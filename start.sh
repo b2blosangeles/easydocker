@@ -46,6 +46,9 @@ node initAdmin.js
 echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
 
+
+sh ./nginx_proxy/run_nginx_proxy.sh
+
 # sh cron.sh > /dev/null &
 stsCron=1
 until [[ $stsCron == 0 ]]
