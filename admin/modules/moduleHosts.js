@@ -249,20 +249,6 @@
             }, 30000);
         }
 /*
-        this.callList = (callback) => {
-            var me = this;
-            var list = me.getList();
-            callback(list)
-        }
-        this.getList = () => {
-            var me = this;
-            var list = [];
-            try { 
-                delete require.cache[fn];
-                list = require(fn);
-            } catch(e) {}
-            return list;
-        }
         this.addHost = (data, callback) => {
             var me = this;
             var _f={};
