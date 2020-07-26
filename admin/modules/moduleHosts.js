@@ -40,7 +40,7 @@
             });
         };
 
-		this.resetVHost = (serverName, callback) => {
+	this.resetVHost = (serverName, callback) => {
             var data_dir = '/var/_localAppDATA';
             var dirn = data_dir + '/sites';
             var _f = {};
