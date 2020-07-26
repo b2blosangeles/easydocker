@@ -7,6 +7,7 @@ SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
 
 mkdir -p "$DATA_DIR"/sites
+mkdir -p "$DATA_DIR"/proxy
 
 markfile=$DATA_DIR/mark.data
 TMP_PATH=$DATA_DIR/_tmp
