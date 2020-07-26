@@ -1,4 +1,3 @@
-
-scriptdir=`dirname "$BASH_SOURCE"`
+DIR="$(realpath "${DIR}")"
 echo "===66==>>"
-echo $scriptdir
+echo $DIR
