@@ -91,7 +91,7 @@
                 }, 500)
             });
 	};
-	    
+	/*
 	this.restartProxy = (callback) = {
 		var _env = {};
 		try {
@@ -107,7 +107,7 @@
 				callback({status:'success'});
 			}, 500)
 		});
-	};
+	};*/
 	    
         this.getDockerHostsList = (callback) => {
             var CP = new pkg.crowdProcess();
