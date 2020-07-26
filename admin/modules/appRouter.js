@@ -22,6 +22,14 @@
 						});
 					break;
 
+				case 'restartProxy' :
+	
+					var hosts = new MHosts(env, pkg);
+					hosts.restartProxy(function(data) {
+						res.send(data);
+					});
+					break;
+			    
 				case 'pullCode' :
 
 					var hosts = new MHosts(env, pkg);
