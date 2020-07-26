@@ -43,14 +43,16 @@ if [[ $cntSts -gt 50  ]]; then
     echo "\nDocker running is required!"
     exit 1
 fi
-
+# --------- docker network S ------#
+docker network rm network_ui_app &> /dev/null
 docker network create \
     --driver=bridge \
     --subnet=10.10.10.0/16 \
     --ip-range=10.10.10.0/24 \
     --gateway=10.10.10.254 \
     network_ui_app &> /dev/null
-    
+# --------- docker network E ------#
+
 node initAdmin.js
 
 echo "\nloading cron job"
