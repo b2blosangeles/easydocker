@@ -59,7 +59,7 @@ echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
 
 echo "====== nginx proxy code s  ======>"
-sh ./nginx_proxy/run_nginx_proxy.sh
+sh ./nginx_proxy/run_nginx_proxy.sh $DATA_DIR
 echo "====== nginx proxy code e  ======>"
 
 # sh cron.sh > /dev/null &
