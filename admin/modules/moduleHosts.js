@@ -4,7 +4,8 @@
         var exec = require('child_process').exec;
 
         var sites_cfg = '/var/_localAppDATA/_sites_cfg.json';
-
+	var data_dir = '/var/_localAppDATA';
+	    
         this.pullCode = (serverName, callback) => {
             var data_dir = '/var/_localAppDATA';
 
@@ -89,7 +90,17 @@
                     callback({status:'success'});
                 }, 500)
             });
-		};
+	};
+	this.restartProxy = (callback) = {
+		fs = require('fs');
+		var cmd = '';
+		fs.writeFile(data_dir + '/_cron/restartProxy_' + new Date().getTime() + '.sh', cmd, function (err) {
+			setTimeout(() => {
+				callback({status:'success'});
+			}, 500)
+		});
+	};
+	    
         this.getDockerHostsList = (callback) => {
             var CP = new pkg.crowdProcess();
             var dirn = '/var/_localAppDATA/sites';
@@ -119,7 +130,8 @@
                 }, 3000);  
             });   
         };
-		this.postLoadList = (callback) => {
+	
+	this.postLoadList = (callback) => {
             var CP = new pkg.crowdProcess();
             var _f = {};
 
