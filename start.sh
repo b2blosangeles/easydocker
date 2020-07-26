@@ -1,4 +1,7 @@
 #!/bin/bash
+
+git pull
+
 SCR_DIR=$(cd `dirname $0` && pwd)
 SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
@@ -46,7 +49,7 @@ node initAdmin.js
 echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
 
-
+echo "===============>"
 sh ./nginx_proxy/run_nginx_proxy.sh
 
 # sh cron.sh > /dev/null &
