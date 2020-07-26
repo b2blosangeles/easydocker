@@ -94,11 +94,12 @@
 	
 	this.restartProxy = (callback) = {
 		var _env = {};
+	    /*the 
 		try {
 			_env = require(data_dir + '/_env.json');
 		} catch (e) {}
 	    
-		fs = require('fs');
+		var fs = require('fs');
 		var cmd = '';
 	    	cmd += _env.code_folder + '/nginx_proxy/run_nginx_proxy.sh ' + _env.data_folder;
 
@@ -106,7 +107,7 @@
 			setTimeout(() => {
 				callback({status:'success'});
 			}, 500)
-		});
+		});*/
 	};
 	    
         this.getDockerHostsList = (callback) => {
