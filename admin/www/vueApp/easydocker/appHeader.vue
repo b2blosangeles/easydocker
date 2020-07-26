@@ -38,8 +38,7 @@ module.exports = {
         },
         restartProxy() {
             var me = this;
-            alert('restartProxy()');
-            // me.$parent.module = (me.$parent.module === 'form') ? 'list' : 'form';
+            me.dataEngine().restartProxy();
         }
     }
 }
