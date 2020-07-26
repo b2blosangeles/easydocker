@@ -1,5 +1,8 @@
 myDir=$( cd ${0%/*} && pwd -P )
 
+echo "===QQ===>"
+echo $1
+
 cd $myDir       
 docker build -t nginx-proxy-image .
 docker stop nginx-proxy-container
