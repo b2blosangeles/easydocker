@@ -12,6 +12,27 @@ module.exports = {
         var me = this;
     },
     methods :{
+       restartProxy() {
+            var me = this;
+
+            me.$parent.triggerSpinner = true;
+
+            $.ajax({
+                type: 'POST',
+                url:'/api',
+                data: {
+                    cmd :'restartProxy'
+                },
+                success: function(result) {
+                    me.$parent.triggerSpinner = false;
+                    console.log(result);
+                },
+                error: function (jqXHR, textStatus, errorThrown) { 
+                    me.$parent.triggerSpinner = false;
+                },
+                dataType: 'JSON'
+            });
+        },
         resetVHost(serverName) {
             var me = this;
 
