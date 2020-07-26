@@ -1,4 +1,4 @@
-echo $PWD/
-SOURCE="${BASH_SOURCE[0]}"
-echo "===33===>>"
-echo $(dirname "$0")
+
+scriptdir=`dirname "$BASH_SOURCE"`
+echo "===66==>>"
+echo $scriptdir
