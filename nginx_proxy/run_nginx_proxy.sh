@@ -1,6 +1,6 @@
 myDir=$( cd ${0%/*} && pwd -P )
 
-        
+cd $myDir       
 docker build -t nginx-proxy-image .
 docker stop nginx-proxy-container
 docker rm nginx-proxy-container
