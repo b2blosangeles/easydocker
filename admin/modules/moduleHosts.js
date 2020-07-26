@@ -101,7 +101,7 @@
 		var cmd = '';
 	    	cmd += 'sh ' +  _env.code_folder + '/nginx_proxy/run_nginx_proxy.sh ' + _env.data_folder;
 
-		fs.writeFile(data_dir + '/_cron/restartProxy_' + new Date().getTime() + '.sh', cmd, function (err) {
+		fs.writeFile(data_dir + '/_cron_restartProxy_' + new Date().getTime() + '.sh', cmd, function (err) {
 			setTimeout(() => {
 				callback({status:'success', message : 'restartProxy'});
 			}, 500)
