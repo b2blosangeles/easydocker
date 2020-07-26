@@ -90,7 +90,34 @@
                 }, 500)
             });
 	};
-	
+	    
+/*
+        this.saveEtcHosts = (callback) => {
+            var me = this;
+            var str='',
+                err = {};
+
+            str += "#!/bin/bash\n";
+            str += 'MARKS="#--UI_MAC_LOCAL_S--"' + "\n";
+            str += 'MARKE="#--UI_MAC_LOCAL_E--"' + "\n";
+            str += 'NLINE=$' + "'" + '\\n' + "'\n";
+            str += 'TABL=$' + "'" + '\\t' + "'\n";
+        
+            str += 'v=$(sed "/"$MARKS"/,/"$MARKE"/d" /etc/hosts)' + "\n";
+
+            var list = me.getList();
+            str += 'p="$v $NLINE$NLINE$MARKS$NLINE';
+            for (var i=0; i < list.length; i++) {
+                str += '"127.0.0.1"$TABL"' + list[i].serverName + '.local"$NLINE';
+                str += '"127.0.0.1"$TABL"' + list[i].serverName + '_local"$NLINE';
+            }
+            str += '$MARKE$NLINE"' + "\n";
+            str += 'echo "$p" > /etc/hosts' + "\n";
+            fs.writeFile(fnHosts, str, (err) => {
+                callback(err);
+            });
+        }
+*/	
 	this.restartProxy = (callback) => {
 		var _env = {};
 		try {
@@ -379,31 +406,6 @@
                 }
             }
             return list.length + 1;
-        }
-        this.saveEtcHosts = (callback) => {
-            var me = this;
-            var str='',
-                err = {};
-
-            str += "#!/bin/bash\n";
-            str += 'MARKS="#--UI_MAC_LOCAL_S--"' + "\n";
-            str += 'MARKE="#--UI_MAC_LOCAL_E--"' + "\n";
-            str += 'NLINE=$' + "'" + '\\n' + "'\n";
-            str += 'TABL=$' + "'" + '\\t' + "'\n";
-        
-            str += 'v=$(sed "/"$MARKS"/,/"$MARKE"/d" /etc/hosts)' + "\n";
-
-            var list = me.getList();
-            str += 'p="$v $NLINE$NLINE$MARKS$NLINE';
-            for (var i=0; i < list.length; i++) {
-                str += '"127.0.0.1"$TABL"' + list[i].serverName + '.local"$NLINE';
-                str += '"127.0.0.1"$TABL"' + list[i].serverName + '_local"$NLINE';
-            }
-            str += '$MARKE$NLINE"' + "\n";
-            str += 'echo "$p" > /etc/hosts' + "\n";
-            fs.writeFile(fnHosts, str, (err) => {
-                callback(err);
-            });
         }
 
         this.copyToTasks = (fname, fnTask, cbk) => {
