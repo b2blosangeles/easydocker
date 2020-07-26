@@ -58,8 +58,9 @@ node initAdmin.js
 echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
 
-echo "===============>"
+echo "====== nginx proxy code s  ======>"
 sh ./nginx_proxy/run_nginx_proxy.sh
+echo "====== nginx proxy code e  ======>"
 
 # sh cron.sh > /dev/null &
 stsCron=1
