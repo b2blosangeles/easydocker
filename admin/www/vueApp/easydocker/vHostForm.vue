@@ -167,7 +167,7 @@ module.exports = {
         cancel() {
             var me = this;
             me.reset();
-            me.$parent.commonData.formStarted = false;
+            me.$parent.module = (me.$parent.module === 'form') ? 'list' : 'form';
         },
         startFrom() {
             var me = this;
