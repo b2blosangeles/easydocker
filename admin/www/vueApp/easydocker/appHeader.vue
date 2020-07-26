@@ -38,7 +38,7 @@ module.exports = {
         },
         restartProxy() {
             var me = this;
-            me.dataEngine().restartProxy();
+            me.$parent.dataEngine().restartProxy();
         }
     }
 }
