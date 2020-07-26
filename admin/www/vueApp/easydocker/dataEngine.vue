@@ -14,7 +14,6 @@ module.exports = {
     methods :{
        restartProxy() {
             var me = this;
-            alert('restartProx!!');
             me.$parent.triggerSpinner = true;
 
             $.ajax({
