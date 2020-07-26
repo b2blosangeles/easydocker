@@ -44,7 +44,7 @@ if [[ $cntSts -gt 50  ]]; then
     echo "\nDocker running is required!"
     exit 1
 fi
-# --------- docker network S ------#
+# --------- docker network Start ------#
 docker network rm network_ui_app &> /dev/null
 docker network create \
     --driver=bridge \
@@ -52,16 +52,16 @@ docker network create \
     --ip-range=10.10.10.0/24 \
     --gateway=10.10.10.254 \
     network_ui_app &> /dev/null
-# --------- docker network E ------#
+# --------- docker network End ------#
 
 node initAdmin.js
 
 echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
 
-echo "====== nginx proxy code s  ======>"
+# ----- nginx proxy code Start  -----#
 sh ./nginx_proxy/run_nginx_proxy.sh $DATA_DIR
-echo "====== nginx proxy code e  ======>"
+# ----- nginx proxy code End  -----#
 
 # sh cron.sh > /dev/null &
 stsCron=1
