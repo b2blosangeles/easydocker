@@ -1,3 +1,3 @@
-DIR="$(dirname "${BASH_SOURCE[0]}")" 
+DIR=$( cd ${0%/*} && pwd -P )
 echo "===66==>>"
 echo $DIR
