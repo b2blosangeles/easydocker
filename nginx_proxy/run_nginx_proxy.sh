@@ -1,4 +1,4 @@
-echo $PWD
+echo $PWD/
 SOURCE="${BASH_SOURCE[0]}"
 echo "===33===>>"
-echo $SOURCE
+echo $(dirname "$0")
