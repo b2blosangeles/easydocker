@@ -92,9 +92,8 @@
             });
 	};
 	
-	this.restartProxy = (callback) = {
+	this.restartProxy = (callback) => {
 		var _env = {};
-	    /*the 
 		try {
 			_env = require(data_dir + '/_env.json');
 		} catch (e) {}
@@ -107,7 +106,7 @@
 			setTimeout(() => {
 				callback({status:'success'});
 			}, 500)
-		});*/
+		});
 	};
 	    
         this.getDockerHostsList = (callback) => {
