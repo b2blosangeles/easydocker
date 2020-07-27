@@ -103,15 +103,19 @@ echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"
 sh ./nginx_proxy/run_nginx_proxy.sh $DATA_DIR
 # ----- nginx proxy code End  -----#
 
-# sh cron.sh > /dev/null &
-stsCron=1
-until [[ $stsCron == 0 ]]
-do 
-    if [ $stsCron != 0 ] ; then
-        sh cron.sh &
-    fi
-    sleep 0.5
-done
+if [ $OSENV == "Mac" ]; then
+   echo "run as MAC"
+   stsCron=1
+   until [[ $stsCron == 0 ]]
+   do 
+       if [ $stsCron != 0 ] ; then
+           sh cron.sh &
+       fi
+       sleep 0.5
+   done
+fi
 
-
+if [ $OSENV == "Mac" ]; then
+   echo "run as not MAC"
+fi
 
