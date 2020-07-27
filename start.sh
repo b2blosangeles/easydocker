@@ -33,6 +33,7 @@ fi
 
 if [[ $USER != $SUDO_USER  ||  $USER != "root" ]] ;
 then
+   echo "---$USER---$SUDO_USER---"
    echo "Error : Need sudo run the command!"
    exit 0
 fi
