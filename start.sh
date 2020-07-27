@@ -35,7 +35,7 @@ if [ $USER == "root" ] ;
 then
    echo "Running as sudo ..."
 else
-   echo "Error : Need sudo run the command!"
+   echo "Error : Need root permission run the command!"
    exit 0
 fi
 exit 0
