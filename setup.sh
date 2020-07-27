@@ -39,7 +39,7 @@ else
    echo "Error : Need root user to run the command!"
    exit 0
 fi
-# ---- prepare E ---
+# ---- setup cronjob E ---
 
 if [ $OSENV == "Linux" ]; then
    echo "Running on Linux ..."
