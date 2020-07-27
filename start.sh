@@ -85,6 +85,7 @@ if [[ $cntSts -gt 50  ]]; then
     exit 1
 fi
 # --------- docker network Start ------#
+
 docker network rm network_ui_app &> /dev/null
 docker network create \
     --driver=bridge \
