@@ -64,6 +64,7 @@ then
         --gateway=10.10.10.254 \
         network_ui_app &> /dev/null
      echo "Success : your application is ready!"
+     chmod 777 /etc/hosts
 else
     echo "Error : Need sudo run the command!"
 fi
