@@ -37,8 +37,6 @@ then
    echo "Error : Need sudo run the command!"
    exit 0
 fi
-echo "===$USER===$SUDO_USER==="
-exit 0
 # ---- prepare E ---
 
 
