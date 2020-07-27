@@ -37,7 +37,7 @@ then
    exit 0
 fi
 echo "===$USER===$SUDO_USER==="
-
+exit 0
 # ---- prepare E ---
 
 
