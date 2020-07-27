@@ -1,6 +1,27 @@
 #!/bin/bash
-
 git pull
+
+# ---- prepare S -----
+DOCKERCMD=$(command -v docker)
+OSENV=""
+case "$(uname -s)" in
+
+   Darwin)
+     OSENV='Mac'
+     ;;
+   Linux)
+     OSENV='Linux'
+     ;;
+
+   CYGWIN*|MINGW32*|MSYS*|MINGW*)
+     OSENV='MS Windows'
+     ;;
+   *)
+     OSENV='' 
+     ;;
+esac
+# ---- prepare E ---
+
 
 SCR_DIR=$(cd `dirname $0` && pwd)
 SCRIPTFN=$(basename -- $SCR_DIR)
