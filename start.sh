@@ -115,7 +115,7 @@ if [ $OSENV == "Mac" ]; then
    done
 fi
 
-if [ $OSENV == "Mac" ]; then
+if [ $OSENV != "Mac" ]; then
    echo "run as not MAC"
 fi
 
