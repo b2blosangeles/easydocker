@@ -38,7 +38,6 @@ else
    echo "Error : Need root user to run the command!"
    exit 0
 fi
-exit 0
 # ---- prepare E ---
 
 
