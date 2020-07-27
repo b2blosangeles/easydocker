@@ -31,13 +31,14 @@ if [ $OSENV != "Mac" ]; then
     exit 0
 fi
 
-if [[ $USER == "root" && $USER != $SUDO_USER ]] ;
+if [ $USER == "root" ] ;
 then
    echo "Running as sudo ..."
 else
    echo "Error : Need sudo run the command!"
    exit 0
 fi
+exit 0
 # ---- prepare E ---
 
 
