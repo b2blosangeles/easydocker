@@ -20,6 +20,23 @@ case "$(uname -s)" in
      OSENV='' 
      ;;
 esac
+
+if [ $DOCKERCMD == '' ]; then
+    echo "Error : Docker installation and running is required!"
+    exit 0
+fi
+
+if [ $OSENV != "Mac" ]; then
+    echo "Error : We only support Mac OS X now!"
+    exit 0
+fi
+
+if [ $USER != $SUDO_USER ] && [ $USER == "root" ] ;
+then
+else
+    echo "Error : Need sudo run the command!"
+fi
+fi
 # ---- prepare E ---
 
 
