@@ -38,9 +38,6 @@ else
    echo "Error : Need sudo run the command!"
    exit 0
 fi
-
-exit 0
-
 # ---- prepare E ---
 
 
