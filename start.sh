@@ -27,6 +27,7 @@ if [ $DOCKERCMD == '' ]; then
 fi
 
 if [ $OSENV != "Mac" ]; then
+    echo "this is $OSENV environment."
     echo "Error : We only support Mac OS X now!"
     exit 0
 fi
