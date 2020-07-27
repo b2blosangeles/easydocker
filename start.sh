@@ -105,7 +105,7 @@ sh ./nginx_proxy/run_nginx_proxy.sh $DATA_DIR
 # ----- nginx proxy code End  -----#
 
 if [ $OSENV == "Mac" ]; then
-   echo "run as MAC"
+   echo "Running on MAC ..."
    stsCron=1
    until [[ $stsCron == 0 ]]
    do 
@@ -116,7 +116,7 @@ if [ $OSENV == "Mac" ]; then
    done
 fi
 
-if [ $OSENV != "Mac" ]; then
-   echo "run as not MAC"
+if [ $OSENV == "Linux" ]; then
+   echo "Running on Linux ..."
 fi
 
