@@ -65,7 +65,7 @@ sh ./nginx_proxy/run_nginx_proxy.sh $DATA_DIR
 
 
    stsCron=1
-   until [[ $stsCron == 0 ]]
+   until [[ $stsCron = 0 ]]
    do 
        if [ $stsCron != 0 ] ; then
            sh cron.sh &
