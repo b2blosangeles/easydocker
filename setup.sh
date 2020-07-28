@@ -21,7 +21,7 @@ case "$(uname -s)" in
      ;;
 esac
 
-if [ "$DOCKERCMD" == '' ]; then
+if [ $DOCKERCMD == "" ]; then
     echo "Error : Docker installation and running is required!"
     exit 0
 fi
