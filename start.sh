@@ -28,8 +28,9 @@ fi
 
 echo "Loading ...==> $DOCKERCMD"
 
-until [ $sts == 0 ] | [ $cntSts -gt 60 ];
+until [ $sts = 0 ] | [ $cntSts -gt 60 ];
 do 
+    echo $sts
     docker_state=$($DOCKERCMD ps -q &> /dev/null)
     
     status=$?
