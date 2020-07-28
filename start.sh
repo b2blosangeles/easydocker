@@ -26,7 +26,7 @@ if [ $DOCKERCMD = "" ]; then
     exit 1
 fi
 
-echo "Loading ...\c $DOCKERCMD"
+echo "Loading ...== $DOCKERCMD"
 exit 0
 
 until [ $sts = 0  ||  $cntSts -gt 60 ]
