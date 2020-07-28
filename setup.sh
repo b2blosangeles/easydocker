@@ -21,12 +21,12 @@ case "$(uname -s)" in
      ;;
 esac
 
-if [ $DOCKERCMD == "" ]; then
+if [ $DOCKERCMD = "" ]; then
     echo "Error : Docker installation and running is required!"
     exit 0
 fi
 
-if [ $OSENV == "Mac" ]; then
+if [ $OSENV = "Mac" ]; then
     echo "this is $OSENV environment."
     echo "Error : Do not need run setup on Mac OS X now!"
     exit 0
