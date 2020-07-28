@@ -36,8 +36,6 @@ do
     sts=$status
     cntSts=$(($cntSts+1))
 
-echo $sts;
-
     if [ $sts != 0 ] ; then
           echo "..\c"
           sleep 0.5
