@@ -31,6 +31,7 @@ echo "Loading ...==> $DOCKERCMD"
 until [ $sts = 0 ] | [ $cntSts -gt 60 ];
 do 
     docker_state=$($DOCKERCMD ps -q &> /dev/null)
+    echo docker_state;
     status=$?
     sts=$status
     cntSts=$(($cntSts+1))
