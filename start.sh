@@ -79,7 +79,7 @@ if [ "$OSENV" = "Mac" ]; then
    done
 fi
 
-if [ $OSENV == "Linux" ]; then
+if [ $OSENV = "Linux" ]; then
    echo "Running on Linux ..."
 fi
 
