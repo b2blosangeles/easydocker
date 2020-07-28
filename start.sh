@@ -21,12 +21,12 @@ cntSts=0
 
 DOCKERCMD=$(command -v docker)
 
-if  ($DOCKERCMD = ""); then
+if  [$DOCKERCMD = ""]; then
     echo "\nDocker should be installed!"
     exit 1
 fi
 
-echo "Loading ...== $DOCKERCMD"
+echo "Loading ...==> $DOCKERCMD"
 exit 0
 
 until [ $sts = 0  ||  $cntSts -gt 60 ]
