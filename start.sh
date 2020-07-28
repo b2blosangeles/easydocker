@@ -21,13 +21,13 @@ cntSts=0
 
 DOCKERCMD=$(command -v docker)
 
-if [[ $DOCKERCMD = "" ]]; then
+if [ $DOCKERCMD = "" ]; then
     echo "\nDocker should be installed!"
     exit 1
 fi
 
 echo "Loading ...\c $DOCKERCMD"
-until [[ $sts = 0  ||  $cntSts -gt 60 ]]
+until [ $sts = 0  ||  $cntSts -gt 60 ]
 do 
     docker_state=$($DOCKERCMD ps -q &> /dev/null)
     status=$?
@@ -39,7 +39,7 @@ do
           sleep 0.5
     fi
 done
-if [[ $cntSts -gt 50  ]]; then
+if [ $cntSts -gt 50  ]; then
     echo "\nDocker running is required!"
     exit 1
 fi
