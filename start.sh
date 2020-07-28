@@ -1,47 +1,6 @@
 #!/bin/bash
 git pull
 
-# ---- prepare S -----
-DOCKERCMD=$(command -v docker)
-OSENV=""
-case "$(uname -s)" in
-
-   Darwin)
-     OSENV='Mac'
-     ;;
-   Linux)
-     OSENV='Linux'
-     ;;
-
-   CYGWIN*|MINGW32*|MSYS*|MINGW*)
-     OSENV='MS Windows'
-     ;;
-   *)
-     OSENV='' 
-     ;;
-esac
-
-if [ $DOCKERCMD == '' ]; then
-    echo "Error : Docker installation and running is required!"
-    exit 0
-fi
-
-if [ $OSENV != "Mac" ]; then
-    echo "this is $OSENV environment."
-    echo "Error : We only support Mac OS X now!"
-    exit 0
-fi
-
-if [ $USER == "root" ] ;
-then
-   echo "Running as sudo ..."
-else
-   echo "Error : Need root user to run the command!"
-   exit 0
-fi
-# ---- prepare E ---
-
-
 SCR_DIR=$(cd `dirname $0` && pwd)
 SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
@@ -62,13 +21,13 @@ cntSts=0
 
 DOCKERCMD=$(command -v docker)
 
-if [[ $DOCKERCMD == "" ]]; then
+if [[ $DOCKERCMD = "" ]]; then
     echo "\nDocker should be installed!"
     exit 1
 fi
 
 echo "Loading ...\c"
-until [[ $sts == 0  ||  $cntSts -gt 60 ]]
+until [[ $sts = 0  ||  $cntSts -gt 60 ]]
 do 
     docker_state=$($DOCKERCMD ps -q &> /dev/null)
     status=$?
@@ -104,8 +63,7 @@ echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"
 sh ./nginx_proxy/run_nginx_proxy.sh $DATA_DIR
 # ----- nginx proxy code End  -----#
 
-if [ $OSENV == "Mac" ]; then
-   echo "Running on MAC ..."
+
    stsCron=1
    until [[ $stsCron == 0 ]]
    do 
@@ -114,9 +72,6 @@ if [ $OSENV == "Mac" ]; then
        fi
        sleep 0.5
    done
-fi
 
-if [ $OSENV == "Linux" ]; then
-   echo "Running on Linux ..."
-fi
+
 
