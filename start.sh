@@ -42,6 +42,7 @@ do
     fi
 done
 if [ $cntSts -gt 50  ]; then
+echo $cntSts
     echo "\nDocker running is required!"
     exit 1
 fi
