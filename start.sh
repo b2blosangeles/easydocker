@@ -27,7 +27,6 @@ if  [ "$DOCKERCMD" = "" ]; then
 fi
 
 echo "Loading ...==> $DOCKERCMD"
-exit 0
 
 until [ $sts = 0  ||  $cntSts -gt 60 ]
 do 
@@ -65,7 +64,7 @@ echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"
 sh ./nginx_proxy/run_nginx_proxy.sh $DATA_DIR
 # ----- nginx proxy code End  -----#
 
-if [ $OSENV == "Mac" ]; then
+if [ "$OSENV" = "Mac" ]; then
    echo "Running on MAC ..."
    stsCron=1
    until [[ $stsCron == 0 ]]
