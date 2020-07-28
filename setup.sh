@@ -32,13 +32,14 @@ if [ $OSENV = "Mac" ]; then
     exit 0
 fi
 
-if [ $USER == "root" ] ;
+if [ $USER = "root" ] ;
 then
    echo "Running as sudo ..."
 else
    echo "Error : Need root user to run the command!"
    exit 0
 fi
+exit 0
 # ---- setup cronjob and file permission S ---
 
 echo "setup cronjob"
