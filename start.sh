@@ -27,6 +27,8 @@ if [ $DOCKERCMD = "" ]; then
 fi
 
 echo "Loading ...\c $DOCKERCMD"
+exit 0
+
 until [ $sts = 0  ||  $cntSts -gt 60 ]
 do 
     docker_state=$($DOCKERCMD ps -q &> /dev/null)
