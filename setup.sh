@@ -45,8 +45,8 @@ echo "setup cronjob"
 
 if [ $OSENV == "Linux" ]; then
    echo "Running on Linux ..."
-   sed '/echo _UI_APP/d' /etc/crontab  > /tmp/crontab_$SUDO_USER
-   cp -f /tmp/crontab_$SUDO_USER  /etc/crontab
+   sed '/echo _UI_APP/d' /etc/crontab  > /tmp/crontab_easydocker
+   cp -f /tmp/crontab_easydocker  /etc/crontab
    echo "@reboot echo _UI_APP && sh start.sh" >> /etc/crontab
 fi
 # ---- setup cronjob and file permission E ---
