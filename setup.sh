@@ -42,9 +42,9 @@ fi
 
 # ---- setup cronjob and file permission S ---
 
-echo "setup cronjob"
+echo "setup cronjob=$OSENV"
 
-if [ $OSENV == "Linux" ]; then
+if [ $OSENV = "Linux" ]; then
    echo "Running on Linux ..."
    sed '/echo _UI_APP/d' /etc/crontab  > /tmp/crontab_easydocker
    cp -f /tmp/crontab_easydocker  /etc/crontab
