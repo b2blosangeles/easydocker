@@ -21,7 +21,7 @@ cntSts=0
 
 DOCKERCMD=$(command -v docker)
 
-if [ $DOCKERCMD = "" ]; then
+if [[ $DOCKERCMD = "" ]]; then
     echo "\nDocker should be installed!"
     exit 1
 fi
