@@ -3,7 +3,6 @@ SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
 dockerDir="${SCR_DIR}/dockerFiles/admin_dockerfile/"
 
-
 CMD=""
 CMD="${CMD}Start admin ..\n";
 CMD="${CMD}cd ${dockerDir}\n";
