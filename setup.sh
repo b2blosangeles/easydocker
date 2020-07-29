@@ -68,7 +68,7 @@ if [ $OSENV = "Linux" ]; then
       echo "* * * * *  (sleep $i ; echo _EASY_DOCKER && $COMM)" >> /etc/crontab
     done
    
-      for i in $(seq 1 2 20)
+      for i in $(seq 1 1 60)
       do
          echo "Welcome $i times"
       done
