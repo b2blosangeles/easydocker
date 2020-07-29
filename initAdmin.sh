@@ -9,7 +9,7 @@ CMD="${CMD}cd ${dockerDirD}\n";
 CMD="${CMD}docker build -f dockerFile -t admin-image .\n";
 CMD="${CMD}docker container stop admin-container\n";
 CMD="${CMD}docker container rm admin-container\n";
-CMD="${CMD}docker run -d -p 10000:10000 -v \"${dockerDirD}/admin\":/var/_localApp -v \"${dockerDir}/dockerFiles\":/var/_localDockerFiles "
+CMD="${CMD}docker run -d -p 10000:10000 -v \"${SCR_DIR}/admin\":/var/_localApp -v \"${SCR_DIR}/dockerFiles\":/var/_localDockerFiles "
 CMD="${CMD}-v \"${DATA_DIR}\":/var/_localAppDATA --name  ";
 CMD="${CMD} admin-container admin-image\n";
 
