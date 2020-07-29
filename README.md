@@ -13,6 +13,7 @@ apt update \
 
 2. setup easydocker
 
-rm -fr /var/easydocker
+rm -fr /var/easydocker \
+&&  mkdir -p /var/easydocker \
 &&  cd /var/easydocker \
 && git clone https://github.com/b2blosangeles/easydocker.git .
