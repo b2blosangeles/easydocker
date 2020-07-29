@@ -54,7 +54,7 @@ if [ $OSENV = "Linux" ]; then
    echo "Running on Linux ..."
    sed '/\@reboot/d' /etc/crontab  > /tmp/crontab_easydocker
    cp -f /tmp/crontab_easydocker  /etc/crontab
-   echo "@reboot root bootup.sh &\"" >> /etc/crontab
+   echo "@reboot root ${SCRIPTDIR}/bootup.sh" >> /etc/crontab
 fi
 # ---- setup cronjob and file permission E ---
 
