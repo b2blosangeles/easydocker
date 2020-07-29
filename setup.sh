@@ -48,7 +48,7 @@ echo "setup cronjob=$OSENV"
 
 if [ $OSENV = "Linux" ]; then
    SCRIPTDIR=$(cd `dirname $0` && pwd)
-   echo "cd ${SCRIPTDIR}\nsh start.sh &" >> ${SCRIPTDIR}/bootup.sh
+   echo "cd ${SCRIPTDIR}\nsh start.sh &" > ${SCRIPTDIR}/bootup.sh
    chmod 777 ${SCRIPTDIR}/bootup.sh
 
    echo "Running on Linux ..."
