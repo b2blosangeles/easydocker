@@ -49,16 +49,21 @@ echo "setup cronjob=$OSENV"
 if [ $OSENV = "Linux" ]; then
    
    echo "Running on Linux ..."
-   SCRIPTDIR=$(cd `dirname $0` && pwd)
    
-   sed '/\@reboot/d' /etc/crontab  > /tmp/crontab_easydocker
+   SCR_DIR=$(cd `dirname $0` && pwd)
+   SCRIPTFN=$(basename -- $SCR_DIR)
+   DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
+   
+   mkdir -p ${DATA_DIR}/log/
+   
+   sed '/\echo _EASY_DOCKER/d' /etc/crontab  > /tmp/crontab_easydocker
    cp -f /tmp/crontab_easydocker  /etc/crontab
-   echo "@reboot root cd ${SCRIPTDIR} && sh start.sh" >> /etc/crontab
+   echo "@reboot root echo _EASY_DOCKER && cd ${SCR_DIR} && sh start.sh" >> /etc/crontab
    
     for (( i=1; i < 60; i+=1 ))
     do
-      COMM="sh ${SCRIPTDIR}/cron.sh $DOCKERCMD >> $DATAPATH/log/crontask_$SUDO_USER.log"
-      echo "* * * * *  (sleep $i ; echo _UI_APP && $COMM)" >> /etc/crontab
+      COMM="sh ${SCR_DIR}/cron.sh >> ${DATA_DIR}/log/crontask_$SUDO_USER.log"
+      echo "* * * * *  (sleep $i ; echo _EASY_DOCKER && $COMM)" >> /etc/crontab
     done
    
 fi
