@@ -67,7 +67,7 @@ echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"
 sh ./nginx_proxy/run_nginx_proxy.sh $DATA_DIR
 # ----- nginx proxy code End  -----#
 
-if [ "$OSENV" = "Mac" ]; then
+#if [ "$OSENV" = "Mac" ]; then
    echo "Running on MAC ..."
    stsCron=1
    until [[ $stsCron == 0 ]]
@@ -77,7 +77,7 @@ if [ "$OSENV" = "Mac" ]; then
        fi
        sleep 0.5
    done
-fi
+#fi
 
 if [ "$OSENV" = "Linux" ]; then
    echo "Running on Linux ..."
