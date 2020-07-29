@@ -1,3 +1,5 @@
+SCR_DIR=$(cd `dirname $0` && pwd)
+echo $SCR_DIR
 << 'MULTILINE-COMMENT'
 
 const process = require('process');
