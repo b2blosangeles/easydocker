@@ -7,10 +7,8 @@ CMD=""
 CMD="${CMD}Start admin ..\n";
 CMD="${CMD}cd ${dockerDirD}\n";
 CMD="${CMD}docker build -f dockerFile -t admin-image .\n";
-# cmd += 'cd ' + dockerDir + "\n";
-# cmd += 'docker build -f dockerFile -t ' + site_image + ' .' + "\n";
-# cmd += 'docker container stop ' + site_container + "\n";
-# cmd += 'docker container rm ' + site_container + "\n";
+CMD="${CMD}docker container stop admin-container\n";
+CMD="${CMD}docker container rm admin-container\n";
 
 echo $SCR_DIR
 echo $DATA_DIR
