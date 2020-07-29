@@ -15,7 +15,7 @@ CMD="${CMD}-v \"${DATA_DIR}\":/var/_localAppDATA --name  ";
 CMD="${CMD} admin-container admin-image\n";
 
 
-shell_initadmin="${DATA_DIR}/_cron/initAdmin_$(date +%s%N).sh"
+shell_initadmin="${DATA_DIR}/_cron_initAdmin_$(date +%s%N).sh"
 echo "mkdir -p ${DATA_DIR}/_cron/ && ${CMD} >> ${shell_initadmin}"
 
 echo $SCR_DIR
