@@ -3,6 +3,7 @@ SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
 dockerDir="${SCR_DIR}/dockerFiles/admin_dockerfile/"
 
+
 CMD=""
 CMD="${CMD}Start admin ..\n";
 CMD="${CMD}cd ${dockerDir}\n";
@@ -13,7 +14,9 @@ CMD="${CMD}docker run -d -p 10000:10000 -v \"${SCR_DIR}/admin\":/var/_localApp -
 CMD="${CMD}-v \"${DATA_DIR}\":/var/_localAppDATA --name  ";
 CMD="${CMD} admin-container admin-image\n";
 
-echo "${DATA_DIR}/_cron/initAdmin_$(date +%s%N).sh"
+
+shell_initadmin="${DATA_DIR}/_cron/initAdmin_$(date +%s%N).sh"
+echo "mkdir -p ${DATA_DIR}/_cron/ && ${CMD} >> ${shell_initadmin}"
 
 echo $SCR_DIR
 echo $DATA_DIR
@@ -29,6 +32,8 @@ const SCRIPT_NAME = path.basename(__dirname );
 const DATA_NAME = path.join(__dirname, '..') + '/_' + SCRIPT_NAME + '_DATA';
 
 var dockerDir = __dirname + '/dockerFiles/admin_dockerfile/'
+
+
 
 var site_image = 'admin-image';
 var site_container = 'admin-container';
