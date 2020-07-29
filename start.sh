@@ -58,7 +58,7 @@ docker network create \
     network_ui_app &> /dev/null
 # --------- docker network End ------#
 
-node initAdmin.js
+sh initAdmin.sh
 
 echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
