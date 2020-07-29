@@ -44,11 +44,13 @@ fi
 
 echo "setup cronjob=$OSENV"
 
-echo "cd ${SCRIPTDIR}\nsh start.sh &" >> ${SCRIPTDIR}/bootup.sh
-chmod 777 ${SCRIPTDIR}/bootup.sh
+
 
 if [ $OSENV = "Linux" ]; then
    SCRIPTDIR=$(cd `dirname $0` && pwd)
+   echo "cd ${SCRIPTDIR}\nsh start.sh &" >> ${SCRIPTDIR}/bootup.sh
+   chmod 777 ${SCRIPTDIR}/bootup.sh
+
    echo "Running on Linux ..."
    sed '/\@reboot/d' /etc/crontab  > /tmp/crontab_easydocker
    cp -f /tmp/crontab_easydocker  /etc/crontab
