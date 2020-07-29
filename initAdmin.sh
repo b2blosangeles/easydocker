@@ -4,7 +4,7 @@ DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
 dockerDir="${SCR_DIR}/dockerFiles/admin_dockerfile/"
 
 CMD=""
-CMD="${CMD}Start admin .." + "\n";
+CMD="${CMD}Start admin ..\n";
 # cmd += 'cd ' + dockerDir + "\n";
 # cmd += 'docker build -f dockerFile -t ' + site_image + ' .' + "\n";
 # cmd += 'docker container stop ' + site_container + "\n";
