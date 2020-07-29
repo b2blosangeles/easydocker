@@ -5,6 +5,8 @@ SCR_DIR=$(cd `dirname $0` && pwd)
 SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
 
+cd ${SCR_DIR}
+
 mkdir -p "$DATA_DIR"/sites
 mkdir -p "$DATA_DIR"/proxy
 
