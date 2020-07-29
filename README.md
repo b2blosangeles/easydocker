@@ -10,3 +10,9 @@ apt update \
 && apt-cache policy docker-ce \
 && apt install -y docker-ce \
 && apt-get -y install git
+
+2. setup easydocker
+
+rm -fr /var/easydocker
+&&  cd /var/easydocker \
+&& git clone https://github.com/b2blosangeles/easydocker.git .
