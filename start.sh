@@ -59,6 +59,7 @@ docker network create \
     network_ui_app &> /dev/null
 # --------- docker network End ------#
 
+echo "===sh initAdmin.sh====\n"
 sh initAdmin.sh > /var/bbb.log
 
 echo "\nloading cron job"
