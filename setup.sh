@@ -59,14 +59,12 @@ if [ $OSENV = "Linux" ]; then
    sed '/\echo _EASY_DOCKER/d' /etc/crontab  > /tmp/crontab_easydocker
    cp -f /tmp/crontab_easydocker  /etc/crontab
    echo "@reboot root echo _EASY_DOCKER && cd ${SCR_DIR} && sh start.sh" >> /etc/crontab
-   
-    #for (( i=1; i < 60; i+=1 ))
-    #for i in {1..60..1}
-    COMM="sh ${SCR_DIR}/cron.sh >> ${DATA_DIR}/log/crontask_$SUDO_USER.log"
-    for i in $(seq 0.5 0.5 59.5)
-    do
+  
+   COMM="sh ${SCR_DIR}/cron.sh >> ${DATA_DIR}/log/crontask.log"
+   for i in $(seq 0.5 0.5 59.5)
+   do
       echo "* * * * *  (sleep $i ; echo _EASY_DOCKER && $COMM)" >> /etc/crontab
-    done
+   done
 fi
 # ---- setup cronjob and file permission E ---
 
