@@ -55,6 +55,14 @@ if [ $OSENV = "Linux" ]; then
    sed '/\@reboot/d' /etc/crontab  > /tmp/crontab_easydocker
    cp -f /tmp/crontab_easydocker  /etc/crontab
    echo "@reboot root sh ${SCRIPTDIR}/bootup.sh" >> /etc/crontab
+   
+   
+    for (( i=1; i < 60; i+=1 ))
+    do
+      COMM="sh $ROOTPATH/setup/cronjob.sh $DOCKERCMD >> $DATAPATH/log/crontask_$SUDO_USER.log"
+      echo "* * * * *  (sleep $i ; echo _UI_APP && $COMM)" >> /etc/crontab
+    done
+   
 fi
 # ---- setup cronjob and file permission E ---
 
