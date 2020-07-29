@@ -58,7 +58,7 @@ if [ $OSENV = "Linux" ]; then
    
    sed '/\echo _EASY_DOCKER/d' /etc/crontab  > /tmp/crontab_easydocker
    cp -f /tmp/crontab_easydocker  /etc/crontab
-   echo "@reboot root echo _EASY_DOCKER && cd ${SCR_DIR} && sh start.sh" >> /etc/crontab
+   echo "@reboot root echo _EASY_DOCKER && sh ${SCR_DIR}/start.sh" >> /etc/crontab
   
    COMM="sh ${SCR_DIR}/cron.sh >> ${DATA_DIR}/log/crontask.log"
    for i in $(seq 0.5 0.5 59.5)
