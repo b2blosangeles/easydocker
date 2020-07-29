@@ -1,15 +1,19 @@
 SCR_DIR=$(cd `dirname $0` && pwd)
 SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
-
-
 dockerDir="${SCR_DIR}/dockerFiles/admin_dockerfile/"
 
+CMD=""
+CMD="${CMD}Start admin .." + "\n";
+# cmd += 'cd ' + dockerDir + "\n";
+# cmd += 'docker build -f dockerFile -t ' + site_image + ' .' + "\n";
+# cmd += 'docker container stop ' + site_container + "\n";
+# cmd += 'docker container rm ' + site_container + "\n";
 
 echo $SCR_DIR
 echo $DATA_DIR
 echo $dockerDir
-
+echo $CMD
 << 'MULTILINE-COMMENT'
 
 const process = require('process');
