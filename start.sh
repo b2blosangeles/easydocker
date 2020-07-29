@@ -75,7 +75,7 @@ if [ "$OSENV" = "Mac" ]; then
        if [ $stsCron != 0 ] ; then
            sh cron.sh &
        fi
-       sleep 0.5
+       sleep 1
    done
 fi
 
