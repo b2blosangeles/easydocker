@@ -2,9 +2,6 @@
 git pull
 
 SCR_DIR=$(cd `dirname $0` && pwd)
-
-<< 'MULTILINE-COMMENT'
-
 SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
 
@@ -86,4 +83,3 @@ if [ "$OSENV" = "Linux" ]; then
    echo "Running on Linux ..."
 fi
 
-MULTILINE-COMMENT
