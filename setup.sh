@@ -49,7 +49,7 @@ if [ $OSENV = "Linux" ]; then
    echo "Running on Linux ..."
    sed '/echo _EASYDOCKER/d' /etc/crontab  > /tmp/crontab_easydocker
    cp -f /tmp/crontab_easydocker  /etc/crontab
-   echo "@reboot root echo _EASYDOCKER && sh ${SCRIPTDIR}/start.sh &" >> /etc/crontab
+   echo "@reboot root echo _EASYDOCKER && cd ${SCRIPTDIR} && sh start.sh &" >> /etc/crontab
 fi
 # ---- setup cronjob and file permission E ---
 
