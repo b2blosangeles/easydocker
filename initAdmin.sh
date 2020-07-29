@@ -1,3 +1,5 @@
+<< 'MULTILINE-COMMENT'
+
 const process = require('process');
 const path = require('path');
 const { exit } = require('process');
@@ -30,3 +32,5 @@ fs.writeFile(DATA_NAME + '/_cron/initAdmin_' + new Date().getTime() + '.sh', cmd
 });
 
 console.log(cmd);
+
+MULTILINE-COMMENT
