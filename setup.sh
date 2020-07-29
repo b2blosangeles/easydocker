@@ -68,6 +68,13 @@ if [ $OSENV = "Linux" ]; then
       echo "* * * * *  (sleep $i ; echo _EASY_DOCKER && $COMM)" >> /etc/crontab
     done
    
+   #!/bin/bash
+   for i in {0..20..4}
+   do
+   echo “$i”
+   done
+
+
 fi
 # ---- setup cronjob and file permission E ---
 
