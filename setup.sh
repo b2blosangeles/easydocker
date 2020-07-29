@@ -62,9 +62,9 @@ if [ $OSENV = "Linux" ]; then
    
     #for (( i=1; i < 60; i+=1 ))
     #for i in {1..60..1}
+    COMM="sh ${SCR_DIR}/cron.sh >> ${DATA_DIR}/log/crontask_$SUDO_USER.log"
     for i in {1..60}
     do
-      COMM="sh ${SCR_DIR}/cron.sh >> ${DATA_DIR}/log/crontask_$SUDO_USER.log"
       echo "* * * * *  (sleep $i ; echo _EASY_DOCKER && $COMM)" >> /etc/crontab
     done
    
