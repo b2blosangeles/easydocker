@@ -5,6 +5,8 @@ dockerDir="${SCR_DIR}/dockerFiles/admin_dockerfile/"
 
 CMD=""
 CMD="${CMD}Start admin ..\n";
+CMD="${CMD}cd ${dockerDirD}\n";
+CMD="${CMD}docker build -f dockerFile -t admin-image .\n";
 # cmd += 'cd ' + dockerDir + "\n";
 # cmd += 'docker build -f dockerFile -t ' + site_image + ' .' + "\n";
 # cmd += 'docker container stop ' + site_container + "\n";
