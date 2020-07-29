@@ -13,6 +13,6 @@ CMD="${CMD}docker run -d -p 10000:10000 -v \"${SCR_DIR}/admin\":/var/_localApp -
 CMD="${CMD}-v \"${DATA_DIR}\":/var/_localAppDATA --name  ";
 CMD="${CMD} admin-container admin-image\n";
 
-shell_initadmin="${DATA_DIR}/_cron_initAdmin_$(date +%s%N).sh"
+shell_initadmin="${DATA_DIR}/_cron/initAdmin_$(date +%s%N).sh"
 mkdir -p ${DATA_DIR}/_cron/
 echo "${CMD}" >> ${shell_initadmin}
