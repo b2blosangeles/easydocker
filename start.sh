@@ -59,14 +59,6 @@ if [ -z $(docker network ls --filter name=^${NETWORK_NAME}$ --format="{{ .Name }
         --gateway=10.10.10.254 \
        network_easydocker &> /dev/null
 fi
-
-# docker network rm network_ui_app &> /dev/null
-docker network create \
-    --driver=bridge \
-    --subnet=10.10.10.0/16 \
-    --ip-range=10.10.10.0/24 \
-    --gateway=10.10.10.254 \
-    network_ui_app &> /dev/null
 # --------- docker network End ------#
 
 echo "===sh initAdmin.sh=START===\n"
