@@ -62,7 +62,7 @@ fi
 # --------- docker network End ------#
 
 echo "===sh initAdmin.sh=START===\n"
-sh initAdmin.sh > /var/bbb.log
+sh initAdmin.sh
 echo "===sh initAdmin.sh==END==\n"
 
 echo "\nloading cron job"
@@ -83,7 +83,7 @@ if [ "$OSENV" = "Mac" ]; then
 fi
 
 # ----- nginx proxy code Start  -----#
-sh run_nginx_proxy.sh > /var/ccc.log
+sh nginx_proxy.sh
 # ----- nginx proxy code End  -----#
 
 if [ "$OSENV" = "Linux" ]; then
