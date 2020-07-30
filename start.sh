@@ -61,9 +61,9 @@ if [ -z $(docker network ls --filter name=^${NETWORK_NAME}$ --format="{{ .Name }
 fi
 # --------- docker network End ------#
 
-echo "===sh initAdmin.sh=START===\n"
+#--- Admin.sh Start ---
 sh initAdmin.sh
-echo "===sh initAdmin.sh==END==\n"
+#--- Admin.sh End ---
 
 echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
