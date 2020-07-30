@@ -85,8 +85,3 @@ fi
 # ----- nginx proxy Start  -----#
 sh nginx_proxy.sh
 # ----- nginx proxy End  -----#
-
-if [ "$OSENV" = "Linux" ]; then
-   echo "Running on Linux ..."
-fi
-
