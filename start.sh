@@ -86,7 +86,9 @@ sh initAdmin.sh
 echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
 
-
+# ----- nginx proxy Start  -----#
+sh nginx_proxy.sh
+# ----- nginx proxy End  -----#
 
 if [ "$OSENV" = "Mac" ]; then
    echo "Running on MAC ..."
@@ -100,6 +102,4 @@ if [ "$OSENV" = "Mac" ]; then
    done
 fi
 
-# ----- nginx proxy Start  -----#
-sh nginx_proxy.sh
-# ----- nginx proxy End  -----#
+
