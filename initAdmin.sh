@@ -10,8 +10,9 @@ CMD="${CMD}docker build -f dockerFile -t admin-image .\n";
 CMD="${CMD}docker container stop admin-container\n";
 CMD="${CMD}docker container rm admin-container\n";
 CMD="${CMD}docker run -d -p 10000:10000 -v \"${SCR_DIR}/admin\":/var/_localApp -v \"${SCR_DIR}/dockerFiles\":/var/_localDockerFiles "
-CMD="${CMD}-v \"${DATA_DIR}\":/var/_localAppDATA --name  ";
-CMD="${CMD} admin-container admin-image\n";
+CMD="${CMD}-v \"${DATA_DIR}\":/var/_localAppDATA ";
+CMD="${CMD} --network network_easydocker  ";
+CMD="${CMD} --name admin-container admin-image\n";
 
 shell_initadmin="${DATA_DIR}/_cron/initAdmin_$(date +%s%N).sh"
 mkdir -p ${DATA_DIR}/_cron/
