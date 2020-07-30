@@ -82,9 +82,9 @@ if [ "$OSENV" = "Mac" ]; then
    done
 fi
 
-# ----- nginx proxy code Start  -----#
+# ----- nginx proxy Start  -----#
 sh nginx_proxy.sh
-# ----- nginx proxy code End  -----#
+# ----- nginx proxy End  -----#
 
 if [ "$OSENV" = "Linux" ]; then
    echo "Running on Linux ..."
