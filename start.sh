@@ -82,7 +82,7 @@ fi
 
 # ----- nginx proxy code Start  -----#
 sleep 1;
-sh ./nginx_proxy/run_nginx_proxy.sh $DATA_DIR > /var/ccc.log
+sh ${SCR_DIR}/nginx_proxy/run_nginx_proxy.sh $DATA_DIR > /var/ccc.log
 # ----- nginx proxy code End  -----#
 
 if [ "$OSENV" = "Linux" ]; then
