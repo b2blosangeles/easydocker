@@ -7,7 +7,7 @@ CMD="${CMD}cd ${myDir}\n";
 CMD="${CMD}docker build -t nginx-proxy-image  .\n";
 CMD="${CMD}docker stop nginx-proxy-container\n";
 CMD="${CMD}docker rm nginx-proxy-container\n";
-CMD="${CMD}docker run -d -p 80:80 -v \"${$myDir}/html\":/usr/share/nginx/html -v \"${DATA_DIR}/proxy\":/usr/share/nginx/proxy_config ";
+CMD="${CMD}docker run -d -p 80:80 -v \"${myDir}/html\":/usr/share/nginx/html -v \"${DATA_DIR}/proxy\":/usr/share/nginx/proxy_config ";
 CMD="${CMD} --network network_ui_app  ";
 CMD="${CMD} --name nginx-proxy-container nginx-proxy-image\n";
 
