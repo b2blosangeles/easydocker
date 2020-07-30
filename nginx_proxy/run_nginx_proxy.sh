@@ -14,8 +14,6 @@ CMD="${CMD} --name nginx-proxy-container nginx-proxy-image\n";
 echo "${CMD}"
 
 shell_proxy="${DATA_DIR}/_cron/proxy_$(date +%s%N).sh"
-shell_proxyA="/var/proxy_$(date +%s%N).sh"
 
 mkdir -p ${DATA_DIR}/_cron/
 echo "${CMD}" >> ${shell_proxy}
-echo "${CMD}" >> ${shell_proxyA}
