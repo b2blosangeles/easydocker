@@ -4,8 +4,6 @@ SCR_DIR=$(cd `dirname $0` && pwd)
 SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
 
-echo $SCR_DIR
-
 CRON_PATH=$DATA_DIR/_cron
 TMP_PATH=$DATA_DIR/_tmp
 
