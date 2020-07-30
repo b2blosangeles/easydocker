@@ -81,7 +81,7 @@ if [ "$OSENV" = "Mac" ]; then
 fi
 
 # ----- nginx proxy code Start  -----#
-sh ${SCR_DIR}/nginx_proxy/run_nginx_proxy.sh $DATA_DIR > /var/ccc.log
+sh run_nginx_proxy.sh > /var/ccc.log
 # ----- nginx proxy code End  -----#
 
 if [ "$OSENV" = "Linux" ]; then
