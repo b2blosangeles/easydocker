@@ -50,7 +50,7 @@ echo $cntSts
 fi
 # --------- docker network Start ------#
 
-docker network rm network_ui_app &> /dev/null
+# docker network rm network_ui_app &> /dev/null
 docker network create \
     --driver=bridge \
     --subnet=10.10.10.0/16 \
