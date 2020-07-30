@@ -1,5 +1,5 @@
 myDir=$( cd ${0%/*} && pwd -P )
-DATA_DIR="111"
+DATA_DIR="$1"
 
 CMD=""
 CMD="${CMD}Start proxy ..\n";
