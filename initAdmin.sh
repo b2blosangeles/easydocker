@@ -17,6 +17,3 @@ shell_initadmin="${DATA_DIR}/_cron/initAdmin_$(date +%s%N).sh"
 mkdir -p ${DATA_DIR}/_cron/
 echo "${CMD}" >> ${shell_initadmin}
 
-echo "======>>"
-echo "${CMD}"
-echo ${shell_initadmin}
