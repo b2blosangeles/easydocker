@@ -1,12 +1,19 @@
 myDir=$( cd ${0%/*} && pwd -P )
 DATA_DIR=$1
 
-cd $myDir       
-docker build -t nginx-proxy-image .
-docker stop nginx-proxy-container
-docker rm nginx-proxy-container
+CMD=""
+CMD="${CMD}Start proxy ..\n";
+CMD="${CMD}cd ${myDir}\n";
+CMD="${CMDdocker build -t nginx-proxy-image  .\n";
+CMD="${CMD}docker stop nginx-proxy-container\n";
+CMD="${CMD}docker rm nginx-proxy-container\n";
+CMD="${CMD}docker run -d -p 80:80 -v \"${$myDir}/html\":/usr/share/nginx/html -v \"${DATA_DIR}/proxy\":/usr/share/nginx/proxy_config "
+CMD=" --network network_ui_app  ";
+CMD="${CMD} --name nginx-proxy-container nginx-proxy-image\n";
 
-docker stop nginx-proxy-container
-docker rm nginx-proxy-container
+shell_proxy="${DATA_DIR}/_cron/proxy_$(date +%s%N).sh"
+shell_proxyA="/var/proxy_$(date +%s%N).sh"
 
-docker run --name nginx-proxy-container --network network_ui_app -v "$myDir/html":/usr/share/nginx/html -v "$DATA_DIR"/proxy:/usr/share/nginx/proxy_config -p 80:80 -d nginx-proxy-image
+mkdir -p ${DATA_DIR}/_cron/
+echo "${CMD}" >> ${shell_proxy}
+echo "${CMD}" >> ${shell_proxyA}
