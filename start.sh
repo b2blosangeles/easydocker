@@ -3,6 +3,24 @@ SCR_DIR=$(cd `dirname $0` && pwd)
 SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
 
+OSENV=""
+case "$(uname -s)" in
+
+   Darwin)
+     OSENV='Mac'
+     ;;
+   Linux)
+     OSENV='Linux'
+     ;;
+
+   CYGWIN*|MINGW32*|MSYS*|MINGW*)
+     OSENV='MS Windows'
+     ;;
+   *)
+     OSENV='' 
+     ;;
+esac
+
 cd ${SCR_DIR}
 git pull
 
