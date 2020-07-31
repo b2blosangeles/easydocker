@@ -80,8 +80,7 @@
                 cmd_ports += ' -p ' + ((sitesCfg.unidx * 10000) + cfg.ports[i]) + ':' + cfg.ports[i] + ' ';
             }
            
-            cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name  ' + site_container + ' ' + site_image  + "\n";
-             
+            cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name --network network_easydocker ' + site_container + ' ' + site_image  + "\n";
             
             fs = require('fs');
             fs.writeFile(data_dir + '/_cron/addHost_' + new Date().getTime() + '.sh', cmd, function (err) {
