@@ -148,9 +148,6 @@ module.exports = {
             } 
             me.$parent.dataEngine().saveVHostForm(
                 me.form, function(result) {
-                    console.log('---result---');
-                    console.log(result);
-                    return true;
                     if (result.status === 'success') {
                         me.cancel();
                     }

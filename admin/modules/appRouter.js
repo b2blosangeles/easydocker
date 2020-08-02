@@ -48,15 +48,6 @@
 						});
 					break;
 
-				case 'getDockerHostsList' :
-		
-					var hosts = new MHosts(env, pkg);
-					hosts.getDockerHostsList(
-						function(data) {
-							res.send(data);
-						});
-					break;
-
 				case 'loadList' :
 		
 					var hosts = new MHosts(env, pkg);
