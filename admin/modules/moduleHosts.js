@@ -89,7 +89,16 @@
                 }, 500)
             });
 	};
-	    
+    
+    this.deleteVHost = (serverName, callback) => {
+        var me = this;
+        var _f = {};
+        var sites_list = me.getSitesCfg();
+        delete sites_list[serverName];
+        me.saveSitesCfg(sites_cfg, function() {
+            callback({status:'success', code: sites_list});
+        });
+    };
 /*
         this.saveEtcHosts = (callback) => {
             var me = this;
@@ -134,37 +143,37 @@
 		});
 	};
 	    
-        this.getDockerHostsList = (callback) => {
-            var CP = new pkg.crowdProcess();
-            var dirn = '/var/_localAppDATA/sites';
-            var _f = {};
+    this.getDockerHostsList = (callback) => {
+        var CP = new pkg.crowdProcess();
+        var dirn = '/var/_localAppDATA/sites';
+        var _f = {};
 
-            fs.readdir(dirn, function (err, files) {
-                var list = (err) ? [] : files.filter((v) => {
-                    return !(/^\./.test(v));
-                });
-                var list1 = [];
-                for (o in list) {
-                    _f[list[o]] = (function(o) {
-                        return (cbk) => {
-                            var v = {};
-                            try {
-                                v = require(dirn + '/' + list[o] + '/dockerSetting.json');
+        fs.readdir(dirn, function (err, files) {
+            var list = (err) ? [] : files.filter((v) => {
+                return !(/^\./.test(v));
+            });
+            var list1 = [];
+            for (o in list) {
+                _f[list[o]] = (function(o) {
+                    return (cbk) => {
+                        var v = {};
+                        try {
+                            v = require(dirn + '/' + list[o] + '/dockerSetting.json');
 
-                            } catch (e) {}
-                            list1.push({name : list[o], ports: v.ports.join(',')});
-                            cbk(true);
-                        }
-                    })(o);
-                    
-                }
-                CP.serial(_f, (data) => {
-                    callback({status:'success', list : list1});
-                }, 3000);  
-            });   
-        };
+                        } catch (e) {}
+                        list1.push({name : list[o], ports: v.ports.join(',')});
+                        cbk(true);
+                    }
+                })(o);
+                
+            }
+            CP.serial(_f, (data) => {
+                callback({status:'success', list : list1});
+            }, 3000);  
+        });   
+    };
 	
-	this.postLoadList = (callback) => {
+	this.postLoadList = (callback) => { // use this
             var CP = new pkg.crowdProcess();
             var _f = {};
 
@@ -225,6 +234,12 @@
                 v = require(sites_cfg);
             } catch (e) {}
             return v;
+        }
+        this.saveSitesCfg = (v, callback) => {
+            fs.writeFile(sites_cfg, 
+                JSON.stringify(v), (err) => {
+                    callback(err);
+            });
         }    
         this.getNewUnIdx = () => {
             var me = this;

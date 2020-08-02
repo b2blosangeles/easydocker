@@ -87,7 +87,7 @@ echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
 
 # ----- nginx proxy Start  -----#
-sh nginx_proxy.sh
+sh ${SCR_DIR}/nginx_proxy.sh
 # ----- nginx proxy End  -----#
 
 if [ "$OSENV" = "Mac" ]; then

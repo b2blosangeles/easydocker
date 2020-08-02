@@ -81,18 +81,14 @@
 					});
 					break;
 
-			/*	
-              case 'addHost' :
-                me.postSaveHost(req.body.data);
-                break;
-              case 'deleteHost' :
-                me.postRemoveHost(req.body.serverName);
-                break;
-              case 'loadDockersList' :
-                  me.loadDockersList();
-                  break;
+				case 'deleteHost' :
+					var hosts = new MHosts(env, pkg);
+					hosts.deleteVHost(req.body.serverName,
+						function(data) {
+							res.send(data);
+						});
+					break;
 
-					*/
               default :
                 res.send({status:'failure', message : '404 wrong cmd!'});
             }
@@ -104,7 +100,7 @@
 			dockers.loadDockersList(function(list) {
 			  res.send({status:'successA', list : list });
 			});
-		}		
+		}
 
         this.gitRemoteBranchs = () => {
 			var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
