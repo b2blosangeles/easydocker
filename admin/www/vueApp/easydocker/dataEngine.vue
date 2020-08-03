@@ -111,9 +111,11 @@ module.exports = {
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
-                    if (result.status !== 'success') {
-                    } else {
-                        me.$parent.commonData.list = result.list;
+                    console.log('--->');
+                    console.log('result--');
+                    console.log(result.status );
+                    if (result.status === 'success') {
+                            me.$parent.commonData.list = result.list;
                     }
                 },
                 dataType: 'JSON'

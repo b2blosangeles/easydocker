@@ -85,7 +85,7 @@ module.exports = {
             var str = '';
             var p = item.ports;
             for (var i = 0; i < p.length; i++) {
-                str += p[i].i + '-' + p[i].o
+                str += p[i].o+','
             }
             return str.replace(/\,$/,'');
         }

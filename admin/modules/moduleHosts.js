@@ -96,7 +96,7 @@
         var sites_list = me.getSitesCfg();
         delete sites_list[serverName];
         me.saveSitesCfg(sites_list, function() {
-            callback({status:'success', list: sites_list});
+            me.postLoadList(callback);
         });
     };
 /*
@@ -498,25 +498,6 @@
             });
         }
 
-        this.vHostRec = (rec) => {
-            var str = '';
-            str += '<VirtualHost *:80>' + "\n";
-            str += 'ServerName ' + rec.serverName +  ".local\n";
-            str += 'ProxyRequests On' + "\n";
-            str += 'ProxyPreserveHost Off' + "\n";
-            str += 'ProxyPass / http://' + rec.ip + ':' + rec.port + '/' + "\n";
-            str += 'ProxyPassReverse / http://' + rec.ip + ':' + rec.port + '/' + "\n";
-            str += '</VirtualHost>' + "\n\n";
-
-            str += '<VirtualHost *:80>' + "\n";
-            str += 'ServerName ' + rec.serverName +  "_local\n";
-            str += 'ProxyRequests On' + "\n";
-            str += 'ProxyPreserveHost Off' + "\n";
-            str += 'ProxyPass / http://' + rec.ip + ':' + rec.port + '/' + "\n";
-            str += 'ProxyPassReverse / http://' + rec.ip + ':' + rec.port + '/' + "\n";
-            str += '</VirtualHost>' + "\n\n";
-            return str;
-        }
         */
     }
     module.exports = obj;
