@@ -233,6 +233,10 @@
                 me.saveSitesHosts(data, cbk);
             };
 
+            _f['addDocker'] = function(cbk) {
+                me.addDocker(data.serverName, cbk);
+            };
+
             CP.serial(_f, function(data) {
                 callback(CP.data.SitesHosts);
             }, 30000);
@@ -264,7 +268,7 @@
 
         this.addDocker = (serverName, callback) => {
             var me = this;
-            var site_path = data_dir + '/sites/' + serverName;
+            var site_path = _env.data_folder + '/sites/' + serverName;
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
             var code_dir = _env.code_folder;
@@ -278,7 +282,16 @@
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n";
             
+            var cmd_ports  = '',
+                ports = (site_config.ports) ? site_config.ports : [3300, 3301];
+            for (var i = 0;  i < ports.length; i++) {
+                cmd_ports += ' -p ' + ((site_config.unidx * 10000) + ports[i]) + ':' + ports[i] + ' ';
+            }
+        
+            cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name --network network_easydocker ' + site_container + ' ' + site_image  + "\n";
+            
             fs = require('fs');
+            // fs.writeFile(data_dir + '/_cron/_addDocker_' + new Date().getTime() + '.sh', cmd, function (err) {
             fs.writeFile(data_dir + '/_cron_addDocker_' + new Date().getTime() + '.sh', cmd, function (err) {
                 setTimeout(() => {
                     callback({status:'success'});
