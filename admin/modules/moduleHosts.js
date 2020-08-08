@@ -7,8 +7,6 @@
 	var data_dir = '/var/_localAppDATA';
 	    
         this.pullCode = (serverName, callback) => {
-            var data_dir = '/var/_localAppDATA';
-
             var site_path = data_dir + '/sites/' + serverName;
 
             var cmd = 'cd ' + site_path + ' && git pull';
@@ -90,20 +88,11 @@
             });
 	};
     
-    this.deleteVHost = (serverName, callback) => {
-        var me = this;
-        var _f = {};
-        var sites_list = me.getSitesCfg();
-        delete sites_list[serverName];
-        me.saveSitesCfg(sites_list, () => {
-            me.postLoadList(callback);
-        });
-    };
+
 
     this.saveEtcHosts = (callback) => {
         var me = this;
         var str='';
-
         str += "#!/bin/bash\n";
         str += 'MARKS="#--UI_EASYDOCKER_S--"' + "\n";
         str += 'MARKE="#--UI_EASYDOCKER_E--"' + "\n";
@@ -111,15 +100,18 @@
         str += 'TABL=$' + "'" + '\\t' + "'\n";
     
         str += 'v=$(sed "/"$MARKS"/,/"$MARKE"/d" /etc/hosts)' + "\n";
-
-        str += 'p="${MARKS}${NLINE}';
+        
         var sites_list = me.getSitesCfg();
+        str += 'p="';
+        str += (!sites_list || !Object.keys(sites_list).length) ? '' : '${MARKS}${NLINE}';
+
         for (var o in sites_list) { 
             str += '127.0.0.1${TABL}' + o + '.local${NLINE}';
             str += '127.0.0.1${TABL}' + o + '_local${NLINE}';
         }
-        str += '${MARKE}${NLINE}"' + "\n";
-        str += 'echo "$p" > /etc/hosts' + "\n";
+        str += (!sites_list || !Object.keys(sites_list).length) ? '"' : '${MARKE}"';
+        str += "\n";
+        str += 'echo "${v}\n${p}" > /etc/hosts' + "\n";
         fs.writeFile(data_dir + '/_cron/etchost_' + new Date().getTime() + '.sh', str, (err) => {
             callback(err);
         });
@@ -189,7 +181,7 @@
                     unidx      : data['unidx'] 
                 }
             } catch (e) {}
-
+            
             me.saveSitesCfg(v, () => {
                 callback({status:'success', list : me.getSitesCfg()});
             });
@@ -204,6 +196,7 @@
             } catch (e) {}
             return v;
         }
+
         this.saveSitesCfg = (v, callback) => {
             var me = this;
             fs.writeFile(sites_cfg, JSON.stringify(v), 
@@ -263,138 +256,32 @@
                 callback(CP.data.SitesHosts);
             }, 30000);
         }
-/*
-        this.addHost = (data, callback) => {
+
+        this.deleteVHost = (serverName, callback) => {
             var me = this;
-            var _f={};
-            data.unidx = me.getUnIdx();
-
-            _f['cloneCode'] = function(cbk) {
-                delete require.cache[env.root+ '/modules/moduleGit.js'];
-                var MGit = require(env.root+ '/modules/moduleGit.js');
-                var git = new MGit(env);
-                git.gitClone(data, function(result) {
-                    cbk(true);
-                });
-            };
-
-            _f['SitesHosts'] = function(cbk) {
-                me.saveSitesHosts(data, cbk);
-            };
-
-
-            _f['EtcHosts'] = function(cbk) {
-                me.saveEtcHosts(cbk);
-            };
-            _f['VHosts'] = function(cbk) {
-                me.createVhostConfig(cbk);
-            };
-
-            _f['addSiteClonDataFolder'] = function(cbk) {
-                me.addSiteClonDataFolder(data, cbk);
-            };
-
-            _f['addDocker'] = function(cbk) {
-                me.addDocker(data, cbk);
-            };
-
-            _f['refreshProxy'] = function(cbk) {
-                me.refreshProxy(cbk);
-            };
-
-            CP.serial(_f, function(data) {
-                callback(CP.data.SitesHosts);
-            }, 30000);
-        }
-        this.removeHost = (serverName, callback) => {
-            var me = this;
-            var dirn = env.sites;
-            var _f={};
-            var exec = require('child_process').exec;
+            var CP = new pkg.crowdProcess();
+            var _f = {};
             _f['deleteCode'] = function(cbk) {
-                cmd = 'rm -fr ' + dirn + '/' + serverName;
+                var site_path = data_dir + '/sites/' + serverName;
+                cmd = 'rm -fr ' + site_path;
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
                         cbk(true);
                 });
             };
-
-            _f['SitesHosts'] = function(cbk) {
-                me.deleteSitesHosts(serverName, cbk);
+            _f['deleteCfg'] = function(cbk) {
+                var sites_list = me.getSitesCfg();
+                delete sites_list[serverName];
+                me.saveSitesCfg(sites_list, () => {
+                    cbk(true);
+                });
             };
-
-            _f['EtcHosts'] = function(cbk) {
-                me.saveEtcHosts(cbk);
-            };
-
-            _f['VHosts'] = function(cbk) {
-                me.createVhostConfig(cbk);
-            };
-
-            _f['removeDocker'] = function(cbk) {
-                me.removeDocker(serverName, cbk);
-            };
-
-            _f['removeSiteClonDataFolder'] = function(cbk) {
-                me.removeSiteClonDataFolder(serverName, cbk);
-            };
-
-            _f['refreshProxy'] = function(cbk) {
-                me.refreshProxy(cbk);
-            };
-
             CP.serial(_f, function(data) {
-                callback(CP.data.SitesHosts);
+                me.postLoadList(callback);
             }, 30000);
-        }
-        this.saveSitesHosts = (data, callback) => {
-            var me = this;
-            var list = me.getList();
-            var v = {
-                dockerFile : data['dockerFile'],
-                serverName : data['serverName'],
-                gitHub     : data['gitHub'],
-                branch     : data['branch'],
-                ports      : data['ports'],
-                unidx      : data['unidx'] 
-            }
-            list.push(v);
-            fs.writeFile(fn, 
-                JSON.stringify(list), (err) => {
-                    callback(err);
-            });
-        }
-        this.deleteSitesHosts = (serverName, callback) => {
-            var me = this;
-            var list = me.getList(), v = [];
+        };
 
-            for (var i = 0; i < list.length; i++) {
-                if (list[i].serverName !== serverName) {
-                    v.push(list[i]);
-                }
-            }
-            fs.writeFile(fn, 
-                JSON.stringify(v), (err) => {
-                    callback(err);
-            });
-        }
-        this.getUnIdx = () => {
-            var me = this;
-            var list = me.getList();
-            var idxList = [];
-
-            for (var i = 0; i < list.length; i++) { 
-                if (list[i].unidx) {
-                    idxList.push(list[i].unidx);
-                }
-            }
-            for (var i = 0; i < list.length; i++) {
-                if (idxList.indexOf(i+1) === -1) {
-                    return i + 1;
-                }
-            }
-            return list.length + 1;
-        }
+/*
 
         this.copyToTasks = (fname, fnTask, cbk) => {
             var cmd = 'cp -fr ' + fname + ' ' + fnTask;
