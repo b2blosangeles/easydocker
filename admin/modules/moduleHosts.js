@@ -4,40 +4,42 @@
         var exec = require('child_process').exec;
 
         var sites_cfg = '/var/_localAppDATA/_sites_cfg.json';
+
 	var data_dir = '/var/_localAppDATA';
 	    
-        this.pullCode = (serverName, callback) => {
-            var site_path = data_dir + '/sites/' + serverName;
+    this.pullCode = (serverName, callback) => {
+        var site_path = data_dir + '/sites/' + serverName;
 
-            var cmd = 'cd ' + site_path + ' && git pull';
-    
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    callback({status:'success'});
-            });
-        }; 
-       this.stopVHost = (serverName, callback) => {
-            var data_dir = '/var/_localAppDATA';
-            var dirn = data_dir + '/sites';
-            var _f = {};
-            var _env = {};
-            try {
-                _env = require(data_dir + '/_env.json');
-            } catch (e) {}
+        var cmd = 'cd ' + site_path + ' && git pull';
 
-            var site_container = serverName + '-container';
-            var cmd = '';
-            cmd += 'echo "Start docker app .."' + "\n";
-            cmd += 'docker container stop ' + site_container + "\n";
-            cmd += 'docker container rm ' + site_container + "\n";
-            
-            fs = require('fs');
-            fs.writeFile(data_dir + '/_cron/stopHost_' + new Date().getTime() + '.sh', cmd, function (err) {
-                setTimeout(() => {
-                    callback({status:'success'});
-                }, 500)
-            });
-        };
+        exec(cmd, {maxBuffer: 1024 * 2048},
+            function(error, stdout, stderr) {
+                callback({status:'success'});
+        });
+    }; 
+
+    this.stopVHost = (serverName, callback) => {
+        var data_dir = '/var/_localAppDATA';
+        var dirn = data_dir + '/sites';
+        var _f = {};
+        var _env = {};
+        try {
+            _env = require(data_dir + '/_env.json');
+        } catch (e) {}
+
+        var site_container = serverName + '-container';
+        var cmd = '';
+        cmd += 'echo "Start docker app .."' + "\n";
+        cmd += 'docker container stop ' + site_container + "\n";
+        cmd += 'docker container rm ' + site_container + "\n";
+        
+        fs = require('fs');
+        fs.writeFile(data_dir + '/_cron/stopHost_' + new Date().getTime() + '.sh', cmd, function (err) {
+            setTimeout(() => {
+                callback({status:'success'});
+            }, 500)
+        });
+    };
 
 	this.resetVHost = (serverName, callback) => {
             var dirn = data_dir + '/sites';
@@ -47,7 +49,6 @@
                 _env = require(data_dir + '/_env.json');
             } catch (e) {}
             
-            var dockerFile = 'angular11';
             var dockerFn = _env.code_folder + '/dockerFiles/admin_dockerfile/dockerFile';
             
             var site_image = 'admin-image'; // ---TODO
@@ -165,122 +166,176 @@
     }
 
 
-        this.saveSitesHosts = (data, callback) => {
-            var me = this;
-            
-            var v = {};
-            try {
-                v = require(sites_cfg);
-            } catch (e) {}
-            try {
-                v[data['serverName']] = {
-                    dockerFile : data['dockerFile'],
-                    gitHub     : data['gitHub'],
-                    branch     : data['branch'],
-                    ports      : data['ports'],
-                    unidx      : data['unidx'] 
-                }
-            } catch (e) {}
-            
-            me.saveSitesCfg(v, () => {
-                callback({status:'success', list : me.getSitesCfg()});
-            });
-        }
-        this.getSitesCfg = () => {
-            var v = {}, p;
-            try {
-                var p = pkg.require(sites_cfg);
-                if (typeof p == 'object') {
-                    v = p;
-                }
-            } catch (e) {}
-            return v;
-        }
-
-        this.saveSitesCfg = (v, callback) => {
-            var me = this;
-            fs.writeFile(sites_cfg, JSON.stringify(v), 
-                (err) => {
-                    me.saveEtcHosts(
-                        () => {
-                            callback(err);
-                        }
-                    )
-            });
-        }    
-        this.getNewUnIdx = () => {
-            var me = this;
-            var sites_list = me.getSitesCfg();
-            var unidx_max = 0;
-            for (var o in sites_list) { 
-                if (sites_list[o].unidx > unidx_max) {
-                    unidx_max = sites_list[o].unidx;
-                }
+    this.saveSitesHosts = (data, callback) => {
+        var me = this;
+        
+        var v = {};
+        try {
+            v = require(sites_cfg);
+        } catch (e) {}
+        try {
+            v[data['serverName']] = {
+                dockerFile : data['dockerFile'],
+                gitHub     : data['gitHub'],
+                branch     : data['branch'],
+                ports      : data['ports'],
+                unidx      : data['unidx'] 
             }
-            for (var i = 0; i < unidx_max; i++) {
-                var mark = 0;
-                for (var o in sites_list) { 
-                    if (sites_list[o].unidx === (i + 1)) {
-                        mark = 1;
-                        break;
+        } catch (e) {}
+        
+        me.saveSitesCfg(v, () => {
+            callback({status:'success', list : me.getSitesCfg()});
+        });
+    }
+    this.getSitesCfg = () => {
+        var v = {}, p;
+        try {
+            var p = pkg.require(sites_cfg);
+            if (typeof p == 'object') {
+                v = p;
+            }
+        } catch (e) {}
+        return v;
+    }
+
+    this.saveSitesCfg = (v, callback) => {
+        var me = this;
+        fs.writeFile(sites_cfg, JSON.stringify(v), 
+            (err) => {
+                me.saveEtcHosts(
+                    () => {
+                        callback(err);
                     }
-                }
-                if (!mark) {
-                    return i + 1;
+                )
+        });
+    }    
+    this.getNewUnIdx = () => {
+        var me = this;
+        var sites_list = me.getSitesCfg();
+        var unidx_max = 0;
+        for (var o in sites_list) { 
+            if (sites_list[o].unidx > unidx_max) {
+                unidx_max = sites_list[o].unidx;
+            }
+        }
+        for (var i = 0; i < unidx_max; i++) {
+            var mark = 0;
+            for (var o in sites_list) { 
+                if (sites_list[o].unidx === (i + 1)) {
+                    mark = 1;
+                    break;
                 }
             }
-            return unidx_max + 1;
+            if (!mark) {
+                return i + 1;
+            }
         }
+        return unidx_max + 1;
+    }
 
-        this.addHost = (data, callback) => {
-            var me = this;
-            var CP = new pkg.crowdProcess();
-            var _f={};
+    this.addHost = (data, callback) => {
+        var me = this;
+        var CP = new pkg.crowdProcess();
+        var _f={};
 
-            data.unidx = me.getNewUnIdx();
+        data.unidx = me.getNewUnIdx();
 
-            _f['cloneCode'] = function(cbk) {
-                var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
-                var git = new MGit(env);
-                git.gitClone(data, function(result) {
-                    cbk(true);
-                });
-            };
-
- 
-            _f['SitesHosts'] = function(cbk) {
-                me.saveSitesHosts(data, cbk);
-            };
-
-            CP.serial(_f, function(data) {
-                callback(CP.data.SitesHosts);
-            }, 30000);
-        }
-
-        this.deleteVHost = (serverName, callback) => {
-            var me = this;
-            var CP = new pkg.crowdProcess();
-            var _f = {};
-            _f['deleteCode'] = function(cbk) {
-                var site_path = data_dir + '/sites/' + serverName;
-                cmd = 'rm -fr ' + site_path;
-                exec(cmd, {maxBuffer: 1024 * 2048},
-                    function(error, stdout, stderr) {
-                        cbk(true);
-                });
-            };
-            _f['deleteCfg'] = function(cbk) {
-                var sites_list = me.getSitesCfg();
-                delete sites_list[serverName];
-                me.saveSitesCfg(sites_list, () => {
-                    cbk(true);
-                });
-            };
-            CP.serial(_f, function(data) {
-                me.postLoadList(callback);
-            }, 30000);
+        _f['cloneCode'] = function(cbk) {
+            var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
+            var git = new MGit(env);
+            git.gitClone(data, function(result) {
+                cbk(true);
+            });
         };
 
+
+        _f['SitesHosts'] = function(cbk) {
+            me.saveSitesHosts(data, cbk);
+        };
+
+        CP.serial(_f, function(data) {
+            callback(CP.data.SitesHosts);
+        }, 30000);
+    }
+
+    this.deleteVHost = (serverName, callback) => {
+        var me = this;
+        var CP = new pkg.crowdProcess();
+        var _f = {};
+        _f['deleteCode'] = function(cbk) {
+            var site_path = data_dir + '/sites/' + serverName;
+            cmd = 'rm -fr ' + site_path;
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    cbk(true);
+            });
+        };
+        _f['deleteCfg'] = function(cbk) {
+            var sites_list = me.getSitesCfg();
+            delete sites_list[serverName];
+            me.saveSitesCfg(sites_list, () => {
+                cbk(true);
+            });
+        };
+        CP.serial(_f, function(data) {
+            me.postLoadList(callback);
+        }, 30000);
+    };
+
+    this.addDocker = (rec, callback) => {
+        var me = this;
+        var str='', err = {}, DOCKERCMD = {};
+        try {
+           delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
+           DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
+        } catch (e) {};
+       
+        var dname = rec.serverName.toLowerCase();
+        var iname = rec.dockerFile.toLowerCase();
+        str +=  'cd ' + DOCKERCMD.ROOT + '/_localChannel/dockerFiles/' + rec.dockerFile + '/ ' + "\n";
+        str += DOCKERCMD.DOCKERCMD + ' build -f  dockerFile' + ' -t ' + iname + '-image .'  + "\n";
+        str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
+        str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
+        
+        var p_str = '', p = rec.ports.split(',');
+        
+        for (var i = 0; i < p.length; i++) {
+            p_str += ' -p ' + (parseInt(rec.unidx + '0000') + parseInt(p[i])) + ':' + parseInt(p[i]) + ' ';
+        }
+        
+        str += DOCKERCMD.DOCKERCMD + ' run -d --network=network_ui_app ' + p_str;
+        str += ' -v  "'+ DOCKERCMD.DATAPATH + '/sites/' + dname + '":/var/_localApp ';
+        str += ' -v  "'+ DOCKERCMD.DATAPATH + '/cronData/' + dname + '":/var/_cronData ';
+        str += '--name site_channel_container-' + dname + '  ' + iname + '-image';
+        str += "\n";
+
+        var fnDocker = env.dataFolder + '/bootup/addDocker_' + dname +'.sh';
+        var fnTask = env.dataFolder + '/tasks/addDocker_' + dname +'.sh';
+
+        fs.writeFile(fnDocker, str, (err) => {
+            me.copyToTasks(fnDocker, fnTask, callback);
+         //   callback(err);
+        });
+    }
+
+    this.removeDocker = (dname, callback) => {
+        var me = this;
+        var str='', DOCKERCMD = {};
+        try {
+           delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
+           DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
+        } catch (e) {};
+
+        str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
+        str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
+
+        var fnDocker = env.dataFolder + '/bootup/addDocker_' + dname + '.sh';
+        var fnRemoveDocker = env.dataFolder + '/tasks/removeDocker.sh';
+
+        fs.writeFile(fnRemoveDocker, str, (err) => {
+            me.removeBootupFile(fnDocker, callback);
+        });
+    }
 /*
 
         this.copyToTasks = (fname, fnTask, cbk) => {
@@ -332,60 +387,6 @@
 
             fs.writeFile(fnRefreshProxy, str, (err) => {
                 callback(true);               
-            });
-        }
-
-        this.addDocker = (rec, callback) => {
-            var me = this;
-            var str='', err = {}, DOCKERCMD = {};
-            try {
-               delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
-               DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
-            } catch (e) {};
-           
-            var dname = rec.serverName.toLowerCase();
-            var iname = rec.dockerFile.toLowerCase();
-            str +=  'cd ' + DOCKERCMD.ROOT + '/_localChannel/dockerFiles/' + rec.dockerFile + '/ ' + "\n";
-            str += DOCKERCMD.DOCKERCMD + ' build -f  dockerFile' + ' -t ' + iname + '-image .'  + "\n";
-            str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
-            str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
-            
-            var p_str = '', p = rec.ports.split(',');
-            
-            for (var i = 0; i < p.length; i++) {
-                p_str += ' -p ' + (parseInt(rec.unidx + '0000') + parseInt(p[i])) + ':' + parseInt(p[i]) + ' ';
-            }
-            
-            str += DOCKERCMD.DOCKERCMD + ' run -d --network=network_ui_app ' + p_str;
-            str += ' -v  "'+ DOCKERCMD.DATAPATH + '/sites/' + dname + '":/var/_localApp ';
-            str += ' -v  "'+ DOCKERCMD.DATAPATH + '/cronData/' + dname + '":/var/_cronData ';
-            str += '--name site_channel_container-' + dname + '  ' + iname + '-image';
-            str += "\n";
-
-            var fnDocker = env.dataFolder + '/bootup/addDocker_' + dname +'.sh';
-            var fnTask = env.dataFolder + '/tasks/addDocker_' + dname +'.sh';
-
-            fs.writeFile(fnDocker, str, (err) => {
-                me.copyToTasks(fnDocker, fnTask, callback);
-             //   callback(err);
-            });
-        }
-        this.removeDocker = (dname, callback) => {
-            var me = this;
-            var str='', DOCKERCMD = {};
-            try {
-               delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
-               DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
-            } catch (e) {};
-
-            str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
-            str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
-
-            var fnDocker = env.dataFolder + '/bootup/addDocker_' + dname + '.sh';
-            var fnRemoveDocker = env.dataFolder + '/tasks/removeDocker.sh';
-
-            fs.writeFile(fnRemoveDocker, str, (err) => {
-                me.removeBootupFile(fnDocker, callback);
             });
         }
 
