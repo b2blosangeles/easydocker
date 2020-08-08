@@ -95,37 +95,36 @@
         var _f = {};
         var sites_list = me.getSitesCfg();
         delete sites_list[serverName];
-        me.saveSitesCfg(sites_list, function() {
+        me.saveSitesCfg(sites_list, () => {
             me.postLoadList(callback);
         });
     };
-/*
-        this.saveEtcHosts = (callback) => {
-            var me = this;
-            var str='',
-                err = {};
 
-            str += "#!/bin/bash\n";
-            str += 'MARKS="#--UI_MAC_LOCAL_S--"' + "\n";
-            str += 'MARKE="#--UI_MAC_LOCAL_E--"' + "\n";
-            str += 'NLINE=$' + "'" + '\\n' + "'\n";
-            str += 'TABL=$' + "'" + '\\t' + "'\n";
-        
-            str += 'v=$(sed "/"$MARKS"/,/"$MARKE"/d" /etc/hosts)' + "\n";
+    this.saveEtcHosts = (callback) => {
+        var me = this;
+        var str='';
 
-            var list = me.getList();
-            str += 'p="$v $NLINE$NLINE$MARKS$NLINE';
-            for (var i=0; i < list.length; i++) {
-                str += '"127.0.0.1"$TABL"' + list[i].serverName + '.local"$NLINE';
-                str += '"127.0.0.1"$TABL"' + list[i].serverName + '_local"$NLINE';
-            }
-            str += '$MARKE$NLINE"' + "\n";
-            str += 'echo "$p" > /etc/hosts' + "\n";
-            fs.writeFile(fnHosts, str, (err) => {
-                callback(err);
-            });
+        str += "#!/bin/bash\n";
+        str += 'MARKS="#--UI_EASYDOCKER_S--"' + "\n";
+        str += 'MARKE="#--UI_EASYDOCKER_E--"' + "\n";
+        str += 'NLINE=$' + "'" + '\\n' + "'\n";
+        str += 'TABL=$' + "'" + '\\t' + "'\n";
+    
+        str += 'v=$(sed "/"$MARKS"/,/"$MARKE"/d" /etc/hosts)' + "\n";
+
+        str += 'p="${MARKS}${NLINE}';
+        var sites_list = me.getSitesCfg();
+        for (var o in sites_list) { 
+            str += '127.0.0.1${TABL}' + o + '.local${NLINE}';
+            str += '127.0.0.1${TABL}' + o + '_local${NLINE}';
         }
-*/	
+        str += '${MARKE}${NLINE}"' + "\n";
+        str += 'echo "$p" > /etc/hosts' + "\n";
+        fs.writeFile(data_dir + '/_cron/etchost_' + new Date().getTime() + '.sh', str, (err) => {
+            callback(err);
+        });
+    }
+	
 	this.restartProxy = (callback) => {
 		var _env = {};
 		try {
@@ -173,6 +172,7 @@
         }, 3000); 
     }
 
+
         this.saveSitesHosts = (data, callback) => {
             var me = this;
             
@@ -189,10 +189,9 @@
                     unidx      : data['unidx'] 
                 }
             } catch (e) {}
-            
-            fs.writeFile(sites_cfg, 
-                JSON.stringify(v), (err) => {
-                    callback({status:'success', list : me.getSitesCfg()});
+
+            me.saveSitesCfg(v, () => {
+                callback({status:'success', list : me.getSitesCfg()});
             });
         }
         this.getSitesCfg = () => {
@@ -206,9 +205,14 @@
             return v;
         }
         this.saveSitesCfg = (v, callback) => {
-            fs.writeFile(sites_cfg, 
-                JSON.stringify(v), (err) => {
-                    callback(err);
+            var me = this;
+            fs.writeFile(sites_cfg, JSON.stringify(v), 
+                (err) => {
+                    me.saveEtcHosts(
+                        () => {
+                            callback(err);
+                        }
+                    )
             });
         }    
         this.getNewUnIdx = () => {

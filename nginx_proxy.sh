@@ -3,7 +3,7 @@ SCRIPTFN=$(basename -- $SCR_DIR)
 DATA_DIR="$(dirname "$SCR_DIR")/_"$SCRIPTFN"_DATA"
 
 CMD=""
-CMD="${CMD}Start proxy ..\n";
+CMD="${CMD}echo \"Start proxy ...\"\n";
 CMD="${CMD}cd ${SCR_DIR}/nginx_proxy\n";
 CMD="${CMD}docker build -t nginx-proxy-image  .\n";
 CMD="${CMD}docker container stop nginx-proxy-container\n";
