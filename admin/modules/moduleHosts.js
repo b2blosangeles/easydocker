@@ -5,7 +5,7 @@
             exec = require('child_process').exec,
             CP = new pkg.crowdProcess();
 
-        var sites_cfg = '/var/_localAppDATA/_sites_cfg.json';
+        var sitesCfgFn = '/var/_localAppDATA/_sites_cfg.json';
         var data_dir = '/var/_localAppDATA';
         
         var _env = {};
@@ -146,7 +146,7 @@
         this.getSitesCfg = () => {
             var v = {}, p;
             try {
-                var p = pkg.require(sites_cfg);
+                var p = pkg.require(sitesCfgFn);
                 if (typeof p == 'object') {
                     v = p;
                 }
@@ -155,7 +155,7 @@
         }
 
         this.saveSitesCfg = (v, callback) => {
-            fs.writeFile(sites_cfg, JSON.stringify(v), 
+            fs.writeFile(sitesCfgFn, JSON.stringify(v), 
                 (err) => {
                     me.saveEtcHosts(
                         () => {
