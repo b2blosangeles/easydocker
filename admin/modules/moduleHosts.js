@@ -29,12 +29,7 @@
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n";
             
-            fs = require('fs');
-            fs.writeFile(data_dir + '/_cron/stopHost_' + new Date().getTime() + '.sh', cmd, function (err) {
-                setTimeout(() => {
-                    callback({status:'success'});
-                }, 500)
-            });
+            me.setClone = ('stopVHost', cmd, callback);
         };
 
         this.resetVHost = (serverName, callback) => {
@@ -222,8 +217,7 @@
                     cbk(true);
                 });
             };
-
-
+            
             _f['SitesHosts'] = function(cbk) {
                 me.saveSitesHosts(data, cbk);
             };
@@ -283,48 +277,7 @@
         
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name --network network_easydocker ' + site_container + ' ' + site_image  + "\n";
             
-            fs = require('fs');
-            // fs.writeFile(data_dir + '/_cron/_addDocker_' + new Date().getTime() + '.sh', cmd, function (err) {
-            fs.writeFile(data_dir + '/_cron_addDocker_' + new Date().getTime() + '.sh', cmd, function (err) {
-                setTimeout(() => {
-                    callback({status:'success'});
-                }, 500)
-            });
-            return true;
-        }
-        this.PPPddDocker0 = (rec, callback) => {
-            var str='', err = {}, DOCKERCMD = {};
-            try {
-            delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
-            DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
-            } catch (e) {};
-        
-            var dname = rec.serverName.toLowerCase();
-            var iname = rec.dockerFile.toLowerCase();
-            str +=  'cd ' + DOCKERCMD.ROOT + '/_localChannel/dockerFiles/' + rec.dockerFile + '/ ' + "\n";
-            str += DOCKERCMD.DOCKERCMD + ' build -f  dockerFile' + ' -t ' + iname + '-image .'  + "\n";
-            str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
-            str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
-            
-            var p_str = '', p = rec.ports.split(',');
-            
-            for (var i = 0; i < p.length; i++) {
-                p_str += ' -p ' + (parseInt(rec.unidx + '0000') + parseInt(p[i])) + ':' + parseInt(p[i]) + ' ';
-            }
-            
-            str += DOCKERCMD.DOCKERCMD + ' run -d --network=network_ui_app ' + p_str;
-            str += ' -v  "'+ DOCKERCMD.DATAPATH + '/sites/' + dname + '":/var/_localApp ';
-            str += ' -v  "'+ DOCKERCMD.DATAPATH + '/cronData/' + dname + '":/var/_cronData ';
-            str += '--name site_channel_container-' + dname + '  ' + iname + '-image';
-            str += "\n";
-
-            var fnDocker = env.dataFolder + '/bootup/addDocker_' + dname +'.sh';
-            var fnTask = env.dataFolder + '/tasks/addDocker_' + dname +'.sh';
-
-            fs.writeFile(fnDocker, str, (err) => {
-                me.copyToTasks(fnDocker, fnTask, callback);
-            //   callback(err);
-            });
+            me.setClone = ('addDocker', cmd, callback);
         }
 
         this.removeDocker = (dname, callback) => {
@@ -344,61 +297,6 @@
                 me.removeBootupFile(fnDocker, callback);
             });
         }
-/*
-
-        this.copyToTasks = (fname, fnTask, cbk) => {
-            var cmd = 'cp -fr ' + fname + ' ' + fnTask;
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    cbk(true);
-            });
-        }
-        this.removeBootupFile = (fname, cbk) => {
-            var cmd = 'rm -fr ' + fname;
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    cbk(true);
-            });
-        }
-
-        this.addSiteClonDataFolder = (rec, cbk) => {
-            var me = this;
-            var dname = rec.serverName.toLowerCase();
-            var cmd = 'mkdir -p ' + env.dataFolder + '/cronData/' + dname + '/upload'; 
-            cmd += ' && ' + 'mkdir -p ' + env.dataFolder + '/cronData/' + dname + '/inBound';
-            cmd += ' && ' + 'mkdir -p ' + env.dataFolder + '/cronData/' + dname + '/outBound';
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    cbk(true);
-            });
-        }
-
-        this.removeSiteClonDataFolder = (fname, cbk) => {
-            var me = this;
-            var cmd = 'rm -fr ' + env.dataFolder + '/cronData/' + fname; 
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    cbk(true);
-            });
-        }
-
-        this.refreshProxy = (callback) => {
-            var me = this;
-            var str='', err = {}, DOCKERCMD = {};
-            try {
-               delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
-               DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
-            } catch (e) {};
-           
-            str += 'sleep 2 && ' + DOCKERCMD.DOCKERCMD + ' restart local_proxy_container ';
-            str += "\n";
-
-            fs.writeFile(fnRefreshProxy, str, (err) => {
-                callback(true);               
-            });
-        }
-
-        */
     }
     module.exports = obj;
 })()
