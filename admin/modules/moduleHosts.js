@@ -2,7 +2,8 @@
     var obj = function(env, pkg) {
         var me = this,
             fs = require('fs'),
-            exec = require('child_process').exec;
+            exec = require('child_process').exec,
+            CP = new pkg.crowdProcess();
 
         var sites_cfg = '/var/_localAppDATA/_sites_cfg.json';
         var data_dir = '/var/_localAppDATA';
@@ -28,13 +29,20 @@
             cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n";
-            
             me.setClone = ('stopVHost', cmd, callback);
         };
 
-        this.resetVHost = (serverName, callback) => {
-                var dirn = data_dir + '/sites';
+        this.dockerSetting = (serverName) => {
+            var dirn = data_dir + '/sites';
+            try {
+                cfg = require(dirn + '/' + serverName +  '/dockerSetting.json'); 
+            } catch (e) {}
 
+            return {
+                dockerSetting : cfg
+            };
+        }
+        this.resetVHost = (serverName, callback) => {
                 var dockerFn = _env.code_folder + '/dockerFiles/admin_dockerfile/dockerFile';
                 
                 var site_image = 'admin-image'; // ---TODO
@@ -42,16 +50,7 @@
                 
                 var site_path = _env.data_folder + '/sites/' + serverName;
                 
-                var cfg = {};
-                
-                try {
-                    cfg = require(dirn + '/' + serverName +  '/dockerSetting.json'); 
-                } catch (e) {}
-                
-                var sitesCfg = {};
-                try {
-                    sitesCfg= pkg.require(sites_cfg)[serverName];
-                } catch (e) {}
+                var cfg = me.dockerSetting(serverName).dockerSetting;
 
                 var cmd = '';
                 cmd += 'echo "Start docker app .."' + "\n";
@@ -59,12 +58,10 @@
                 cmd += 'docker build -f ' + dockerFn + ' -t ' + site_image + ' .' + "\n";
                 cmd += 'docker container stop ' + site_container + "\n";
                 cmd += 'docker container rm ' + site_container + "\n";
-                
                 var cmd_ports  = '';
                 for (var i = 0;  i < cfg.ports.length; i++) {
                     cmd_ports += ' -p ' + ((sitesCfg.unidx * 10000) + cfg.ports[i]) + ':' + cfg.ports[i] + ' ';
                 }
-            
                 cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name --network network_easydocker ' + site_container + ' ' + site_image  + "\n";
                 
                 me.setClone = ('resetVHost', cmd, callback);
@@ -82,11 +79,8 @@
         this.saveEtcHosts = (callback) => {
             var str='';
             str += "#!/bin/bash\n";
-            str += 'MARKS="#--UI_EASYDOCKER_S--"' + "\n";
-            str += 'MARKE="#--UI_EASYDOCKER_E--"' + "\n";
-            str += 'NLINE=$' + "'" + '\\n' + "'\n";
-            str += 'TABL=$' + "'" + '\\t' + "'\n";
-        
+            str += 'MARKS="#--UI_EASYDOCKER_S--"' + "\n" + 'MARKE="#--UI_EASYDOCKER_E--"' + "\n";
+            str += 'NLINE=$' + "'" + '\\n' + "'\n" + 'TABL=$' + "'" + '\\t' + "'\n";
             str += 'v=$(sed "/"$MARKS"/,/"$MARKE"/d" /etc/hosts)' + "\n";
             
             var sites_list = me.getSitesCfg();
@@ -97,28 +91,17 @@
                 str += '127.0.0.1${TABL}' + o + '.local${NLINE}';
                 str += '127.0.0.1${TABL}' + o + '_local${NLINE}';
             }
-            str += (!sites_list || !Object.keys(sites_list).length) ? '"' : '${MARKE}"';
-            str += "\n";
+            str += (!sites_list || !Object.keys(sites_list).length) ? '"' : '${MARKE}"' + "\n";
             str += 'echo "${v}\n${p}" > /etc/hosts' + "\n";
-
             me.setClone = ('saveEtcHosts', str, callback);
         }
         
         this.restartProxy = (callback) => {
-            var fs = require('fs');
-            var cmd = '';
-                cmd += 'sh ' +  _env.code_folder + '/nginx_proxy.sh ' + _env.data_folder;
-
-            fs.writeFile(data_dir + '/_cron/restartProxy_' + new Date().getTime() + '.sh', cmd, function (err) {
-                setTimeout(() => {
-                    callback({status:'success', message : 'restartProxy'});
-                }, 500)
-            });
+            var cmd = 'sh ' +  _env.code_folder + '/nginx_proxy.sh ' + _env.data_folder;
+            me.setClone = ('restartProxy', cmd, callback);
         };
         
         this.postLoadList = (callback) => { // use this
-            
-            var CP = new pkg.crowdProcess();
             var _f = {};
 
             var sites_list = me.getSitesCfg();
@@ -205,7 +188,6 @@
         }
 
         this.addHost = (data, callback) => {
-            var CP = new pkg.crowdProcess();
             var _f={};
 
             data.unidx = me.getNewUnIdx();
@@ -232,7 +214,6 @@
         }
 
         this.deleteVHost = (serverName, callback) => {
-            var CP = new pkg.crowdProcess();
             var _f = {};
             _f['deleteCode'] = function(cbk) {
                 var site_path = data_dir + '/sites/' + serverName;
