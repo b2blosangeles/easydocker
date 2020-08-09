@@ -1,7 +1,8 @@
 (function() {
     var obj = function(env, pkg) {
-        var fs = require('fs');
-        var exec = require('child_process').exec;
+        var me = this,
+            fs = require('fs'),
+            exec = require('child_process').exec;
 
         var sites_cfg = '/var/_localAppDATA/_sites_cfg.json';
         var data_dir = '/var/_localAppDATA';
@@ -14,9 +15,7 @@
 
         this.pullCode = (serverName, callback) => {
             var site_path = data_dir + '/sites/' + serverName;
-
             var cmd = 'cd ' + site_path + ' && git pull';
-
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
                     callback({status:'success'});
@@ -73,18 +72,19 @@
             
                 cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name --network network_easydocker ' + site_container + ' ' + site_image  + "\n";
                 
-                fs = require('fs');
-                fs.writeFile(data_dir + '/_cron/addHost_' + new Date().getTime() + '.sh', cmd, function (err) {
-                    setTimeout(() => {
-                        callback({status:'success'});
-                    }, 500)
-                });
+                me.setClone = ('resetVHost', cmd, callback);
         };
         
-
+        this.setClone = (code, str, callback) => {
+            var fs = require('fs');
+            fs.writeFile(data_dir + '/_cron/' + code + '_' + new Date().getTime() + '.sh', str, function (err) {
+                setTimeout(() => {
+                    callback({status:'success', message: code});
+                }, 500)
+            });
+        }
 
         this.saveEtcHosts = (callback) => {
-            var me = this;
             var str='';
             str += "#!/bin/bash\n";
             str += 'MARKS="#--UI_EASYDOCKER_S--"' + "\n";
@@ -105,9 +105,8 @@
             str += (!sites_list || !Object.keys(sites_list).length) ? '"' : '${MARKE}"';
             str += "\n";
             str += 'echo "${v}\n${p}" > /etc/hosts' + "\n";
-            fs.writeFile(data_dir + '/_cron/etchost_' + new Date().getTime() + '.sh', str, (err) => {
-                callback(err);
-            });
+
+            me.setClone = ('saveEtcHosts', str, callback);
         }
         
         this.restartProxy = (callback) => {
@@ -123,7 +122,7 @@
         };
         
         this.postLoadList = (callback) => { // use this
-            var me = this;
+            
             var CP = new pkg.crowdProcess();
             var _f = {};
 
@@ -154,7 +153,6 @@
 
 
         this.saveSitesHosts = (data, callback) => {
-            var me = this;
             var v = me.getSitesCfg();
             v[data['serverName']] = {
                 dockerFile : data['dockerFile'],
@@ -179,7 +177,6 @@
         }
 
         this.saveSitesCfg = (v, callback) => {
-            var me = this;
             fs.writeFile(sites_cfg, JSON.stringify(v), 
                 (err) => {
                     me.saveEtcHosts(
@@ -190,7 +187,6 @@
             });
         }    
         this.getNewUnIdx = () => {
-            var me = this;
             var sites_list = me.getSitesCfg();
             var unidx_max = 0;
             for (var o in sites_list) { 
@@ -214,7 +210,6 @@
         }
 
         this.addHost = (data, callback) => {
-            var me = this;
             var CP = new pkg.crowdProcess();
             var _f={};
 
@@ -243,7 +238,6 @@
         }
 
         this.deleteVHost = (serverName, callback) => {
-            var me = this;
             var CP = new pkg.crowdProcess();
             var _f = {};
             _f['deleteCode'] = function(cbk) {
@@ -267,7 +261,6 @@
         };
 
         this.addDocker = (serverName, callback) => {
-            var me = this;
             var site_path = _env.data_folder + '/sites/' + serverName;
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
@@ -299,8 +292,7 @@
             });
             return true;
         }
-        this.addDocker0 = (rec, callback) => {
-            var me = this;
+        this.PPPddDocker0 = (rec, callback) => {
             var str='', err = {}, DOCKERCMD = {};
             try {
             delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
@@ -336,7 +328,6 @@
         }
 
         this.removeDocker = (dname, callback) => {
-            var me = this;
             var str='', DOCKERCMD = {};
             try {
             delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
