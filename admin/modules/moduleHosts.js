@@ -29,7 +29,7 @@
             cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n";
-            me.setClone = ('stopVHost', cmd, callback);
+            me.setClone('stopVHost', cmd, callback);
         };
 
         this.dockerSetting = (serverName) => {
@@ -64,7 +64,7 @@
                 }
                 cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name --network network_easydocker ' + site_container + ' ' + site_image  + "\n";
                 
-                me.setClone = ('resetVHost', cmd, callback);
+                me.setClone('resetVHost', cmd, callback);
         };
         
         this.setClone = (code, str, callback) => {
@@ -93,12 +93,12 @@
             }
             str += (!sites_list || !Object.keys(sites_list).length) ? '"' : '${MARKE}"' + "\n";
             str += 'echo "${v}\n${p}" > /etc/hosts' + "\n";
-            me.setClone = ('saveEtcHosts', str, callback);
+            me.setClone('saveEtcHosts', str, callback);
         }
         
         this.restartProxy = (callback) => {
             var cmd = 'sh ' +  _env.code_folder + '/nginx_proxy.sh ' + _env.data_folder;
-            me.setClone = ('restartProxy', cmd, callback);
+            me.setClone('restartProxy', cmd, callback);
         };
         
         this.postLoadList = (callback) => { // use this
@@ -165,12 +165,10 @@
             });
         }    
         this.getNewUnIdx = () => {
-            var sites_list = me.getSitesCfg();
-            var unidx_max = 0;
+            var unidx_max = 0,
+                sites_list = me.getSitesCfg();
             for (var o in sites_list) { 
-                if (sites_list[o].unidx > unidx_max) {
-                    unidx_max = sites_list[o].unidx;
-                }
+                unidx_max = (sites_list[o].unidx > unidx_max) ? sites_list[o].unidx : unidx_max;
             }
             for (var i = 0; i < unidx_max; i++) {
                 var mark = 0;
@@ -189,7 +187,6 @@
 
         this.addHost = (data, callback) => {
             var _f={};
-
             data.unidx = me.getNewUnIdx();
 
             _f['cloneCode'] = function(cbk) {
@@ -258,7 +255,7 @@
         
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name --network network_easydocker ' + site_container + ' ' + site_image  + "\n";
             
-            me.setClone = ('addDocker', cmd, callback);
+            me.setClone('addDocker', cmd, callback);
         }
 
         this.removeDocker = (dname, callback) => {
