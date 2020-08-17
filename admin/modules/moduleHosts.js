@@ -117,6 +117,7 @@
                 var dockerSetting = {type: null, dockerFile : null, ports: []},
                     dockerFileName = '',
                     ports = [];
+
                 try {
                     dockerSetting = pkg.require(data_dir + '/sites/' + data['serverName'] + '/dockerSetting.json');
                     dockerFileName = (dockerSetting.dockerFile) ? dockerSetting.dockerFile : 'dockerFile',
@@ -124,44 +125,38 @@
 
                     cbk({
                         type        : dockerSetting.type,
-                        dockerFile  : data_dir + '/sites/' + data['serverName'] + '/' + dockerFileName,
+                        dockerFile  : dockerSetting.dockerFile,
+                        dockerFileFn: _env.data_folder + '/sites/' + data['serverName'] + '/' + dockerFileName,
                         ports       : ports
                     });
                 } catch (e) {}
+
                 if (!dockerSetting.ports) {
                     try {
+                        code_dir = _env.code_folder;
+
                         dockerSetting = pkg.require(env.root + '/dockerFiles/' + data['dockerFile'] + '/dockerSetting.json');
                         dockerFileName = (dockerSetting.dockerFile) ? dockerSetting.dockerFile : 'dockerFile',
                         ports = (dockerSetting.ports) ? dockerSetting.ports : [];
 
                         cbk({
                             type        : dockerSetting.type,
-                            dockerFile  : env.root + '/dockerFiles/' + data['dockerFile'] + '/' + dockerFileName,
+                            dockerFile  : dockerSetting.dockerFile,
+                            dockerFileFn: _env.code_folder + '/dockerFiles/' + data['dockerFile'] + '/' + dockerFileName,
                             ports       : ports
                         });
                     } catch (e) {}
                 }
             }
 
-            _f['getPorts'] = function(cbk) {
-                var dockerSetting = {};
-                try {
-                    dockerSetting = pkg.require(data_dir + '/sites/' + data['serverName'] + '/dockerSetting.json');
-                } catch (e) {}
-                if (!dockerSetting.ports) {
-                    try {
-                        dockerSetting = pkg.require(env.root + '/dockerFiles/' + data['dockerFile'] + '/dockerSetting.json');
-                    } catch (e) {}
-                }
-                cbk(dockerSetting.ports); // TODO
-            }
             _f['siteConfig'] = function(cbk) {
                 v[data['serverName']] = {
-                    dockerFile : CP.data.getDockerSetting.dockerFile,
-                    gitHub     : data['gitHub'],
-                    branch     : data['branch'],
-                    ports      : CP.data.getDockerSetting.ports,
-                    unidx      : data['unidx']
+                    dockerFile  : CP.data.getDockerSetting.dockerFile,
+                    dockerFileFn: CP.data.getDockerSetting.dockerFileFn,
+                    gitHub      : data['gitHub'],
+                    branch      : data['branch'],
+                    ports       : CP.data.getDockerSetting.ports,
+                    unidx       : data['unidx']
                 };
                 cbk(v);
             }
@@ -334,7 +329,7 @@
             var site_container = serverName + '-container';
             var cmd = '';
             cmd += 'cd ' + site_path + "\n";
-            cmd += 'docker build -f ' + code_dir + '/dockerFiles/' + site_config.dockerFile + '/dockerFile' + ' -t ' + site_image + ' .' + "\n";
+            cmd += 'docker build -f ' + site_config.dockerFileFn + ' -t ' + site_image + ' .' + "\n";
             cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n";
