@@ -33,13 +33,20 @@
         };
 
         this.dockerSetting = (serverName) => {
+            let cfg = {};
             try {
-                cfg = require(data_dir + '/sites/' + serverName +  '/dockerSetting.json'); 
+                cfg = require(data_dir + '/sites/' + serverName +  '/docker/setting.json'); 
             } catch (e) {}
 
-            return {
-                dockerSetting : cfg
-            };
+            return cfg;
+        }
+
+        this.dockerLibSetting = (dockerName) => {
+            let cfg = {};
+            try {
+                cfg = require(env.root + '/cockerFiles/' + dockerName +  '/setting.json'); 
+            } catch (e) {}
+            return cfg;
         }
 
         this.resetVHost = (serverName, callback) => {
@@ -91,13 +98,10 @@
             for (o in sites_list ) {
                 _f[o] = (function(o) {
                     return (cbk) => {
-                        var v = {};
-                        try {
-                            v = pkg.require(dirn + '/' + o + '/dockerSetting.json');
-                        } catch (e) {}
+                        var dockerSetting = me.dockerSetting(o);
                         var ports = [];
-                        for (var i = 0; i < v.ports.length; i++) {
-                            ports.push({i : v.ports[i], o : (sites_list[o].unidx * 10000) + v.ports[i]})
+                        for (var i = 0; i < dockerSetting.ports.length; i++) {
+                            ports.push({i : dockerSetting.ports[i], o : (sites_list[o].unidx * 10000) + dockerSetting.ports[i]})
                         }
                         list.push({name : o, ports: ports});
                         cbk(true);
@@ -114,12 +118,12 @@
             var v = me.getSitesCfg();
             var _f = {};
             _f['getDockerSetting'] = function(cbk) {
-                var dockerSetting = {type: null, dockerFile : null, ports: []},
+                var dockerSetting = {type: null, dockerFile : null, dockerFileFn : null, ports: []},
                     dockerFileName = '',
                     ports = [];
 
                 try {
-                    dockerSetting = pkg.require(data_dir + '/sites/' + data['serverName'] + '/dockerSetting.json');
+                    dockerSetting = me.dockerSetting();
                     dockerFileName = (dockerSetting.dockerFile) ? dockerSetting.dockerFile : 'dockerFile',
                     ports = (dockerSetting.ports) ? dockerSetting.ports : [];
 
@@ -135,7 +139,7 @@
                     try {
                         code_dir = _env.code_folder;
 
-                        dockerSetting = pkg.require(env.root + '/dockerFiles/' + data['dockerFile'] + '/dockerSetting.json');
+                        dockerSetting = me.dockerLibSetting();
                         dockerFileName = (dockerSetting.dockerFile) ? dockerSetting.dockerFile : 'dockerFile',
                         ports = (dockerSetting.ports) ? dockerSetting.ports : [];
 
