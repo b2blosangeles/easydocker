@@ -67,7 +67,7 @@
 
 				case 'addHost' :
 					var hosts = new MHosts(env, pkg);
-					hosts.addHost(req.body.data, function(data) {
+					hosts.addVHost(req.body.data, function(data) {
 						res.send(data);
 					});
 					break;

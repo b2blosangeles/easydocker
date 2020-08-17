@@ -33,9 +33,8 @@
         };
 
         this.dockerSetting = (serverName) => {
-            var dirn = data_dir + '/sites';
             try {
-                cfg = require(dirn + '/' + serverName +  '/dockerSetting.json'); 
+                cfg = require(data_dir + '/sites/' + serverName +  '/dockerSetting.json'); 
             } catch (e) {}
 
             return {
@@ -50,7 +49,6 @@
         };
         
         this.setClone = (code, str, callback) => {
-            var fs = require('fs');
             fs.writeFile(data_dir + '/_cron/' + code + '_' + new Date().getTime() + '.sh', str, function (err) {
                 setTimeout(() => {
                     callback({status:'success', message: code});
@@ -115,22 +113,54 @@
         this.saveSitesHosts = (data, callback) => {
             var v = me.getSitesCfg();
             var _f = {};
+            _f['getDockerSetting'] = function(cbk) {
+                var dockerSetting = {type: null, dockerFile : null, ports: []},
+                    dockerFileName = '',
+                    ports = [];
+                try {
+                    dockerSetting = pkg.require(data_dir + '/sites/' + data['serverName'] + '/dockerSetting.json');
+                    dockerFileName = (dockerSetting.dockerFile) ? dockerSetting.dockerFile : 'dockerFile',
+                    ports = (dockerSetting.ports) ? dockerSetting.ports : [];
+
+                    cbk({
+                        type        : dockerSetting.type,
+                        dockerFile  : data_dir + '/sites/' + data['serverName'] + '/' + dockerFileName,
+                        ports       : ports
+                    });
+                } catch (e) {}
+                if (!dockerSetting.ports) {
+                    try {
+                        dockerSetting = pkg.require(env.root + '/dockerFiles/' + data['dockerFile'] + '/dockerSetting.json');
+                        dockerFileName = (dockerSetting.dockerFile) ? dockerSetting.dockerFile : 'dockerFile',
+                        ports = (dockerSetting.ports) ? dockerSetting.ports : [];
+
+                        cbk({
+                            type        : dockerSetting.type,
+                            dockerFile  : env.root + '/dockerFiles/' + data['dockerFile'] + '/' + dockerFileName,
+                            ports       : ports
+                        });
+                    } catch (e) {}
+                }
+            }
+
             _f['getPorts'] = function(cbk) {
                 var dockerSetting = {};
                 try {
                     dockerSetting = pkg.require(data_dir + '/sites/' + data['serverName'] + '/dockerSetting.json');
                 } catch (e) {}
                 if (!dockerSetting.ports) {
-
+                    try {
+                        dockerSetting = pkg.require(env.root + '/dockerFiles/' + data['dockerFile'] + '/dockerSetting.json');
+                    } catch (e) {}
                 }
                 cbk(dockerSetting.ports); // TODO
             }
             _f['siteConfig'] = function(cbk) {
                 v[data['serverName']] = {
-                    dockerFile : data['dockerFile'],
+                    dockerFile : CP.data.getDockerSetting.dockerFile,
                     gitHub     : data['gitHub'],
                     branch     : data['branch'],
-                    ports      : CP.data.getPorts,
+                    ports      : CP.data.getDockerSetting.ports,
                     unidx      : data['unidx']
                 };
                 cbk(v);
@@ -183,7 +213,7 @@
             return unidx_max + 1;
         }
 
-        this.addHost = (data, callback) => {
+        this.addVHost = (data, callback) => {
             var _f={};
             data.unidx = me.getNewUnIdx();
 
