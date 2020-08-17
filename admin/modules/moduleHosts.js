@@ -42,29 +42,11 @@
                 dockerSetting : cfg
             };
         }
-        this.resetVHost = (serverName, callback) => {
-                var dockerFn = _env.code_folder + '/dockerFiles/admin_dockerfile/dockerFile';
-                
-                var site_image = 'admin-image'; // ---TODO
-                var site_container = serverName + '-container';
-                
-                var site_path = _env.data_folder + '/sites/' + serverName;
-                
-                var cfg = me.dockerSetting(serverName).dockerSetting;
 
-                var cmd = '';
-                cmd += 'echo "Start docker app .."' + "\n";
-                cmd += 'cd ' + site_path + "\n";
-                cmd += 'docker build -f ' + dockerFn + ' -t ' + site_image + ' .' + "\n";
-                cmd += 'docker container stop ' + site_container + "\n";
-                cmd += 'docker container rm ' + site_container + "\n";
-                var cmd_ports  = '';
-                for (var i = 0;  i < cfg.ports.length; i++) {
-                    cmd_ports += ' -p ' + ((sitesCfg.unidx * 10000) + cfg.ports[i]) + ':' + cfg.ports[i] + ' ';
-                }
-                cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name --network network_easydocker ' + site_container + ' ' + site_image  + "\n";
-                
-                me.setClone('resetVHost', cmd, callback);
+        this.resetVHost = (serverName, callback) => {
+            me.addDocker(serverName, function() {
+                callback();
+            });
         };
         
         this.setClone = (code, str, callback) => {
@@ -132,16 +114,26 @@
 
         this.saveSitesHosts = (data, callback) => {
             var v = me.getSitesCfg();
-            v[data['serverName']] = {
-                dockerFile : data['dockerFile'],
-                gitHub     : data['gitHub'],
-                branch     : data['branch'],
-                ports      : data['ports'],
-                unidx      : data['unidx'] 
-            };
-            me.saveSitesCfg(v, () => {
-                callback({status:'success', list : me.getSitesCfg()});
-            });
+            var _f = {};
+            _f['siteport'] = function(cbk) {
+                var dockerSetting = {};
+                try {
+                    dockerSetting = pkg.require(data_dir + '/sites/' + data['serverName'] + '/dockerSetting.json');
+                } catch (e) {}
+                v[data['serverName']] = {
+                    dockerFile : data['dockerFile'],
+                    gitHub     : data['gitHub'],
+                    branch     : data['branch'],
+                    ports      : dockerSetting.ports,
+                    unidx      : data['unidx']
+                };
+                cbk(true);
+            }
+            CP.serial(_f, (dataCP) => {
+                me.saveSitesCfg(v, () => {
+                    callback({status:'success', list : me.getSitesCfg()});
+                });
+            }, 3000); 
         }
         this.getSitesCfg = () => {
             var v = {}, p;
@@ -201,8 +193,17 @@
                 me.saveSitesHosts(data, cbk);
             };
 
+
             _f['addDocker'] = function(cbk) {
                 me.addDocker(data.serverName, cbk);
+            };
+
+            _f['addProxyConfig'] = function(cbk) {
+                me.addProxyConfig(data.serverName, cbk);
+            };
+
+            _f['restartProxy'] = function(cbk) {
+                me.restartProxy(cbk);
             };
 
             CP.serial(_f, function(data) {
@@ -232,11 +233,47 @@
             }, 30000);
         };
 
+        this.addProxyConfig = (serverName, callback) => {
+            var proxy_fn = data_dir + '/proxy/' + serverName+'.local';
+            var sites_list = me.getSitesCfg();
+            var site_config = sites_list[serverName];
+
+            var cmd_ports  = '';
+            var str = '';
+
+            ports = (site_config.ports) ? site_config.ports : [];
+            for (var i = 0;  i < ports.length; i++) {
+                cmd_ports += (site_config.unidx * 10000) + ports[i];
+                var u_str = 'http://10.10.10.254:' + cmd_ports + '/';
+                var servasname_v = [serverName + '_local', serverName + '.local']
+                for (var j = 0; j < servasname_v .length; j++) {
+                    str += 'server {' + "\n";
+                    str += '    listen       80;' + "\n";
+                    str += '    server_name  ' + servasname_v[j] + ';' + "\n";
+                    str += '    location / {' + "\n";
+                    str += '        proxy_cache                     off;' + "\n";
+                    str += '        proxy_pass ' + u_str + ';' + "\n";
+                    str += '        proxy_redirect     off;' + "\n";
+                    str += '        proxy_set_header   Host $host;' + "\n";
+                    str += '        sub_filter ' + u_str + ' http://$host/;' + "\n";
+                    str += '        sub_filter ' + u_str + ' http://$host/;' + "\n";
+                    str += '        sub_filter_once off;' + "\n";
+                    str += '      }' + "\n";
+                    str += '}' + "\n";
+                }
+            }
+            fs.writeFile(proxy_fn, str, function (err) {
+                callback(true);
+            });
+        }
+
         this.addDocker = (serverName, callback) => {
             var site_path = _env.data_folder + '/sites/' + serverName;
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
             var code_dir = _env.code_folder;
+
+            // dockerSetting.json
 
             var site_image = site_config.dockerFile + '-image'; 
             var site_container = serverName + '-container';
@@ -253,27 +290,20 @@
                 cmd_ports += ' -p ' + ((site_config.unidx * 10000) + ports[i]) + ':' + ports[i] + ' ';
             }
         
-            cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --name --network network_easydocker ' + site_container + ' ' + site_image  + "\n";
+            cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' ' + site_image  + "\n";
             
             me.setClone('addDocker', cmd, callback);
         }
 
-        this.removeDocker = (dname, callback) => {
-            var str='', DOCKERCMD = {};
-            try {
-            delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
-            DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
-            } catch (e) {};
-
-            str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
-            str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
-
-            var fnDocker = env.dataFolder + '/bootup/addDocker_' + dname + '.sh';
-            var fnRemoveDocker = env.dataFolder + '/tasks/removeDocker.sh';
-
-            fs.writeFile(fnRemoveDocker, str, (err) => {
-                me.removeBootupFile(fnDocker, callback);
-            });
+        this.removeDocker = (serverName, callback) => {
+            var site_path = _env.data_folder + '/sites/' + serverName;
+            var site_container = serverName + '-container';
+            var cmd = '';
+            cmd += 'cd ' + site_path + "\n";
+             cmd += 'echo "Start docker app .."' + "\n";
+            cmd += 'docker container stop ' + site_container + "\n";
+            cmd += 'docker container rm ' + site_container + "\n";
+            me.setClone('addDocker', cmd, callback);
         }
     }
     module.exports = obj;

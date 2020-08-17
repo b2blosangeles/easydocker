@@ -33,11 +33,13 @@ for f in "$CRON_PATH"/*; do
 
     execfn=$TMP_PATH/SH_$(basename $f)
     echo $execfn > $markfile
-
-    cmdd="cp $f /Users/johnxu/_tmp && mv $f $execfn && sh $execfn $DOCKERCMD && rm -fr $execfn && rm -fr $markfile"
+    # cmdd="cp $f /Users/johnxu/_tmp && mv $f $execfn && sh $execfn $DOCKERCMD && rm -fr $execfn && rm -fr $markfile"
     echo "-- Ran $f -- at $(date +"%m/%d/%Y %H:%M:%S")"
-    echo "$cmdd"
-    eval "$cmdd"
+    cp $f /Users/johnxu/_tmp/ || true
+    mv -f $f $execfn || true
+    sh $execfn $DOCKERCMD || true
+    rm -fr $execfn || true
+    rm -fr $markfile || true
     echo "-- done $f -- at $(date +"%m/%d/%Y %H:%M:%S")"
   else
     exit 1
