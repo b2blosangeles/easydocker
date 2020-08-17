@@ -74,6 +74,9 @@
             str += 'p="';
             str += (!sites_list || !Object.keys(sites_list).length) ? '' : '${MARKS}${NLINE}';
 
+            str += '127.0.0.1${TABL}admin.local${NLINE}';
+            str += '127.0.0.1${TABL}admin_local${NLINE}';
+
             for (var o in sites_list) { 
                 str += '127.0.0.1${TABL}' + o + '.local${NLINE}';
                 str += '127.0.0.1${TABL}' + o + '_local${NLINE}';
