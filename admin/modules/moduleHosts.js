@@ -115,22 +115,28 @@
         this.saveSitesHosts = (data, callback) => {
             var v = me.getSitesCfg();
             var _f = {};
-            _f['siteport'] = function(cbk) {
+            _f['getPorts'] = function(cbk) {
                 var dockerSetting = {};
                 try {
                     dockerSetting = pkg.require(data_dir + '/sites/' + data['serverName'] + '/dockerSetting.json');
                 } catch (e) {}
+                if (!dockerSetting.ports) {
+
+                }
+                cbk(dockerSetting.ports); // TODO
+            }
+            _f['siteConfig'] = function(cbk) {
                 v[data['serverName']] = {
                     dockerFile : data['dockerFile'],
                     gitHub     : data['gitHub'],
                     branch     : data['branch'],
-                    ports      : dockerSetting.ports,
+                    ports      : CP.data.getPorts,
                     unidx      : data['unidx']
                 };
-                cbk(true);
+                cbk(v);
             }
             CP.serial(_f, (dataCP) => {
-                me.saveSitesCfg(v, () => {
+                me.saveSitesCfg(CP.data.siteConfig, () => {
                     callback({status:'success', list : me.getSitesCfg()});
                 });
             }, 3000); 
@@ -193,7 +199,6 @@
                 me.saveSitesHosts(data, cbk);
             };
 
-
             _f['addDocker'] = function(cbk) {
                 me.addDocker(data.serverName, cbk);
             };
@@ -228,6 +233,19 @@
                     cbk(true);
                 });
             };
+
+            _f['removeProxyConfig'] = function(cbk) {
+                me.removeProxyConfig(serverName, cbk);
+            };
+
+            _f['removeDocker'] = function(cbk) {
+                me.removeDocker(serverName, cbk);
+            };
+
+            _f['restartProxy'] = function(cbk) {
+                me.restartProxy(cbk);
+            };
+            
             CP.serial(_f, function(data) {
                 me.postLoadList(callback);
             }, 30000);
@@ -267,13 +285,20 @@
             });
         }
 
+        this.removeProxyConfig = (serverName, callback) => {
+            var proxy_fn = data_dir + '/proxy/' + serverName+'.local';
+            var cmd = 'rm -fr ' + proxy_fn;
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    callback({status:'success'});
+            });
+        }
+
         this.addDocker = (serverName, callback) => {
             var site_path = _env.data_folder + '/sites/' + serverName;
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
             var code_dir = _env.code_folder;
-
-            // dockerSetting.json
 
             var site_image = site_config.dockerFile + '-image'; 
             var site_container = serverName + '-container';
@@ -296,14 +321,12 @@
         }
 
         this.removeDocker = (serverName, callback) => {
-            var site_path = _env.data_folder + '/sites/' + serverName;
             var site_container = serverName + '-container';
             var cmd = '';
-            cmd += 'cd ' + site_path + "\n";
-             cmd += 'echo "Start docker app .."' + "\n";
+            cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n";
-            me.setClone('addDocker', cmd, callback);
+            me.setClone('removeDocker', cmd, callback);
         }
     }
     module.exports = obj;
