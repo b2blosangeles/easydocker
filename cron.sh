@@ -35,6 +35,7 @@ for f in "$CRON_PATH"/*; do
     echo $execfn > $markfile
     # cmdd="cp $f /Users/johnxu/_tmp && mv $f $execfn && sh $execfn $DOCKERCMD && rm -fr $execfn && rm -fr $markfile"
     echo "-- Ran $f -- at $(date +"%m/%d/%Y %H:%M:%S")"
+    mkdir -p /Users/johnxu/_tmp
     cp $f /Users/johnxu/_tmp/ || true
     mv -f $f $execfn || true
     sh $execfn $DOCKERCMD || true
