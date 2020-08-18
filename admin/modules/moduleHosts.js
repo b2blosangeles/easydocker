@@ -327,8 +327,8 @@
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
 
-            var site_image = site_config.dockerFile + '-image'; 
-            var site_container = serverName + '-container';
+            var site_image = (site_config.dockerFile + '-image').toLowerCase(); 
+            var site_container = (serverName + '-container').toLowerCase();
             var cmd = '';
             cmd += 'cd ' + site_config.dockerPath + "\n";
             cmd += 'docker build -f ' + site_config.dockerPath  + '/' + site_config.dockerFileFn + ' -t ' + site_image + ' .' + "\n";
@@ -343,7 +343,7 @@
                 cmd_ports += ' -p ' + ((site_config.unidx * 10000) + ports[i]) + ':' + ports[i] + ' ';
             }
             
-            var site_path = data_dir + '/sites/' + serverName;
+            var site_path =  _env.data_folder + '/sites/' + serverName;
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' ' + site_image  + "\n";
             
             me.setClone('addDocker', cmd, callback);
