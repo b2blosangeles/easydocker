@@ -7,32 +7,44 @@
             CP = new pkg.crowdProcess();
 
         this.gitRemoteBranchs = (gitRecord, callback) => {
-            var regex = /^(git|ssh|https?|git@[-\w.]+):(\/\/)?(.*@|)(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
-            var uri_a = gitRecord.gitHub.match(regex);
-            var uri = uri_a[1] + '://' + ((!gitRecord.userName) ? '' : 
-                (encodeURIComponent(gitRecord.userName) + ':' + encodeURIComponent(gitRecord.password) + '@'));
-            for (var i=4; i < uri_a.length; i++) {
-                uri +=  uri_a[i];
-            }
-            var cmd = 'git ls-remote ' + uri;
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    var branches = [];
-                    var list = stdout.split(/\s+/);
-                    if (!error) {
-                        for (var i in list) {
-                            let regs = /^refs\/heads\//i;
-                            if (regs.test(list[i])) {
-                                branches.push(list[i].replace(regs, ''));
-                            }
-                        }
-                        callback({status : 'success', branches : branches });
-                    } else {
-                        callback({status : 'failure', message : error.message});
-                    }
 
-                    
+            var _f = {};
+            _f['bracnes'] = function(cbk) {
+                var regex = /^(git|ssh|https?|git@[-\w.]+):(\/\/)?(.*@|)(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
+                var uri_a = gitRecord.gitHub.match(regex);
+                var uri = uri_a[1] + '://' + ((!gitRecord.userName) ? '' : 
+                    (encodeURIComponent(gitRecord.userName) + ':' + encodeURIComponent(gitRecord.password) + '@'));
+                for (var i=4; i < uri_a.length; i++) {
+                    uri +=  uri_a[i];
+                }
+                
+                var cmd = 'git ls-remote ' + uri;
+                exec(cmd, {maxBuffer: 1024 * 2048},
+                    function(error, stdout, stderr) {
+                        var branches = [];
+                        var list = stdout.split(/\s+/);
+                        if (!error) {
+                            for (var i in list) {
+                                let regs = /^refs\/heads\//i;
+                                if (regs.test(list[i])) {
+                                    branches.push(list[i].replace(regs, ''));
+                                }
+                            }
+                            cbk({status : 'success', branches : branches });
+                        } else {
+                            cbk({status : 'failure', message : error.message});
+                        }
+    
+                        
+                });
+            }
+            _f['dockerFile'] = function(cbk) {
+                cbk(true);
+            }
+            CP.serial(_f, (dataCP) => {
+                callback(CP.data.bracnes);
             });
+
         }
 
         this.gitClone = (gitRecord, callback) => {
