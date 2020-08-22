@@ -218,7 +218,7 @@
 
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
-                var git = new MGit(env);
+                var git = new MGit(env, pkg);
                 git.gitClone(data, function(result) {
                     cbk(true);
                 });

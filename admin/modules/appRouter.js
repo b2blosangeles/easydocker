@@ -95,7 +95,7 @@
 
         this.gitRemoteBranchs = () => {
 			var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
-			var git = new MGit(env);
+			var git = new MGit(env, pkg);
 			git.gitRemoteBranchs(req.body.data, function(result) {
 			  res.send(result);
 			});

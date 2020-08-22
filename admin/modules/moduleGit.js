@@ -1,8 +1,10 @@
 (function() {
     var exec = require('child_process').exec;
-    var obj = function(env) {
-        var fs = require('fs');
-
+    var obj = function(env, pkg) {
+        var me = this,
+            fs = require('fs'),
+            exec = require('child_process').exec,
+            CP = new pkg.crowdProcess();
 
         this.gitRemoteBranchs = (gitRecord, callback) => {
             var regex = /^(git|ssh|https?|git@[-\w.]+):(\/\/)?(.*@|)(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
