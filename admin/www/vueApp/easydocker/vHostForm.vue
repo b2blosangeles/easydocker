@@ -30,9 +30,9 @@
                 <select class="form-control" :required="true" v-model="form.branch">
                     <option 
                     v-for="option in branches" 
-                    v-bind:value="option"
-                    :selected="option ==  form.branch"
-                    >{{ option }}</option>
+                    v-bind:value="option.branch"
+                    :selected="option.branch ==  form.branch"
+                    >{{ option.branch }}</option>
                 </select>
             </div>
 
@@ -107,8 +107,8 @@ module.exports = {
             me.branches = null;
             me.form.branch = '';
             me.form.serverName = '';
-        //    me.form.ports = '';
             me.form.dockerFile = '';
+            me.form.docker = {};
         },
         changedGit(e) {
             var me = this;
@@ -125,9 +125,9 @@ module.exports = {
             if (me.isformValid()) {
                 me.$parent.dataEngine().gitRemoteBranchs(gitRecord, function(result) {
                     if (result.status === 'success') {
-                        me.branches = result.branches;
+                        me.branches = result.list;
                     } else {
-                        me.branches = null;
+                        me.branches = [];
                         me.errors.gitHub = result.message;
                     }
                     me.form.branch = (!me.branches) ? '' : (me.branches.indexOf(me.form.branch) === -1) ? me.branches[0] : me.form.branch

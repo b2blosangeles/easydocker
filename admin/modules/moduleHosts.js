@@ -327,7 +327,8 @@
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
 
-            var site_image = (site_config.dockerFile + '-image').toLowerCase(); 
+          //  var site_image = (site_config.dockerFile + '-image').toLowerCase();  // todo
+            var site_image = (serverName + '-image').toLowerCase();  // todo
             var site_container = (serverName + '-container').toLowerCase();
             var cmd = '';
             cmd += 'cd ' + site_config.dockerPath + "\n";
