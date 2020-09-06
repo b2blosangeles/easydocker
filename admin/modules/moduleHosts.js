@@ -31,21 +31,16 @@
             cmd += 'docker container rm ' + site_container + "\n";
             me.setClone('stopVHost', cmd, callback);
         };
-
+        /*
         this.dockerSetting = (serverName) => {
             let cfg = {};
             try {
                 cfg = require(data_dir + '/sites/' + serverName +  '/docker/setting.json');
 
             } catch (e) {}
-            /*
-            cfg = {
-                "ports" : [3000],
-                "dockerFile" : data_dir + '/sites/' + serverName +  '/docker/setting.json'
-              };*/
             return cfg;
         }
-
+        
         this.dockerLibSetting = (dockerName) => {
             let cfg = {};
             try {
@@ -53,7 +48,7 @@
             } catch (e) {}
             return cfg;
         }
-
+        */
         this.resetVHost = (serverName, callback) => {
             me.addDocker(serverName, function() {
                 callback();
@@ -100,71 +95,27 @@
             var sites_list = me.getSitesCfg();
             var list = [];
             for (o in sites_list ) {
-                list.push({name : o, unidx: sites_list[o].unidx, docker : sites_list[o].docker});
+                let v = sites_list[o];
+                v.name = o;
+                list.push(v);
             }
             callback({status:'success', list : list });
         }
 
 
         this.saveSitesHosts = (data, callback) => {
+            
             var v = me.getSitesCfg();
-            var _f = {};
-            _f['getDockerSetting'] = function(cbk) {
-                var dockerSetting = {type: null, dockerFile : null, dockerPath : null, dockerFileFn : null,  ports: []},
-                    dockerFileName = '',
-                    ports = [];
-
-                try {
-                    dockerSetting = me.dockerSetting(data['serverName']);
-                    dockerFileName = (dockerSetting.dockerFile) ? dockerSetting.dockerFile : 'dockerFile',
-                    ports = (dockerSetting.ports) ? dockerSetting.ports : [];
-
-                    cbk({
-                        type        : dockerSetting.type,
-                        dockerFile  : dockerSetting.dockerFile,
-                        dockerPath  : _env.data_folder + '/sites/' + data['serverName'] + '/docker',
-                        dockerFileFn: dockerFileName,
-                        ports       : ports
-                    });
-                } catch (e) {}
-
-                if (!dockerSetting.ports) {
-                    try {
-                        code_dir = _env.code_folder;
-
-                        dockerSetting = me.dockerLibSetting(dockerSetting.dockerFile);
-                        dockerFileName = (dockerSetting.dockerFile) ? dockerSetting.dockerFile : 'dockerFile',
-                        ports = (dockerSetting.ports) ? dockerSetting.ports : [];
-
-                        cbk({
-                            type        : dockerSetting.type,
-                            dockerFile  : dockerSetting.dockerFile,
-                            dockerPath  : _env.code_folder + '/dockerFiles/' + data['dockerFile'],
-                            dockerFileFn: 'dockerFile',
-                            ports       : ports
-                        });
-                    } catch (e) {}
-                }
-            }
-
-            _f['siteConfig'] = function(cbk) {
-                v[data['serverName']] = {
-                    dockerFile  : CP.data.getDockerSetting.dockerFile,
-                    dockerFileFn: CP.data.getDockerSetting.dockerFileFn,
-                    dockerPath  : CP.data.getDockerSetting.dockerPath,
-                    gitHub      : data['gitHub'],
-                    branch      : data['branch'],
-                    ports       : CP.data.getDockerSetting.ports,
-                    unidx       : data['unidx'],
-                    docker      : data['docker']
-                };
-                cbk(v);
-            }
-            CP.serial(_f, (dataCP) => {
-                me.saveSitesCfg(CP.data.siteConfig, () => {
-                    callback({status:'success', list : me.getSitesCfg()});
-                });
-            }, 3000); 
+            v[data['serverName']] = {
+                gitHub      : data['gitHub'],
+                branch      : data['branch'],
+                publicDocker: data['publicDocker'],
+                unidx       : me.getNewUnIdx(),
+                docker      : data['docker']
+            };
+            me.saveSitesCfg(v, () => {
+                callback({status:'success', list : me.getSitesCfg()});
+            });
         }
         this.getSitesCfg = () => {
             var v = {}, p;
@@ -210,7 +161,7 @@
 
         this.addVHost = (data, callback) => {
             var _f={};
-            data.unidx = me.getNewUnIdx();
+        //    data.unidx = me.getNewUnIdx();
 
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
@@ -223,11 +174,11 @@
             _f['SitesHosts'] = function(cbk) {
                 me.saveSitesHosts(data, cbk);
             };
-
+            
             _f['addDocker'] = function(cbk) {
                 me.addDocker(data.serverName, cbk);
             };
-
+            
             _f['addProxyConfig'] = function(cbk) {
                 me.addProxyConfig(data.serverName, cbk);
             };
@@ -235,7 +186,7 @@
             _f['restartProxy'] = function(cbk) {
                 me.restartProxy(cbk);
             };
-
+            
             CP.serial(_f, function(data) {
                 callback(CP.data.SitesHosts);
             }, 30000);
@@ -284,7 +235,7 @@
             var cmd_ports  = '';
             var str = '';
 
-            ports = (site_config.ports) ? site_config.ports : [];
+            let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
             for (var i = 0;  i < ports.length; i++) {
                 cmd_ports += (site_config.unidx * 10000) + ports[i];
                 var u_str = 'http://10.10.10.254:' + cmd_ports + '/';
@@ -319,30 +270,60 @@
             });
         }
 
-        this.addDocker = (serverName, callback) => {
+        this.getDockerPath = (serverName) => {
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
+            var p = '';
+            if (!site_config.publicDocker) {
+                p = _env.data_folder + '/sites/' + data['serverName'] + '/docker/';
+            } else {
+                p = _env.code_folder + '/dockerFiles/' + site_config.publicDocker + '/';
+            }
+           return p;
+        }
 
-          //  var site_image = (site_config.dockerFile + '-image').toLowerCase();  // todo
-            var site_image = (serverName + '-image').toLowerCase();  // todo
+        this.getDockerFileFn = (serverName) => {
+            var sites_list = me.getSitesCfg();
+            var site_config = sites_list[serverName];
+            var p = '';
+    
+            if (!site_config.publicDocker) {
+                p = me.getDockerPath(serverName) + site_config.docker.dockerFile;
+            } else {
+                p = me.getDockerPath(serverName) + site_config.docker.dockerFile;
+            }
+           return p;
+        }
+
+        this.getSiteImageName = (serverName) => {
+            var sites_list = me.getSitesCfg();
+            var site_config = sites_list[serverName];
+            return (!site_config.publicDocker) ? serverName : site_config.publicDocker;
+        }
+
+        this.addDocker = (serverName, callback) => {
+           
+            var sites_list = me.getSitesCfg();
+            var site_config = sites_list[serverName];
+            var site_image = (me.getSiteImageName(serverName) + '-image').toLowerCase();  // todo
             var site_container = (serverName + '-container').toLowerCase();
+            
             var cmd = '';
-            cmd += 'cd ' + site_config.dockerPath + "\n";
-            cmd += 'docker build -f ' + site_config.dockerPath  + '/' + site_config.dockerFileFn + ' -t ' + site_image + ' .' + "\n";
+            cmd += 'cd ' + me.getDockerPath(serverName) + "\n";
+            
+            cmd += 'docker build -f ' + me.getDockerFileFn(serverName) + ' -t ' + site_image + ' .' + "\n";
             cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
-            cmd += 'docker container rm ' + site_container + "\n";
-            var cmd_ports  = ''
-                       
-            var cmd_ports  = '',
-                ports = (site_config.ports) ? site_config.ports : [3300, 3301];
+            cmd += 'docker container rm ' + site_container + "\n"; 
+            var cmd_ports  = '';
+            let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
             for (var i = 0;  i < ports.length; i++) {
                 cmd_ports += ' -p ' + ((site_config.unidx * 10000) + ports[i]) + ':' + ports[i] + ' ';
             }
             
             var site_path =  _env.data_folder + '/sites/' + serverName;
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' ' + site_image  + "\n";
-            
+
             me.setClone('addDocker', cmd, callback);
         }
 

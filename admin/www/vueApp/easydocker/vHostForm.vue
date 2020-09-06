@@ -50,7 +50,7 @@
             <div class="form-group" v-if=" branches !== null && !form.docker.siteDocker">
                 <label>Dockerfile</label>
                     <div class="dropdown">
-                        <input type="text" data-toggle="dropdown"  class="form-control dockerfile" v-model="selectedPublicDockerCode" 
+                        <input type="text" data-toggle="dropdown"  class="form-control dockerfile" v-model="form.publicDocker" 
                         aria-haspopup="true" aria-expanded="false"
                         placeholder="Select your Dockerfile" readonly />
                         
@@ -85,13 +85,13 @@ module.exports = {
         return {
             errors: {},
             publicDockers     : [],
-            selectedPublicDockerCode  : '',
             branches : null,
             form : {
                 serverName  : '',
                 gitHub      : '',
                 branch      : '',
                 siteDocker  : false,
+                publicDocker: '',
                 docker: {
                     type : '',
                     ports : [],
@@ -117,6 +117,7 @@ module.exports = {
                 gitHub      : '',
                 branch      : '',
                 siteDocker  : false,
+                publicDocker: '',
                 docker: {
                         type : '',
                         ports : [],
@@ -131,6 +132,7 @@ module.exports = {
             me.form.serverName = '';
             me.form.branch = '';
             me.form.siteDocker  = false;
+            me.form.publicDocker = '';
             me.form.docker = {
                     type : '',
                     ports : [],
@@ -196,7 +198,7 @@ module.exports = {
 
         selectPublicDocker(v) {
             var me = this;
-            me.selectedPublicDockerCode = v.code;
+            me.form.publicDocker = v.code;
             me.form.siteDocker = false;
             me.form.docker = v.setting;
             me.$forceUpdate();
