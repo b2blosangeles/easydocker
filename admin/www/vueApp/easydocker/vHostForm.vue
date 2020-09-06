@@ -47,7 +47,7 @@
                 ports: {{ form.docker.ports }}   Docker file: {{form.docker.dockerFile}}  Type: {{form.docker.type}}
                  <hr/>
             </div>
-            <div class="form-group" v-if=" branches !== null && !form.docker.siteDocker">
+            <div class="form-group" v-if=" branches !== null && !form.siteDocker">
                 <label>Dockerfile</label>
                     <div class="dropdown">
                         <input type="text" data-toggle="dropdown"  class="form-control dockerfile" v-model="form.publicDocker" 

@@ -31,24 +31,7 @@
             cmd += 'docker container rm ' + site_container + "\n";
             me.setClone('stopVHost', cmd, callback);
         };
-        /*
-        this.dockerSetting = (serverName) => {
-            let cfg = {};
-            try {
-                cfg = require(data_dir + '/sites/' + serverName +  '/docker/setting.json');
 
-            } catch (e) {}
-            return cfg;
-        }
-        
-        this.dockerLibSetting = (dockerName) => {
-            let cfg = {};
-            try {
-                cfg = require(env.root + '/cockerFiles/' + dockerName +  '/setting.json'); 
-            } catch (e) {}
-            return cfg;
-        }
-        */
         this.resetVHost = (serverName, callback) => {
             me.addDocker(serverName, function() {
                 callback();
@@ -237,7 +220,7 @@
 
             let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
             for (var i = 0;  i < ports.length; i++) {
-                cmd_ports += (site_config.unidx * 10000) + ports[i];
+                cmd_ports += parseInt(site_config.unidx * 10000) + parseInt(ports[i]);
                 var u_str = 'http://10.10.10.254:' + cmd_ports + '/';
                 var servasname_v = [serverName + '_local', serverName + '.local']
                 for (var j = 0; j < servasname_v .length; j++) {
@@ -274,8 +257,9 @@
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
             var p = '';
+
             if (!site_config.publicDocker) {
-                p = _env.data_folder + '/sites/' + data['serverName'] + '/docker/';
+                p = _env.data_folder + '/sites/' + serverName + '/docker/';
             } else {
                 p = _env.code_folder + '/dockerFiles/' + site_config.publicDocker + '/';
             }
@@ -285,32 +269,25 @@
         this.getDockerFileFn = (serverName) => {
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
-            var p = '';
-    
-            if (!site_config.publicDocker) {
-                p = me.getDockerPath(serverName) + site_config.docker.dockerFile;
-            } else {
-                p = me.getDockerPath(serverName) + site_config.docker.dockerFile;
-            }
-           return p;
+           return me.getDockerPath(serverName) + site_config.docker.dockerFile;
         }
 
         this.getSiteImageName = (serverName) => {
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
-            return (!site_config.publicDocker) ? serverName : site_config.publicDocker;
+            return ((!site_config.publicDocker) ? serverName : site_config.publicDocker).toLowerCase() + '-image';
         }
 
         this.addDocker = (serverName, callback) => {
            
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
-            var site_image = (me.getSiteImageName(serverName) + '-image').toLowerCase();  // todo
+            var site_image = me.getSiteImageName(serverName);
             var site_container = (serverName + '-container').toLowerCase();
             
             var cmd = '';
-            cmd += 'cd ' + me.getDockerPath(serverName) + "\n";
             
+            cmd += 'cd ' + me.getDockerPath(serverName) + "\n";
             cmd += 'docker build -f ' + me.getDockerFileFn(serverName) + ' -t ' + site_image + ' .' + "\n";
             cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
@@ -318,21 +295,22 @@
             var cmd_ports  = '';
             let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
             for (var i = 0;  i < ports.length; i++) {
-                cmd_ports += ' -p ' + ((site_config.unidx * 10000) + ports[i]) + ':' + ports[i] + ' ';
+                cmd_ports += ' -p ' + (parseInt(site_config.unidx * 10000) + parseInt(ports[i])) + ':' + ports[i] + ' ';
             }
             
             var site_path =  _env.data_folder + '/sites/' + serverName;
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' ' + site_image  + "\n";
-
+            
             me.setClone('addDocker', cmd, callback);
         }
 
         this.removeDocker = (serverName, callback) => {
-            var site_container = serverName + '-container';
+            var site_container = serverName.toLowerCase() + '-container';
             var cmd = '';
             cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n";
+            cmd += 'docker image rm -f ' + serverName.toLowerCase() + '-image' + "\n";
             me.setClone('removeDocker', cmd, callback);
         }
     }
