@@ -100,12 +100,7 @@
             var sites_list = me.getSitesCfg();
             var list = [];
             for (o in sites_list ) {
-                var ports = [];
-                site_ports = sites_list[o].ports;
-                for (var i = 0; i < site_ports.length; i++) {
-                    ports.push({i : site_ports[i], o : (sites_list[o].unidx * 10000) + site_ports[i]});
-                }
-                list.push({name : o, ports: ports});
+                list.push({name : o, unidx: sites_list[o].unidx, docker : sites_list[o].docker});
             }
             callback({status:'success', list : list });
         }
@@ -160,7 +155,8 @@
                     gitHub      : data['gitHub'],
                     branch      : data['branch'],
                     ports       : CP.data.getDockerSetting.ports,
-                    unidx       : data['unidx']
+                    unidx       : data['unidx'],
+                    docker      : data['docker']
                 };
                 cbk(v);
             }

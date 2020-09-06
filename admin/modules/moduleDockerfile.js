@@ -3,7 +3,7 @@
         var fs = require('fs');
         var CP = new pkg.crowdProcess();
 
-        this.loadDockersList = (callback) => {
+        this.loadPublicDockersList = (callback) => {
             var me = this;
             var dirname = '/var/_localDockerFiles';
             var _f = {};
@@ -19,7 +19,13 @@
                                 me.getDescription(dirname + '/' + files[i] + '/description',
                                     function(err, info) {
                                     if (!err) {
-                                        list.push({code : files[i], description : info});
+                                        let setting = {};
+                                        try {
+                                            setting = pkg.require(dirname + '/' + files[i] + '/setting.json');
+                                        } catch (e) {
+
+                                        }
+                                        list.push({code : files[i], description : info, setting : setting});
                                     }
                                     cbk(true);
                                 });

@@ -61,8 +61,8 @@
 					me.gitRemoteBranchs();
 					break;
 
-				case 'loadDockersList' :
-					me.loadDockersList();
+				case 'loadPublicDockersList' :
+					me.loadPublicDockersList();
 					break;
 
 				case 'addHost' :
@@ -85,10 +85,10 @@
             }
 		};
 
-		this.loadDockersList = () => {
+		this.loadPublicDockersList = () => {
 			var MDockerfile= pkg.require(env.root+ '/modules/moduleDockerfile.js');
 			var dockers = new MDockerfile(env, pkg);
-			dockers.loadDockersList(function(list) {
+			dockers.loadPublicDockersList(function(list) {
 			  res.send({status:'successA', list : list });
 			});
 		}

@@ -13,14 +13,8 @@
                             <div class="col-9 p-0 m-0 text-left">
                                 Server name: <span class="text-info">{{item.name}}</span>
                                 <span class="ml-3">
-                                    Port : <span class="text-info"> {{outerPorts(item)}} </span>
+                                    Port : <span class="text-info"> {{outerPorts(item)}}</span>
                                 </span>
-                                <!--span>
-                                <br/>
-                                Docker file: <span class="text-info">{{item.dockerFile}}</span><br/>
-                                github : <span class="text-info"> {{item.gitHub}}</span><br/>
-                                branch : <span class="text-info"> {{item.branch}}</span>
-                                </span-->
                                 <br/>
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name)">
                                     Delete
@@ -83,9 +77,9 @@ module.exports = {
         outerPorts(item) {
             var me = this;
             var str = '';
-            var p = item.ports;
+            var p = (!item || !item.docker || !item.docker.ports) ? [] : item.docker.ports;
             for (var i = 0; i < p.length; i++) {
-                str += p[i].o+','
+                str += (item.unidx * 10000 + parseInt(p[i])) +','
             }
             return str.replace(/\,$/,'');
         }

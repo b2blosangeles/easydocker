@@ -121,7 +121,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        getVHostList(noSpinner) {
+        getVHostList(noSpinner, callback) {
             var me = this;
             if (!noSpinner) {
                 me.$parent.triggerSpinner = true;
@@ -134,6 +134,7 @@ module.exports = {
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
+                    if (callback) callback(result.list);
                     me.$parent.commonData.list = result.list;
                     console.log('==result.list;==>');
                     console.log(result);
@@ -145,7 +146,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        loadDockersList(noSpinner) {
+        loadPublicDockersList(noSpinner, callback) {
             var me = this;
             if (!noSpinner) {
                 me.$parent.triggerSpinner = true;
@@ -154,11 +155,11 @@ module.exports = {
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'loadDockersList'
+                    cmd :'loadPublicDockersList'
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
-                    me.$parent.commonData.dockers = result.list;
+                    if (callback) callback(result.list);
                 },
                 error: function (jqXHR, textStatus, errorThrown) { 
                     me.$parent.triggerSpinner = false;

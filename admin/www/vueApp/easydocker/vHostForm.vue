@@ -25,9 +25,16 @@
                 <input type="hidden" v-model="form.userName">
                 <input type="hidden"  v-model="form.password" >
             </div>
+
+            <div class="form-group" v-if="branches!==null" >
+                <label>Host ServerName * </label>
+                <input type="text" class="form-control" maxlength="64" v-model="form.serverName" placeholder="Host ServerName">
+            </div>
+
+
             <div class="form-group" v-if="branches!==null" >
                 <label>Branche</label>
-                <select class="form-control" :required="true" v-model="form.branch">
+                <select class="form-control" :required="true" @change="onBranchSelect($event)" v-model="form.branch">
                     <option 
                     v-for="option in branches" 
                     v-bind:value="option.branch"
@@ -35,33 +42,27 @@
                     >{{ option.branch }}</option>
                 </select>
             </div>
-
-            <div class="form-group" v-if="branches!==null" >
-                <label>Host ServerName * </label>
-                <input type="text" class="form-control" maxlength="64" v-model="form.serverName" placeholder="Host ServerName">
+            <div v-if="form.docker.dockerFile">
+                 <hr/>
+                ports: {{ form.docker.ports }}   Docker file: {{form.docker.dockerFile}}  Type: {{form.docker.type}}
+                 <hr/>
             </div>
-
-            <!--div class="form-group" v-if="branches!==null" >
-                <label>Open Ports</label>
-                <input type="text" class="form-control" maxlength="64" v-model="form.ports" placeholder="ports">
-            </div-->
-
-            <div class="form-group" v-if="branches!==null">
+            <div class="form-group" v-if=" branches !== null && !form.docker.siteDocker">
                 <label>Dockerfile</label>
                     <div class="dropdown">
-                        <input type="text" data-toggle="dropdown"  class="form-control dockerfile" v-model="form.dockerFile" 
+                        <input type="text" data-toggle="dropdown"  class="form-control dockerfile" v-model="selectedPublicDockerCode" 
                         aria-haspopup="true" aria-expanded="false"
                         placeholder="Select your Dockerfile" readonly />
                         
                         <div class="dropdown-menu dropdown-pick-docker shadow border-secondary rounded-0 border-width-1" >
-                            <div v-for="(v, k) in $parent.commonData.dockers" class="dropdown-item" v-bind:class="{ 'bg-even': !(k%2), 'bg-odd': (k%2) }">
-                                <a href="JavaScript:void(0)" v-on:click="selectDocker(v.code)"><b>{{v.code}}</a></a>
+                            <div v-for="(v, k) in publicDockers" class="dropdown-item" v-bind:class="{ 'bg-even': !(k%2), 'bg-odd': (k%2) }">
+                                <a href="JavaScript:void(0)" v-on:click="selectPublicDocker(v)"><b>{{v.code}}</a></a>
                                 <p class="text-wrap p-0 m-1" v-html="v.description"></p>
                             </div>
                         </div>
                     </div>
             </div>
-
+            <hr/>
             <button type="button" v-if="branches!==null" class="btn btn-info" v-on:click="saveVHost()">Save the virtual host</button>
             <!--button type="button" class="btn btn-warning" v-on:click="reset()">Reset fields</button-->
             <button type="button" class="btn btn-secondary" v-on:click="cancel()">Cancel</button>
@@ -83,13 +84,19 @@ module.exports = {
     data: function() {
         return {
             errors: {},
-            dockers : [],
+            publicDockers     : [],
+            selectedPublicDockerCode  : '',
             branches : null,
             form : {
-                dockerFile  : '',
                 serverName  : '',
                 gitHub      : '',
-                branch      : ''
+                branch      : '',
+                siteDocker  : false,
+                docker: {
+                    type : '',
+                    ports : [],
+                    dockerFile : ''
+                },
             }
         }
     },
@@ -97,7 +104,7 @@ module.exports = {
         var me = this;
         setTimeout(
             function() {
-                me.loadDockersList()
+                me.loadPublicDockersList()
             }, 1000
         );
     },
@@ -105,18 +112,41 @@ module.exports = {
         initForm() {
             var me = this;
             me.branches = null;
-            me.form.branch = '';
+            me.form = {
+                serverName  : '',
+                gitHub      : '',
+                branch      : '',
+                siteDocker  : false,
+                docker: {
+                        type : '',
+                        ports : [],
+                        dockerFile : ''
+                }
+            };
+
+        },
+        cleanForm() {
+            var me = this;
+            me.branches = null;
             me.form.serverName = '';
-            me.form.dockerFile = '';
-            me.form.docker = {};
+            me.form.branch = '';
+            me.form.siteDocker  = false;
+            me.form.docker = {
+                    type : '',
+                    ports : [],
+                    dockerFile : ''
+                };
+
         },
         changedGit(e) {
             var me = this;
-            me.initForm();
+            me.cleanForm();
         },
-        loadDockersList() {
+        loadPublicDockersList() {
             var me = this;
-            me.$parent.dataEngine().loadDockersList(true);
+            me.$parent.dataEngine().loadPublicDockersList(true, function(data) {
+                me.publicDockers = data;
+            });
         },
         gitRemoteBranchs(gitRecord) {
             var me = this;
@@ -130,14 +160,45 @@ module.exports = {
                         me.branches = [];
                         me.errors.gitHub = result.message;
                     }
-                    me.form.branch = (!me.branches) ? '' : (me.branches.indexOf(me.form.branch) === -1) ? me.branches[0] : me.form.branch
+                    me.getInitBranch();
+                    me.getSiteDocker();
                     me.$forceUpdate();
                 });
             }
         },
-        selectDocker(v) {
+        getInitBranch() {
             var me = this;
-            me.form.dockerFile = v;
+            for (var i = 0; i < me.branches.length; i++) {
+                if (me.form.branch === me.branches[i].branch) {
+                    return true;
+                }
+            }
+            me.form.branch = (me.branches.length) ? me.branches[0].branch : '';
+        },
+        onBranchSelect(event) {
+            var me = this;
+            me.form.branch = event.target.value;
+            me.getSiteDocker();
+        },
+
+        getSiteDocker() {
+            var me = this;
+            if (me.branches) {
+                for (var i = 0; i < me.branches.length; i++) {
+                    if (me.form.branch === me.branches[i].branch && me.branches[i].dockerSetting.dockerFile) {
+                        me.form.siteDocker = true;
+                        me.form.docker = me.branches[i].dockerSetting;
+                        me.$forceUpdate();
+                    }
+                }
+            }
+        },
+
+        selectPublicDocker(v) {
+            var me = this;
+            me.selectedPublicDockerCode = v.code;
+            me.form.siteDocker = false;
+            me.form.docker = v.setting;
             me.$forceUpdate();
         },
         saveVHost() {
@@ -159,16 +220,12 @@ module.exports = {
             var me = this;
             me.form = {};
             me.errors={};
-            me.branches = null;
+            me.branches = [];
         },
         cancel() {
             var me = this;
             me.reset();
             me.$parent.module = (me.$parent.module === 'form') ? 'list' : 'form';
-        },
-        startFrom() {
-            var me = this;
-            me.$parent.commonData.formStarted = true;
         },
         isformValid() {
             var me = this;
@@ -198,33 +255,10 @@ module.exports = {
             }
             return (!me.errors.gitHub) ? true : false;
         },
-        portValidation() {
-            return true;
-            /*
-            var me = this;
-            delete me.errors.ports;
-            if (!me.form.ports) {
-                me.errors.ports = 'ports required.';
-            } else if (me.form.ports) {
-                var l = me.form.ports.split(',');
-                for (var i = 0; i < l.length; i++) {
-                    if (isNaN(l[i])) {
-                        me.errors.ports = 'Incorrect port list.';
-                        return false;
-                    } else  if (l[i] > 9999) {
-                        me.errors.ports = 'all port should be less than 10000';
-                        return false;
-                    }
-                }
-            } 
-            return true ;
-            */
-        },
         formValidation() {
             var me = this;
             me.errors = {};
             me.gitValidation();
-            // me.portValidation();
 
             if (!me.form.serverName) {
                 me.errors.serverName = 'ServerName required.';
@@ -234,7 +268,7 @@ module.exports = {
                 me.errors.serverName = 'ServerName required.';
             }
 
-            if (!me.form.serverName) {
+            if (!me.form.docker.dockerFile) {
                 me.errors.dockerFile = 'DockerFile required.';
             }
             
