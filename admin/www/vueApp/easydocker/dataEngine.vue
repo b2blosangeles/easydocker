@@ -111,9 +111,6 @@ module.exports = {
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
-                    console.log('--->');
-                    console.log('result--');
-                    console.log(result.status );
                     if (result.status === 'success') {
                             me.$parent.commonData.list = result.list;
                     }
@@ -136,9 +133,6 @@ module.exports = {
                     me.$parent.triggerSpinner = false;
                     if (callback) callback(result.list);
                     me.$parent.commonData.list = result.list;
-                    console.log('==result.list;==>');
-                    console.log(result);
-                    console.log(result.list);
                 },
                 error: function (jqXHR, textStatus, errorThrown) { 
                     me.$parent.triggerSpinner = false;

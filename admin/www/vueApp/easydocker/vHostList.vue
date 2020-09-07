@@ -15,6 +15,9 @@
                                 <span class="ml-3">
                                     Port : <span class="text-info"> {{outerPorts(item)}}</span>
                                 </span>
+                                <span class="ml-3">
+                                    gitHub : <span class="text-info"> {{item.gitHub}}</span>
+                                </span>
                                 <br/>
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name)">
                                     Delete
