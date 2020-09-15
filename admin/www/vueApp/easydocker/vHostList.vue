@@ -18,6 +18,9 @@
                                 <span class="ml-3">
                                     gitHub : <span class="text-info"> {{item.gitHub}}</span>
                                 </span>
+                                <span class="ml-3">
+                                    branch : <span class="text-info"> {{item.branch}}</span>
+                                </span>
                                 <br/>
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name)">
                                     Delete
