@@ -9,6 +9,6 @@
 
         "/vueApp/jsLib/vueIntegration.js",
         "/vueApp/jsLib/vue-router.min.js",
-        "/js/package/_entrance/main.js"
+        "/js/package/_entrance/easydockerMain.js"
     ]
 }
