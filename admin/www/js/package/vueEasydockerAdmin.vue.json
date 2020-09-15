@@ -8,6 +8,7 @@
         "/js/bootstrap.4.4.1.js",
 
         "/vueApp/jsLib/vueIntegration.js",
-        "/vueApp/jsLib/vue-router.min.js"
+        "/vueApp/jsLib/vue-router.min.js",
+        "/js/package/_entrance/main.js"
     ]
 }
