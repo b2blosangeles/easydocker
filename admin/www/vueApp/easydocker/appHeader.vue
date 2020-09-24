@@ -7,6 +7,9 @@
                         <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
                                 Restart proxy
                         </a>
+                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartAllHost()">
+                                Restart All Host
+                        </a>
                     </div>
                     <div class="col-8 p-0 m-0 text-center">
                             <h4>EasyDocker Admin.</h4>
@@ -39,6 +42,14 @@ module.exports = {
         restartProxy() {
             var me = this;
             me.$parent.dataEngine().restartProxy();
+        },
+        restartAllHost() {
+            var me = this;
+            me.$parent.dataEngine().runPost('/api', 'restartAllHost', {}, function(result) {
+                console.log(result);
+            } , function(result) {
+                console.log(result);
+            });
         }
     }
 }

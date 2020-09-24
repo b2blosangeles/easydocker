@@ -32,6 +32,51 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
+        runPost(url, cmd, params, success, error) {
+            var me = this;
+            me.$parent.triggerSpinner = true;
+
+            let data = {params : params, cmd: cmd};
+  
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function(result) {
+                    me.$parent.triggerSpinner = false;
+                    if (typeof  success === 'function') {
+                        success({status : 'success', result : result});
+                    }
+                },
+                error: function (jqXHR) { 
+                    me.$parent.triggerSpinner = false;
+                    if (typeof error === 'function') {
+                        error({statu : 'failure', message : 'failure request.', result : jqXHR.responseText});
+                    }
+                },
+                dataType: 'JSON'
+            });
+        },
+        restartAllHost() {
+            var me = this;
+            me.$parent.triggerSpinner = true;
+
+            $.ajax({
+                type: 'POST',
+                url:'/api',
+                data: {
+                    cmd :'restartAllHost'
+                },
+                success: function(result) {
+                    me.$parent.triggerSpinner = false;
+                    console.log(result);
+                },
+                error: function (jqXHR, textStatus, errorThrown) { 
+                    me.$parent.triggerSpinner = false;
+                },
+                dataType: 'JSON'
+            });
+        },
         resetVHost(serverName) {
             var me = this;
 

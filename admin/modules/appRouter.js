@@ -31,12 +31,29 @@
 			var me = this;
 			var MHosts = pkg.require(env.root+ '/modules/moduleHosts.js');
 
+			let p = req.params[0],
+				mp = p.match(/\/([^\/]+)(\/|$)/);
+
+			if (!mp || mp[1] !== 'api') {
+				res.render(env.root  + '/views/html/page404.ect');
+				return true
+			}
+
             switch(req.body.cmd) {
 
 				case 'resetVHost' :
 	
 					var hosts = new MHosts(env, pkg);
 					hosts.resetVHost(req.body.serverName,
+						function(data) {
+							res.send(data);
+						});
+					break;
+				
+				case 'restartAllHost' :
+	
+					var hosts = new MHosts(env, pkg);
+					hosts.restartAllHost(
 						function(data) {
 							res.send(data);
 						});

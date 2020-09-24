@@ -27,9 +27,26 @@
             var site_container = serverName + '-container';
             var cmd = '';
             cmd += 'echo "Start docker app .."' + "\n";
-            cmd += 'docker container stop ' + site_container + "\n";
-            cmd += 'docker container rm ' + site_container + "\n";
+            cmd += 'docker container stop ' + site_container.toLowerCase() + "\n";
+            cmd += 'docker container rm ' + site_container.toLowerCase() + "\n";
             me.setClone('stopVHost', cmd, callback);
+        };
+
+        this.restartAllHost = (callback) => {
+            var v = me.getSitesCfg();
+            var _f = {};
+            for (var o in v) {
+                _f[o] = (function(o) {
+                    return (cbk) => {
+                        me.addDocker(o, function() {
+                            cbk(true)
+                        });
+                    }
+                })(o)
+            }
+            CP.serial(_f, (data) => {
+                callback(data);
+            }, 30000);
         };
 
         this.resetVHost = (serverName, callback) => {
