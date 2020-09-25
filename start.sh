@@ -80,14 +80,18 @@ fi
 # --------- docker network End ------#
 
 #--- Admin.sh Start ---
-sh initAdmin.sh
+sh ${SCR_DIR}/scriptStartup/initAdmin.sh
 #--- Admin.sh End ---
 
 echo "\nloading cron job"
 echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
 
 # ----- nginx proxy Start  -----#
-sh ${SCR_DIR}/nginx_proxy.sh
+sh ${SCR_DIR}/scriptStartup/nginx_proxy.sh
+# ----- nginx proxy End  -----#
+
+# ----- nginx proxy Start  -----#
+sh ${SCR_DIR}/scriptStartup/vhosts.sh
 # ----- nginx proxy End  -----#
 
 if [ "$OSENV" = "Mac" ]; then
