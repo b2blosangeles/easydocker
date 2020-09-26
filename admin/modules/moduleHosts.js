@@ -32,21 +32,32 @@
             me.setClone('stopVHost', cmd, callback);
         };
 
+        this.createStartUpVHosts = (callback) => {
+            var v = me.getSitesCfg();
+            var str = '';
+            for (var o in v) {
+                str += "## --- Start " + o + " ---\n";
+                str += me.addDockerCMD(o);
+            }
+            fs.writeFile(data_dir + '/_startUpScript.sh', str, function (err) {
+                setTimeout(() => {
+                    callback({status:'success', message: 'restartAllHost'});
+                }, 500)
+            });
+        };
+
         this.restartAllHost = (callback) => {
             var v = me.getSitesCfg();
-            var _f = {};
+            var str = '';
             for (var o in v) {
-                _f[o] = (function(o) {
-                    return (cbk) => {
-                        me.addDocker(o, function() {
-                            cbk(true)
-                        });
-                    }
-                })(o)
+                str += "## --- Start " + o + " ---\n";
+                str += me.addDockerCMD(o);
             }
-            CP.serial(_f, (data) => {
-                callback(data);
-            }, 30000);
+            fs.writeFile(data_dir + '/_startUpScript.sh', str, function (err) {
+                setTimeout(() => {
+                    callback({status:'success', message: 'restartAllHost'});
+                }, 500)
+            });
         };
 
         this.resetVHost = (serverName, callback) => {
@@ -87,7 +98,7 @@
         }
         
         this.restartProxy = (callback) => {
-            var cmd = 'sh ' +  _env.code_folder + '/nginx_proxy.sh ' + _env.data_folder;
+            var cmd = 'sh ' +  _env.code_folder + '/scriptStartup/nginx_proxy.sh ' + _env.data_folder;
             me.setClone('restartProxy', cmd, callback);
         };
         
@@ -186,6 +197,9 @@
             _f['restartProxy'] = function(cbk) {
                 me.restartProxy(cbk);
             };
+            _f['createStartUpVHosts'] = function(cbk) {
+                me.createStartUpVHosts(cbk); 
+            };
             
             CP.serial(_f, function(data) {
                 callback(CP.data.SitesHosts);
@@ -221,7 +235,11 @@
             _f['restartProxy'] = function(cbk) {
                 me.restartProxy(cbk);
             };
-            
+
+            _f['createStartUpVHosts'] = function(cbk) {
+                me.createStartUpVHosts(cbk); 
+            };
+
             CP.serial(_f, function(data) {
                 me.postLoadList(callback);
             }, 30000);
@@ -295,7 +313,7 @@
             return ((!site_config.publicDocker) ? serverName : site_config.publicDocker).toLowerCase() + '-image';
         }
 
-        this.addDocker = (serverName, callback) => {
+        this.addDockerCMD = (serverName) => {
            
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
@@ -306,7 +324,7 @@
             
             cmd += 'cd ' + me.getDockerPath(serverName) + "\n";
             cmd += 'docker build -f ' + me.getDockerFileFn(serverName) + ' -t ' + site_image + ' .' + "\n";
-            cmd += 'echo "Start docker app .."' + "\n";
+            cmd += 'echo "Start docker app ..' + serverName + ' "' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n"; 
             var cmd_ports  = '';
@@ -318,7 +336,11 @@
             var site_path =  _env.data_folder + '/sites/' + serverName;
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' ' + site_image  + "\n";
             
-            me.setClone('addDocker', cmd, callback);
+            return cmd;
+        }
+
+        this.addDocker = (serverName, callback) => {
+            me.setClone('addDocker', me.addDockerCMD(serverName), callback);
         }
 
         this.removeDocker = (serverName, callback) => {

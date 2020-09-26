@@ -66,6 +66,7 @@ module.exports = {
         deleteVirtualServer(serverName) {
             var me = this;
             me.$parent.commonData.popUp.serverName = serverName;
+            alert($('#confirm_modal'));
             $('#confirm_modal').modal('show');
         },
         stopVHost(serverName) {

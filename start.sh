@@ -90,9 +90,9 @@ echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"
 sh ${SCR_DIR}/scriptStartup/nginx_proxy.sh
 # ----- nginx proxy End  -----#
 
-# ----- nginx proxy Start  -----#
-sh ${SCR_DIR}/scriptStartup/vhosts.sh
-# ----- nginx proxy End  -----#
+# ----- vhosts Start  -----#
+sh ${DATA_DIR}/_startUpScript.sh
+# ----- vhosts End  -----#
 
 if [ "$OSENV" = "Mac" ]; then
    echo "Running on MAC ..."
