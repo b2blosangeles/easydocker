@@ -105,7 +105,7 @@ $(document).ready(
                     components: {
                         'vHostList' : httpVueLoader('/vueApp/easydocker/vHostList.vue'),
                         'vHostForm' : httpVueLoader('/vueApp/easydocker/vHostForm.vue'),
-                        'popUpModal': httpVueLoader('/vueApp/easydocker/popUpModal.vue'),
+                        'popUpModal': httpVueLoader('/vueApp/easydocker/popUpModals/frame.vue'),
                         'dataEngine': httpVueLoader('/vueApp/easydocker/dataEngine.vue'),
                         'spinner'   : httpVueLoader('/vueApp/easydocker/spinner.vue'),
                         'appHeader' : httpVueLoader('/vueApp/easydocker/appHeader.vue')
