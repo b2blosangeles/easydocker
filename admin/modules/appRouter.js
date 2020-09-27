@@ -50,10 +50,10 @@
 						});
 					break;
 				
-				case 'restartAllHost' :
+				case 'removeAllHosts' :
 	
 					var hosts = new MHosts(env, pkg);
-					hosts.restartAllHost(
+					hosts.removeAllHosts(
 						function(data) {
 							res.send(data);
 						});

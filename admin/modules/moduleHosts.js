@@ -22,7 +22,10 @@
                     callback({status:'success'});
             });
         }; 
-
+/*
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+*/
         this.stopVHost = (serverName, callback) => {
             var site_container = serverName + '-container';
             var cmd = '';
@@ -41,23 +44,25 @@
             }
             fs.writeFile(data_dir + '/_startUpScript.sh', str, function (err) {
                 setTimeout(() => {
-                    callback({status:'success', message: 'restartAllHost'});
+                    callback({status:'success', message: 'createStartUpVHosts'});
                 }, 500)
             });
         };
 
-        this.restartAllHost = (callback) => {
-            var v = me.getSitesCfg();
-            var str = '';
-            for (var o in v) {
-                str += "## --- Start " + o + " ---\n";
-                str += me.addDockerCMD(o);
-            }
-            fs.writeFile(data_dir + '/_startUpScript.sh', str, function (err) {
-                setTimeout(() => {
-                    callback({status:'success', message: 'restartAllHost'});
-                }, 500)
-            });
+        this.removeAllHosts = (callback) => {
+            setTimeout(
+                () => {
+                    callback({status:'success'});
+                }, 6000
+            );
+            
+            /*
+
+            var cmd = 'docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)';
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    callback({status:'success'});
+            });*/
         };
 
         this.resetVHost = (serverName, callback) => {

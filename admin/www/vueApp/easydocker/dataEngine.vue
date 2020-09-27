@@ -57,7 +57,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        restartAllHost() {
+        removeAllHosts() {
             var me = this;
             me.$parent.triggerSpinner = true;
 
@@ -65,7 +65,7 @@ module.exports = {
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'restartAllHost'
+                    cmd :'removeAllHosts'
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;

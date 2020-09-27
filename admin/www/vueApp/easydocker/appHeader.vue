@@ -7,8 +7,8 @@
                         <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
                                 Restart proxy
                         </a>
-                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartAllHost()">
-                                Restart All Host
+                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="removeAllHosts()">
+                                Remove All Hosts
                         </a>
                     </div>
                     <div class="col-8 p-0 m-0 text-center">
@@ -43,9 +43,9 @@ module.exports = {
             var me = this;
             me.$parent.dataEngine().restartProxy();
         },
-        restartAllHost() {
+        removeAllHosts() {
             var me = this;
-            me.$parent.dataEngine().runPost('/api', 'restartAllHost', {}, function(result) {
+            me.$parent.dataEngine().runPost('/api', 'removeAllHosts', {}, function(result) {
                 console.log(result);
             } , function(result) {
                 console.log(result);
