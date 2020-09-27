@@ -1,5 +1,11 @@
 {
     "TPL" : [
+        "/vueApp/easydocker/vHostList.vue",
+        "/vueApp/easydocker/vHostForm.vue",
+        "/vueApp/easydocker/popUpModals/frame.vue",
+        "/vueApp/easydocker/dataEngine.vue",
+        "/vueApp/easydocker/spinner.vue",
+        "/vueApp/easydocker/appHeader.vue"
     ],
     "JS" : [
         "/js/coffee-script.js",
@@ -9,6 +15,7 @@
 
         "/vueApp/jsLib/vueIntegration.js",
         "/vueApp/jsLib/vue-router.min.js",
+        "/vueApp/jsLib/vueApp.js",
         "/js/package/_entrance/easydockerMain.js"
     ]
 }

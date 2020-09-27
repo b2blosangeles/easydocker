@@ -102,14 +102,19 @@ $(document).ready(
                             return this.$refs.dataEngine
                         }
                     },
-                    components: {
-                        'vHostList' : httpVueLoader('/vueApp/easydocker/vHostList.vue'),
-                        'vHostForm' : httpVueLoader('/vueApp/easydocker/vHostForm.vue'),
-                        'popUpModal': httpVueLoader('/vueApp/easydocker/popUpModals/frame.vue'),
-                        'dataEngine': httpVueLoader('/vueApp/easydocker/dataEngine.vue'),
-                        'spinner'   : httpVueLoader('/vueApp/easydocker/spinner.vue'),
-                        'appHeader' : httpVueLoader('/vueApp/easydocker/appHeader.vue')
-                    }
+                    components: VUEApp.loadComponents({
+                        LOAD    : {
+
+                        }, 
+                        TPL :{
+                            'vHostList' : '/vueApp/easydocker/vHostList.vue',
+                            'vHostForm' : '/vueApp/easydocker/vHostForm.vue',
+                            'popUpModal': '/vueApp/easydocker/popUpModals/frame.vue',
+                            'dataEngine': '/vueApp/easydocker/dataEngine.vue',
+                            'spinner'   : '/vueApp/easydocker/spinner.vue',
+                            'appHeader' : '/vueApp/easydocker/appHeader.vue'
+                        }
+                    })
                 });
             }
         ) 
