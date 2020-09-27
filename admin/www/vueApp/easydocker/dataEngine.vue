@@ -226,15 +226,6 @@ module.exports = {
         saveVHostForm(data, callback) {
             var me = this;
             me.$parent.triggerSpinner = true;
-            /*
-            setTimeout(
-                () => {
-                    alert(889);
-                     me.$parent.triggerSpinner = false;
-                }, 1000
-            );
-            return true;
-            */
             $.ajax({
                 type: 'POST',
                 url:'/api',

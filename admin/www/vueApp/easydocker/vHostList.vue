@@ -19,7 +19,8 @@
                                     gitHub : <span class="text-info"> {{item.gitHub}}</span>
                                 </span>
                                 <span class="ml-3">
-                                    branch : <span class="text-info"> {{item.branch}}</span>
+                                    branch : 
+                                    <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item.name)">{{item.branch}}</button>
                                 </span>
                                 <br/>
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name)">
@@ -66,7 +67,11 @@ module.exports = {
         deleteVirtualServer(serverName) {
             var me = this;
             me.$parent.commonData.popUp.serverName = serverName;
-            alert($('#confirm_modal'));
+            $('#confirm_modal').modal('show');
+        },
+        switchBranch(serverName) {
+            var me = this;
+            me.$parent.commonData.popUp.serverName = serverName;
             $('#confirm_modal').modal('show');
         },
         stopVHost(serverName) {
