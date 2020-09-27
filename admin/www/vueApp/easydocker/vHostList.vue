@@ -72,7 +72,7 @@ module.exports = {
         switchBranch(serverName) {
             var me = this;
             me.$parent.commonData.popUp.serverName = serverName;
-            $('#confirm_modal').modal('show');
+            $('#confirm_modal_frame').modal('show');
         },
         stopVHost(serverName) {
             var me = this;

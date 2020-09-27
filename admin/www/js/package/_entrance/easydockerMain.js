@@ -109,6 +109,7 @@ $(document).ready(
                         TPL :{
                             'vHostList' : '/vueApp/easydocker/vHostList.vue',
                             'vHostForm' : '/vueApp/easydocker/vHostForm.vue',
+                            'popUpFrame': '/vueApp/easydocker/popUpModals/root.vue',
                             'popUpModal': '/vueApp/easydocker/popUpModals/frame.vue',
                             'dataEngine': '/vueApp/easydocker/dataEngine.vue',
                             'spinner'   : '/vueApp/easydocker/spinner.vue',

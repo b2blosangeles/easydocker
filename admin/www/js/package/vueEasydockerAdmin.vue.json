@@ -3,6 +3,7 @@
         "/vueApp/easydocker/vHostList.vue",
         "/vueApp/easydocker/vHostForm.vue",
         "/vueApp/easydocker/popUpModals/frame.vue",
+        "/vueApp/easydocker/popUpModals/root.vue",
         "/vueApp/easydocker/dataEngine.vue",
         "/vueApp/easydocker/spinner.vue",
         "/vueApp/easydocker/appHeader.vue"
