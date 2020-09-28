@@ -41,7 +41,7 @@ module.exports = {
         },
         close() {
             var me = this;
-            me.root.commonData.popUp.insideModule = '';
+            me.cfg = {};
             $('#confirm_modal').modal('hide');
        }
    },

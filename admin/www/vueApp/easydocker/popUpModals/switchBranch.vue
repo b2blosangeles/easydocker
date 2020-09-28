@@ -1,5 +1,5 @@
 <template>
-    <div>switchBranch</div>
+    <div>switchBranch => {{this.$parent.cfg.data.serverName}}</div>
 </template>
 
 <script>
@@ -13,7 +13,6 @@ module.exports = {
     },
     mounted() {
         let me = this;
-        console.log('mounted switch ' + me.root.commonData.popUp.serverName);
     },
     methods :{
         gitRemoteBranchs(gitRecord) {

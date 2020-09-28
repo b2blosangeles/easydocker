@@ -47,7 +47,8 @@
 module.exports = {
     data: function() {
         return {
-            list : []
+            list : [],
+            root :  this.$parent.root
         }
     },
     mounted() {
@@ -61,11 +62,11 @@ module.exports = {
     methods : {
         getVHostList() {
             var me = this;
-            me.$parent.dataEngine().getVHostList();
+            me.root.dataEngine().getVHostList();
         },
         deleteVirtualServer(serverName) {
             var me = this;
-            me.$parent.popUp().show({
+            me.root.popUp().show({
                 insideModule: 'confirmDelete',
                 data : {
                     serverName : serverName
@@ -75,7 +76,7 @@ module.exports = {
 
         switchBranch(serverName) {
             var me = this;
-            me.$parent.popUp().show({
+            me.root.popUp().show({
                 insideModule: 'switchBranch',
                 data : {
                     serverName : serverName
@@ -85,15 +86,15 @@ module.exports = {
 
         stopVHost(serverName) {
             var me = this;
-            me.$parent.dataEngine().stopVHost(serverName);
+            me.root.dataEngine().stopVHost(serverName);
         },
         pullCode(serverName) {
             var me = this;
-            me.$parent.dataEngine().pullCode(serverName);
+            me.root.dataEngine().pullCode(serverName);
         },       
         resetVHost(serverName) {
             var me = this;
-            me.$parent.dataEngine().resetVHost(serverName);
+            me.root.dataEngine().resetVHost(serverName);
         },
         outerPorts(item) {
             var me = this;

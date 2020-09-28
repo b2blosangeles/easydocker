@@ -15,14 +15,13 @@ module.exports = {
     },
     mounted() {
         let me = this;
-        console.log('mounted confirm ' + me.$parent.cfg.data.serverName);
     },
     methods :{
-            execDeletVirtualServer() {
-                let me = this;
-                let serverName = me.$parent.cfg.data.serverName;
-                me.root.dataEngine().removeVirtualHost(serverName);
-            }
+        execDeletVirtualServer() {
+            let me = this;
+            let serverName = me.$parent.cfg.data.serverName;
+            me.root.dataEngine().removeVirtualHost(serverName);
+        }
     }
 }
 </script>
