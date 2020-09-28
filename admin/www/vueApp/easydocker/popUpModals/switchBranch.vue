@@ -1,5 +1,5 @@
 <template>
-    <div>test inside</div>
+    <div>switchBranch</div>
 </template>
 
 <script>

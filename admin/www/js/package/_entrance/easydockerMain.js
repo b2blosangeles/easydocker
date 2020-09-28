@@ -89,7 +89,8 @@ $(document).ready(
                                 list : [],
                                 dockers : [],
                                 popUp : {
-                                    serverName : ''
+                                    serverName  : '',
+                                    insideModule: ''
                                 },
                                 formStarted : false
                             },
@@ -104,13 +105,11 @@ $(document).ready(
                     },
                     components: VUEApp.loadComponents({
                         LOAD    : {
-
                         }, 
                         TPL :{
                             'vHostList' : '/vueApp/easydocker/vHostList.vue',
                             'vHostForm' : '/vueApp/easydocker/vHostForm.vue',
-                            'popUpFrame': '/vueApp/easydocker/popUpModals/root.vue',
-                            'popUpModal': '/vueApp/easydocker/popUpModals/frame.vue',
+                            'popUpModal': '/vueApp/easydocker/popUpModals/_frame.vue',
                             'dataEngine': '/vueApp/easydocker/dataEngine.vue',
                             'spinner'   : '/vueApp/easydocker/spinner.vue',
                             'appHeader' : '/vueApp/easydocker/appHeader.vue'

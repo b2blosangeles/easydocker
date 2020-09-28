@@ -22,7 +22,6 @@
                                     branch : 
                                     <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item.name)">{{item.branch}}</button>
                                 </span>
-                                <br/>
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name)">
                                     Delete
                                 </a>
@@ -66,14 +65,18 @@ module.exports = {
         },
         deleteVirtualServer(serverName) {
             var me = this;
-            me.$parent.commonData.popUp.serverName = serverName;
-            $('#confirm_modal').modal('show');
+            me.$parent.commonData.popUp.serverName = serverName + '';
+            me.$parent.commonData.popUp.insideModule = 'confirmDelete';
+            $('#confirm_modal_frame').modal('show');
         },
+
         switchBranch(serverName) {
             var me = this;
             me.$parent.commonData.popUp.serverName = serverName;
+            me.$parent.commonData.popUp.insideModule = 'switchBranch';
             $('#confirm_modal_frame').modal('show');
         },
+
         stopVHost(serverName) {
             var me = this;
             me.$parent.dataEngine().stopVHost(serverName);
