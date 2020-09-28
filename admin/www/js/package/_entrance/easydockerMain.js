@@ -1,6 +1,8 @@
 $(document).ready(
     function() {
+         /*
         var uiAdmin = {};
+       
         uiAdmin.execDelet = function(serverName) {
             var me = this;
             $.ajax({
@@ -78,6 +80,7 @@ $(document).ready(
         uiAdmin.showErrorMessage = function(str) {
             $('#error_section').html(str)
         }
+        */
         $(document).ready(
             function() {
                 

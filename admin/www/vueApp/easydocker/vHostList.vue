@@ -67,14 +67,14 @@ module.exports = {
             var me = this;
             me.$parent.commonData.popUp.serverName = serverName + '';
             me.$parent.commonData.popUp.insideModule = 'confirmDelete';
-            $('#confirm_modal_frame').modal('show');
+            $('#confirm_modal').modal('show');
         },
 
         switchBranch(serverName) {
             var me = this;
             me.$parent.commonData.popUp.serverName = serverName;
             me.$parent.commonData.popUp.insideModule = 'switchBranch';
-            $('#confirm_modal_frame').modal('show');
+            $('#confirm_modal').modal('show');
         },
 
         stopVHost(serverName) {

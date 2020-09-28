@@ -1,9 +1,8 @@
 <template>
-    <div id="confirm_modal_frame" class="modal fade" tabindex="-1" role="dialog">
+    <div id="confirm_modal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <p>test host "{{this.$parent.commonData.popUp.serverName}}"</p>
                     <span v-bind:is="loadModule()"></span>
                     <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Cancel</button>
                 </div>
