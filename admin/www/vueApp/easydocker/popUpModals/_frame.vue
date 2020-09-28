@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <span v-bind:is="loadModule()"></span>
-                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" v-on:click="close()">Cancel</button>
                 </div>
             </div>
         </div>
@@ -16,7 +16,8 @@ module.exports = {
     props: [],
     data: function() {
         return {
-           // insideModule : ''
+            cfg : {},
+            root :  this.$parent.root
         }
     },
     mounted() {
@@ -28,9 +29,20 @@ module.exports = {
         );
     },
    methods :{
-       loadModule() {
-           var me = this;
-           return (me.$parent.commonData.popUp.insideModule === 'switchBranch') ? 'switchBranch' : 'confirmDelete';
+        show(param) {
+            var me = this;
+            me.cfg = param;
+            $('#confirm_modal').modal('show');
+        },
+        loadModule() {
+           let me = this;
+           let list = ['switchBranch', 'confirmDelete'];
+           return (list.indexOf(me.cfg.insideModule)  === -1) ? '' : me.cfg.insideModule;
+        },
+        close() {
+            var me = this;
+            me.root.commonData.popUp.insideModule = '';
+            $('#confirm_modal').modal('hide');
        }
    },
    components: VUEApp.loadComponents({

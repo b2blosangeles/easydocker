@@ -65,16 +65,22 @@ module.exports = {
         },
         deleteVirtualServer(serverName) {
             var me = this;
-            me.$parent.commonData.popUp.serverName = serverName + '';
-            me.$parent.commonData.popUp.insideModule = 'confirmDelete';
-            $('#confirm_modal').modal('show');
+            me.$parent.popUp().show({
+                insideModule: 'confirmDelete',
+                data : {
+                    serverName : serverName
+                }
+            });
         },
 
         switchBranch(serverName) {
             var me = this;
-            me.$parent.commonData.popUp.serverName = serverName;
-            me.$parent.commonData.popUp.insideModule = 'switchBranch';
-            $('#confirm_modal').modal('show');
+            me.$parent.popUp().show({
+                insideModule: 'switchBranch',
+                data : {
+                    serverName : serverName
+                }
+            });            
         },
 
         stopVHost(serverName) {
