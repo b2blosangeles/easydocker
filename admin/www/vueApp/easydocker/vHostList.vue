@@ -19,8 +19,8 @@
                                     gitHub : <span class="text-info"> {{item.gitHub}}</span>
                                 </span>
                                 <span class="ml-3">
-                                    branch : 
-                                    <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item.name)">{{item.branch}}</button>
+                                    branch :
+                                    <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item.name, item.branch)">{{item.branch}}</button>
                                 </span>
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name)">
                                     Delete
@@ -74,12 +74,13 @@ module.exports = {
             });
         },
 
-        switchBranch(serverName) {
+        switchBranch(serverName, branch) {
             var me = this;
             me.root.popUp().show({
                 insideModule: 'switchBranch',
                 data : {
-                    serverName : serverName
+                    serverName : serverName,
+                    branch : branch
                 }
             });            
         },

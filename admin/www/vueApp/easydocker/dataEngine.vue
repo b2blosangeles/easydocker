@@ -206,6 +206,24 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
+        gitSiteBranchs(serverName, callback) {
+            var me = this;
+            me.$parent.triggerSpinner = true;
+            $.ajax({
+                type: 'POST',
+                url:'/api',
+                data: {
+                    cmd :'gitSiteBranchs',
+                    serverName : serverName
+                },
+                success: function(result) {
+                    me.$parent.triggerSpinner = false;
+                    callback(result);
+                },
+                dataType: 'JSON'
+            });
+        },
+
         gitRemoteBranchs (gitRecord, callback) {
             var me = this;
             me.$parent.triggerSpinner = true;

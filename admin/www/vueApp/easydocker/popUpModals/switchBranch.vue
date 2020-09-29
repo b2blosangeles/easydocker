@@ -13,22 +13,22 @@ module.exports = {
     },
     mounted() {
         let me = this;
+        me.gitRemoteBranchs(me.$parent.cfg.data.serverName);
     },
     methods :{
-        gitRemoteBranchs(gitRecord) {
+        gitRemoteBranchs(serverName) {
             var me = this;
-            me.gitValidation();
-            me.$forceUpdate();
-            if (me.isformValid()) {
-                me.root.dataEngine().gitRemoteBranchs(gitRecord, function(result) {
-                    if (result.status === 'success') {
-                        me.branches = result.list;
-                    } else {
-                        me.branches = [];
-                        me.errors.gitHub = result.message;
-                    }
-                });
-            }
+            me.root.dataEngine().gitSiteBranchs(serverName, function(result) {
+                console.log(result);
+                return true;
+
+                if (result.status === 'success') {
+                    me.branches = result.list;
+                } else {
+                    me.branches = [];
+                    me.errors.gitHub = result.message;
+                }
+            });
         },
     }
 }

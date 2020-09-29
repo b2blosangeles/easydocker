@@ -22,10 +22,7 @@
                     callback({status:'success'});
             });
         }; 
-/*
-docker stop $(docker ps -a -q)
-docker rm $(docker ps -a -q)
-*/
+        
         this.stopVHost = (serverName, callback) => {
             var site_container = serverName + '-container';
             var cmd = '';

@@ -98,6 +98,10 @@
 					me.gitRemoteBranchs();
 					break;
 
+				case 'gitSiteBranchs' :
+					me.gitSiteBranchs();
+					break;
+
 				case 'loadPublicDockersList' :
 					me.loadPublicDockersList();
 					break;
@@ -134,6 +138,14 @@
 			var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
 			var git = new MGit(env, pkg);
 			git.gitRemoteBranchs(req.body.data, function(result) {
+			  res.send(result);
+			});
+		}
+
+        this.gitSiteBranchs = () => {
+			var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
+			var git = new MGit(env, pkg);
+			git.gitSiteBranchs(req.body.serverName, function(result) {
 			  res.send(result);
 			});
 		}
