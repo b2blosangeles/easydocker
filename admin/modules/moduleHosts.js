@@ -130,6 +130,19 @@
                 callback({status:'success', list : me.getSitesCfg()});
             });
         }
+
+        this.switchBranch = (serverName, branch, callback) => {
+            var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
+            var git = new MGit(env, pkg);
+            git.gitSwitchBranch(serverName, branch, function(result) {
+                var v = me.getSitesCfg();
+                if (v[serverName]) {
+                    v[serverName].branch = branch
+                }
+                callback({status:'success'});
+            });
+        }
+
         this.getSitesCfg = () => {
             var v = {}, p;
             try {

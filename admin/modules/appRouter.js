@@ -99,7 +99,11 @@
 					break;
 
 				case 'gitSwitchBranch' :
-					me.gitSwitchBranch();
+					var hosts = new MHosts(env, pkg);
+					hosts.switchBranch(req.body.serverName, req.body.branch,
+						function(data) {
+							res.send(data);
+					});
 					break;
 
 				case 'gitSiteBranchs' :
@@ -154,14 +158,6 @@
 			});
 		}
 		
-		this.gitSwitchBranch = () => {
-			var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
-			var git = new MGit(env, pkg);
-			git.gitSwitchBranch(req.body.serverName, req.body.branch,  function(result) {
-			  res.send(result);
-			});
-		}
-
 		this.sendFile = (fn) => {
 			fs.stat(fn, function(err, stat) {
 				if(err == null) {
