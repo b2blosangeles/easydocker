@@ -41,37 +41,12 @@
         }
         
         this.gitSwitchBranch = (serverName, branch, callback) => {
-
-            var _f = {};
-            _f['getBranches'] = function(cbk) {
-                var dirn = '/var/_localAppDATA/sites/' + serverName;
-                var cmd = 'cd ' + dirn + ' && git branch -r';
-                exec(cmd, {maxBuffer: 1024 * 2048},
-                    function(error, stdout, stderr) {
-                        var branches = [];
-                        var list = stdout.split(/\s+/);
-                        if (!error) {
-                            for (var i in list) {
-                                let regs = /^origin\/([a-z0-9\-\_]+)$/i;
-                                if (regs.test(list[i])) {
-                                    var item = list[i].replace(/^origin\//i, '');
-                                    if (item !== 'HEAD' && branches.indexOf(item) === -1) {
-                                        branches.push(item);
-                                    }
-                                }
-                            }
-                            cbk({status : 'success', branches : branches });
-                        } else {
-                            cbk({status : 'failure', message : error.message});
-                        }
-    
-                        
-                });
-            }
-            CP.serial(_f, (dataCP) => {
-                callback({status : 'success', list : CP.data.getBranches});
-            }, 30000);
-
+            var dirn = '/var/_localAppDATA/sites/' + serverName;
+            var cmd = 'cd ' + dirn + ' && git checkout ' + branch;
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    callback({status : 'success'});                       
+            });
         }
 
         this.gitRemoteBranchs = (gitRecord, callback) => {
