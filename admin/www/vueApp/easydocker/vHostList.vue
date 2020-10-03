@@ -50,7 +50,8 @@ module.exports = {
     data: function() {
         return {
             list : [],
-            root :  this.$parent.root
+            root :  this.$parent.root,
+            currentHost : ''
         }
     },
     mounted() {
@@ -83,7 +84,6 @@ module.exports = {
                     branch      : item.branch
                 };
 
-            
             me.root.popUp().show({
                 insideModule: 'switchBranch',
                 data : data
