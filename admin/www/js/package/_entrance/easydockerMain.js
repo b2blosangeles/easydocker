@@ -25,6 +25,12 @@ $(document).ready(
                         dataEngine() {
                             return this.$refs.dataEngine
                         },
+                        dataEngine() {
+                            return this.$refs.dataEngine
+                        },
+                        vHostList() {
+                            return this.$refs.vHostList
+                        },
                         popUp() {
                             return this.$refs.popUpModal
                         }

@@ -3,23 +3,16 @@
         <span v-if="!branches.length">{{branch}} 
             <a href="JavaScript: void(0)" v-on:click="gitRemoteBranchs()">switch branch</a>
         </span>
-        <span v-if="branches.length">
-        Switch Branch
-        <div class="container">
-            <div class="row">
-                <div class="col-3 p-0 m-0 text-left" v-for="item in branches">
-                    <a href="JavaScript: void(0)" v-on:click="switchBranch(item)">{{item}}</a>
+        <div v-if="branches.length" class="border border-3 p-1">
+            Switch Branch
+            <div class="container m-2">
+                <div class="row">
+                    <div class="col-3 p-0 m-0 text-left" v-for="item in branches">
+                        <a href="JavaScript: void(0)" v-on:click="switchBranch(item)">{{item}}</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <select class="form-control" :required="true" @change="onBranchSelect($event)" v-model="form.branch">
-            <option 
-            v-for="option in branches" 
-            v-bind:value="option"
-            :selected="option.branch == branch"
-            >{{ option }}</option>
-        </select>
-        <span>
+        <div>
     </div>
 </template>
 
@@ -50,18 +43,14 @@ module.exports = {
                 }
             });
         },
-        switchBranch(b) {
+        switchBranch(branch) {
             var me = this;
             me.branches = [];
-            me.root.dataEngine().switchBranch(me.servername, b);        
-        },
-        onBranchSelect(event) {
-            var me = this;
-            me.branches = []
-            // alert(event.target.value);
-            // me.$parent.close() 
-            // me.form.branch = event.target.value;
-            // me.getSiteDocker();
+            me.root.dataEngine().switchBranch(me.servername, branch, function(result) {
+                console.log('result');
+                me.$parent.getVHostList();
+                me.branches = [];
+            });        
         }
     }
 }

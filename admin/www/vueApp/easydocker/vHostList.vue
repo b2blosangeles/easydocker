@@ -3,7 +3,7 @@
         <div class="card-body card-list-section">
 
             <div class="list-group " id="list_section" v-for="item in  $parent.commonData.list">
-                <div class="list-group-item list-group-item-action flex-column align-items-start mb-0">
+                <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
 
                     <div class="container-fluid m-0">
                         <div class="row">
@@ -22,7 +22,7 @@
                              
                                     <select-branch v-bind:servername="item.name" v-bind:branch="item.branch"></select-branch>
                                     branch :
-                                    <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item.name, item.branch)">{{item.branch}}</button>
+                                    <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item)">{{item.branch}}</button>
                                 </span>
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name)">
                                     Delete
@@ -76,14 +76,17 @@ module.exports = {
             });
         },
 
-        switchBranch(serverName, branch) {
-            var me = this;
+        switchBranch(item) {
+            let me = this,
+                data = {
+                    serverName  : item.name,
+                    branch      : item.branch
+                };
+
+            
             me.root.popUp().show({
                 insideModule: 'switchBranch',
-                data : {
-                    serverName : serverName,
-                    branch : branch
-                }
+                data : data
             });            
         },
 

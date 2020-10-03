@@ -139,7 +139,9 @@
                 if (v[serverName]) {
                     v[serverName].branch = branch
                 }
-                callback({status:'success'});
+                me.saveSitesCfg(v, () => {
+                    callback({status:'success'});
+                });
             });
         }
 

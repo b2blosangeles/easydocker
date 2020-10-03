@@ -99,7 +99,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        switchBranch(serverName, branch) {
+        switchBranch(serverName, branch, callback) {
             var me = this;
             me.$parent.triggerSpinner = true;
 
@@ -113,10 +113,11 @@ module.exports = {
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
-                    console.log(result);
+                    if (callback) callback(result);
                 },
                 error: function (jqXHR, textStatus, errorThrown) { 
                     me.$parent.triggerSpinner = false;
+                    if (callback) callback(result);
                 },
                 dataType: 'JSON'
             });

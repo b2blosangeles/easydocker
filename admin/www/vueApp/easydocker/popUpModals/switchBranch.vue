@@ -1,6 +1,6 @@
 <template>
-    <div class="text-left">
-        switchBranch
+    <span class="text-left">
+        Switch Branch
         <select class="form-control" :required="true" @change="onBranchSelect($event)" v-model="form.branch">
             <option 
             v-for="option in branches" 
@@ -8,7 +8,8 @@
             :selected="option.branch ==  form.branch"
             >{{ option }}</option>
         </select>
-    </div>
+        <button type="button" class="btn btn-primary m-1" v-on:click="switchBranch()">Confirm</button>
+    </span>
 </template>
 
 <script>
@@ -39,11 +40,15 @@ module.exports = {
             });
         },
         onBranchSelect(event) {
-            var me = this;
-            // alert(event.target.value);
-            me.$parent.close() 
-            // me.form.branch = event.target.value;
-            // me.getSiteDocker();
+            let me = this;
+            me.form.branch = event.target.value;
+        },
+        switchBranch() {
+            let me = this;
+            me.root.dataEngine().switchBranch(me.$parent.cfg.data.serverName, me.form.branch, function(result) {
+                me.root.vHostList().getVHostList();
+                me.$parent.close();
+            });
         }
     }
 }

@@ -23,11 +23,6 @@ module.exports = {
     },
     mounted() {
         var me = this;
-        setTimeout(
-            function() {
-                // me.$forceUpdate();
-            }, 2000
-        );
     },
    methods :{
         show(param) {
