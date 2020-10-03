@@ -19,6 +19,8 @@
                                     gitHub : <span class="text-info"> {{item.gitHub}}</span>
                                 </span>
                                 <span class="ml-3">
+                             
+                                    <select-branch v-bind:servername="item.name" v-bind:branch="item.branch"></select-branch>
                                     branch :
                                     <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item.name, item.branch)">{{item.branch}}</button>
                                 </span>
@@ -106,8 +108,15 @@ module.exports = {
             }
             return str.replace(/\,$/,'');
         }
-    }
-
+    },
+    components: VUEApp.loadComponents({
+        LOAD    : {
+            'selectBranch' : '/vueApp/easydocker/popUpModals/selectBranch.vue'
+        }, 
+        TPL :{
+            
+        }
+    })
 }
 </script>
  

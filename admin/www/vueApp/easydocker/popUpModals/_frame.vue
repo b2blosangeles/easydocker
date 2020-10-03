@@ -5,6 +5,7 @@
                 <div class="modal-body">
                     <span v-bind:is="loadModule()"></span>
                     <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" v-on:click="close()">Cancel</button>
+                    
                 </div>
             </div>
         </div>

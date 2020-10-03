@@ -99,6 +99,28 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
+        switchBranch(serverName, branch) {
+            var me = this;
+            me.$parent.triggerSpinner = true;
+
+            $.ajax({
+                type: 'POST',
+                url:'/api',
+                data: {
+                    cmd :'switchBranch',
+                    serverName : serverName,
+                    branch     : branch
+                },
+                success: function(result) {
+                    me.$parent.triggerSpinner = false;
+                    console.log(result);
+                },
+                error: function (jqXHR, textStatus, errorThrown) { 
+                    me.$parent.triggerSpinner = false;
+                },
+                dataType: 'JSON'
+            });
+        },
         stopVHost(serverName) {
             var me = this;
 

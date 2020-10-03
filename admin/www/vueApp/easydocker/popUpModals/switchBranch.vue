@@ -1,7 +1,13 @@
 <template>
-    <div>
-        switchBranch => {{this.$parent.cfg.data.serverName}} - {{this.$parent.cfg.data.branch}}
-        {{branches}}
+    <div class="text-left">
+        switchBranch
+        <select class="form-control" :required="true" @change="onBranchSelect($event)" v-model="form.branch">
+            <option 
+            v-for="option in branches" 
+            v-bind:value="option"
+            :selected="option.branch ==  form.branch"
+            >{{ option }}</option>
+        </select>
     </div>
 </template>
 
@@ -11,7 +17,10 @@ module.exports = {
     data: function() {
         return {
             branches : [],
-            root     :  this.$parent.root
+            root     :  this.$parent.root,
+            form     : {
+                branch : this.$parent.cfg.data.branch
+            }
         }
     },
     mounted() {
@@ -29,6 +38,13 @@ module.exports = {
                 }
             });
         },
+        onBranchSelect(event) {
+            var me = this;
+            // alert(event.target.value);
+            me.$parent.close() 
+            // me.form.branch = event.target.value;
+            // me.getSiteDocker();
+        }
     }
 }
 </script>
