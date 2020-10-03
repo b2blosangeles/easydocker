@@ -107,7 +107,7 @@ module.exports = {
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'switchBranch',
+                    cmd :'gitSwitchBranch',
                     serverName : serverName,
                     branch     : branch
                 },

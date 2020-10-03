@@ -98,6 +98,10 @@
 					me.gitRemoteBranchs();
 					break;
 
+				case 'gitSwitchBranch' :
+					me.gitSwitchBranch();
+					break;
+
 				case 'gitSiteBranchs' :
 					me.gitSiteBranchs();
 					break;
@@ -146,6 +150,14 @@
 			var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
 			var git = new MGit(env, pkg);
 			git.gitSiteBranchs(req.body.serverName, function(result) {
+			  res.send(result);
+			});
+		}
+		
+		this.gitSwitchBranch = () => {
+			var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
+			var git = new MGit(env, pkg);
+			git.gitSwitchBranch(req.body.serverName, req.body.branch,  function(result) {
 			  res.send(result);
 			});
 		}
