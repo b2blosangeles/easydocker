@@ -16,13 +16,12 @@ module.exports = {
         }
     },
     mounted() {
-        localStorage.setItem('easydockerFP', new Date().toString());
-        let v = localStorage.getItem('easydockerFP')
-        console.log(v)
+        
     },
     methods : {
         isSignin() {
-            return true
+            let v = localStorage.getItem('easydockerFP')
+            return (!v) ? false : true
         }
     },
     components: VUEApp.loadComponents({

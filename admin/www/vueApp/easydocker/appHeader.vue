@@ -33,6 +33,7 @@ module.exports = {
         }
     },
     mounted() {
+        localStorage.setItem('easydockerFP', new Date().toString());
     },
     methods :{
         addVHost() {
