@@ -20,8 +20,7 @@ module.exports = {
     },
     methods : {
         isSignin() {
-            let v = localStorage.getItem('easydockerFP')
-            return (!v) ? false : true
+            return (!this.root.token) ? false : true
         }
     },
     components: VUEApp.loadComponents({

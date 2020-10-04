@@ -18,6 +18,13 @@
                         <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()">
                                 Add a host
                         </a>
+
+                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="signin()">
+                                signin
+                        </a>
+                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="signoff()">
+                                signoff
+                        </a>
                     </div>
                 </div>
             </div>
@@ -29,13 +36,25 @@
 module.exports = {
     data: function() {
         return {
+            root :  this.$parent.root,
             list : []
         }
     },
     mounted() {
-        localStorage.setItem('easydockerFP', new Date().toString());
+        let v = localStorage.getItem('easydockerFP');
+        this.root.token = v;
     },
     methods :{
+        signin() {
+            var me = this;
+            localStorage.setItem('easydockerFP', new Date().toString());
+            let v = localStorage.getItem('easydockerFP');
+            me.root.token = v;
+        },
+        signoff() {
+            localStorage.removeItem('easydockerFP');
+            this.root.token = null;
+        },
         addVHost() {
             var me = this;
             me.$parent.module = (me.$parent.module === 'form') ? 'list' : 'form';

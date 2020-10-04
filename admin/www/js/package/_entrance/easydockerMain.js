@@ -8,6 +8,7 @@ $(document).ready(
                     data: function() {
                         return {
                             root : this,
+                            token : null,
                             commonData :{
                                 list : [],
                                 dockers : [],
