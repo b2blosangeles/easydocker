@@ -4,27 +4,28 @@
             <div class="container-fluid m-0">
                 <div class="row">
                     <div class="col-2 p-0 m-0 text-left">
-                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
-                                Restart proxy
-                        </a>
-                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="removeAllHosts()">
-                                Remove All Hosts
-                        </a>
+                        <span v-if="isSignin()" >
+                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
+                                    Restart proxy
+                            </a>
+                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="removeAllHosts()">
+                                    Remove All Hosts
+                            </a>
+                        </span>
                     </div>
                     <div class="col-8 p-0 m-0 text-center">
                             <h4>EasyDocker Admin.</h4>
                     </div>
                     <div class="col-2 p-0 m-0 text-right">
-                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()">
-                                Add a host
-                        </a>
+                        <span v-if="isSignin()" >
+                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" v-if="isSignin()" >
+                                    Add a host
+                            </a>
 
-                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="signin()">
-                                signin
-                        </a>
-                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="signoff()">
-                                signoff
-                        </a>
+                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="signoff()">
+                                    signoff
+                            </a>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -45,6 +46,9 @@ module.exports = {
         this.root.token = v;
     },
     methods :{
+        isSignin() {
+            return (!this.root.token) ? false : true
+        },
         signin() {
             var me = this;
             localStorage.setItem('easydockerFP', new Date().toString());

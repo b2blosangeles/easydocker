@@ -1,7 +1,9 @@
 <template>
     <div class="card shadow m-2 mr-1">
         Sign In Form
-
+        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="signin()">
+                signin
+        </a>
     </div>
 </template>
  
@@ -9,6 +11,7 @@
 module.exports = {
     data: function() {
         return {
+            root :  this.$parent.root,
             errors: {},
             publicDockers     : [],
             branches : null,
@@ -37,7 +40,13 @@ module.exports = {
         cleanForm() {
             var me = this;
 
-        }
+        },
+        signin() {
+            var me = this;
+            localStorage.setItem('easydockerFP', new Date().toString());
+            let v = localStorage.getItem('easydockerFP');
+            me.root.token = v;
+        },
     }
 }
 </script>
