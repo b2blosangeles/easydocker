@@ -21,26 +21,26 @@ $(document).ready(
                             module : 'list'
                         }
                     },
+                    mounted () {
+                        localStorage.setItem('easydockerFP', new Date().toString());
+                        let v = localStorage.getItem('easydockerFP')
+                        console.log(v)
+                    },
                     methods :{
                         dataEngine() {
                             return this.$refs.dataEngine
                         },
-                        dataEngine() {
-                            return this.$refs.dataEngine
-                        },
-                        vHostList() {
-                            return this.$refs.vHostList
+                        appBody() {
+                            return this.$refs.appBody
                         },
                         popUp() {
                             return this.$refs.popUpModal
                         }
                     },
                     components: VUEApp.loadComponents({
-                        LOAD    : {
-                        }, 
+                        LOAD    : {}, 
                         TPL :{
-                            'vHostList' : '/vueApp/easydocker/vHostList.vue',
-                            'vHostForm' : '/vueApp/easydocker/vHostForm.vue',
+                            'appBody' : '/vueApp/easydocker/appBody.vue',
                             'popUpModal': '/vueApp/easydocker/popUpModals/_frame.vue',
                             'dataEngine': '/vueApp/easydocker/dataEngine.vue',
                             'spinner'   : '/vueApp/easydocker/spinner.vue',

@@ -2,7 +2,7 @@
     <div class="card shadow m-2 ml-1">
         <div class="card-body card-list-section">
 
-            <div class="list-group " id="list_section" v-for="item in  $parent.commonData.list">
+            <div class="list-group " id="list_section" v-for="item in  root.commonData.list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
 
                     <div class="container-fluid m-0">

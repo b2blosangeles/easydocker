@@ -6,7 +6,8 @@
         "/vueApp/easydocker/popUpModals/_frame.vue",
         "/vueApp/easydocker/dataEngine.vue",
         "/vueApp/easydocker/spinner.vue",
-        "/vueApp/easydocker/appHeader.vue"
+        "/vueApp/easydocker/appHeader.vue",
+        "/vueApp/easydocker/appBody.vue"
     ],
     "JS" : [
         "/js/coffee-script.js",

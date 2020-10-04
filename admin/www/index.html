@@ -13,8 +13,7 @@
       <div class="col-1 p-0"></div>
       <div class="col-10 pt-6 text-center">
         <app-header></app-header>
-        <v-host-form v-if="module=='form'"></v-host-form>
-        <v-host-list v-if="module=='list'" ref="vHostList"></v-host-list>
+        <app-body ref="appBody"></app-body>
         <data-engine ref="dataEngine"></data-engine>
         <pop-up-modal ref="popUpModal"></pop-up-modal>
         <spinner></spinner>

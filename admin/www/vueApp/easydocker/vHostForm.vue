@@ -83,6 +83,7 @@
 module.exports = {
     data: function() {
         return {
+            root :  this.$parent.root,
             errors: {},
             publicDockers     : [],
             branches : null,
@@ -146,7 +147,7 @@ module.exports = {
         },
         loadPublicDockersList() {
             var me = this;
-            me.$parent.dataEngine().loadPublicDockersList(true, function(data) {
+            me.root.dataEngine().loadPublicDockersList(true, function(data) {
                 me.publicDockers = data;
             });
         },
@@ -155,7 +156,7 @@ module.exports = {
             me.gitValidation();
             me.$forceUpdate();
             if (me.isformValid()) {
-                me.$parent.dataEngine().gitRemoteBranchs(gitRecord, function(result) {
+                me.root.dataEngine().gitRemoteBranchs(gitRecord, function(result) {
                     if (result.status === 'success') {
                         me.branches = result.list;
                     } else {
@@ -209,7 +210,7 @@ module.exports = {
             if (!me.isformValid()) {
                 return false;
             } 
-            me.$parent.dataEngine().saveVHostForm(
+            me.root.dataEngine().saveVHostForm(
                 me.form, function(result) {
                     if (result.status === 'success') {
                         me.cancel();
@@ -227,14 +228,14 @@ module.exports = {
         cancel() {
             var me = this;
             me.reset();
-            me.$parent.module = (me.$parent.module === 'form') ? 'list' : 'form';
+            me.root.module = (me.root.module === 'form') ? 'list' : 'form';
         },
         isformValid() {
             var me = this;
             return (!Object.keys(me.errors).length) ? true : false;
         },
         isServerNameExist(name) {
-            var me = this, list = me.$parent.commonData.list
+            var me = this, list = me.root.commonData.list
             for (e in list) {
                 console.log(e);
                 if (list[e].serverName == name) {
