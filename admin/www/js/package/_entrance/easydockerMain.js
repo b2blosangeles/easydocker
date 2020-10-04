@@ -22,9 +22,6 @@ $(document).ready(
                         }
                     },
                     mounted () {
-                        localStorage.setItem('easydockerFP', new Date().toString());
-                        let v = localStorage.getItem('easydockerFP')
-                        console.log(v)
                     },
                     methods :{
                         dataEngine() {
