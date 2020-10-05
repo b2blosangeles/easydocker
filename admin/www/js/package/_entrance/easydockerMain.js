@@ -23,17 +23,13 @@ $(document).ready(
                             module : 'list'
                         }
                     },
-                    mounted () {
-                        var me = this;
-                        setTimeout(
-                            function() {
-                                me.dataEngine().auth();
-                            }, 50
-                        );
-                    },
+                    mounted () {},
                     methods :{
                         dataEngine() {
                             return this.$refs.dataEngine
+                        },
+                        auth() {
+                            return this.$refs.auth
                         },
                         appBody() {
                             return this.$refs.appBody
@@ -45,7 +41,8 @@ $(document).ready(
                     components: VUEApp.loadComponents({
                         LOAD    : {}, 
                         TPL :{
-                            'appBody' : '/vueApp/easydocker/appBody.vue',
+                            'auth'      : '/vueApp/easydocker/auth.vue',
+                            'appBody'   : '/vueApp/easydocker/appBody.vue',
                             'popUpModal': '/vueApp/easydocker/popUpModals/_frame.vue',
                             'dataEngine': '/vueApp/easydocker/dataEngine.vue',
                             'spinner'   : '/vueApp/easydocker/spinner.vue',
