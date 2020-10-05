@@ -1,5 +1,6 @@
 <template>
     <div>
+        {{root.isAuth}}
         <span v-if="isSignin()">
           <v-host-form v-if="root.module=='form'"></v-host-form>
           <v-host-list v-if="root.module=='list'" ref="vHostList"></v-host-list>

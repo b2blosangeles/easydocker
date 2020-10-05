@@ -40,6 +40,11 @@
 			}
 
             switch(req.body.cmd) {
+				case 'auth' :
+					var MAuth= pkg.require(env.root+ '/modules/moduleAuth.js');
+					var auth = new MAuth(env, pkg, req, res);
+					auth.action();
+					break;
 
 				case 'resetVHost' :
 	

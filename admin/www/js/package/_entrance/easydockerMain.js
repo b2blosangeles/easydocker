@@ -9,6 +9,7 @@ $(document).ready(
                         return {
                             root : this,
                             token : null,
+                            isAuth  : false,
                             commonData :{
                                 list : [],
                                 dockers : [],
@@ -23,6 +24,12 @@ $(document).ready(
                         }
                     },
                     mounted () {
+                        var me = this;
+                        setTimeout(
+                            function() {
+                                me.dataEngine().auth();
+                            }, 50
+                        );
                     },
                     methods :{
                         dataEngine() {
