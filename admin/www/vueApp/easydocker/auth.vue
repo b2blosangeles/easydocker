@@ -21,7 +21,7 @@ module.exports = {
    methods : {
       checkAuthExist() {
          var me = this;
-         me.root.dataEngine().post({}, function(result) {
+         me.root.dataEngine().post({cmd: 'auth', data : {code : 'isAuthReady' }}, function(result) {
                me.isAuthExist = false;
          });   
       }

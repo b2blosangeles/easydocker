@@ -11,7 +11,7 @@
                     callback({status:'success', isAuthReady : me.isAuthReady()});
                     break;
                 default:
-                    callback({status:'failure', message : '404 wrong code of auth!'});
+                    callback({status:'failure', message : '404 wrong code of auth!' + data.code});
                     break;
             
             }

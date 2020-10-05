@@ -12,16 +12,13 @@ module.exports = {
         var me = this;
     },
     methods :{
-        post() {
+        post(data) {
             var me = this;
             me.$parent.triggerSpinner = true;
-
             $.ajax({
                 type: 'POST',
                 url:'/api',
-                data: {
-                    cmd :'auth'
-                },
+                data: data,
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
                     console.log(result);
