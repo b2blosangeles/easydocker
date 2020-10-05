@@ -1,12 +1,20 @@
 (function() {
     var exec = require('child_process').exec;
-    var obj = function(env, pkg, req, res) {
+    var obj = function(env, pkg) {
         var me = this,
             fs = require('fs'),
             exec = require('child_process').exec,
             CP = new pkg.crowdProcess();
-        this.action = () => {
-            res.send('action');
+        this.action = (data, callback) => {
+            switch(data.code) {
+                case 'isAuthReady' :
+                    callback({status:'success', isAuthReady : me.isAuthReady()});
+                    break;
+                default:
+                    callback({status:'failure', message : '404 wrong code of auth!'});
+                    break;
+            
+            }
         };
         this.isAuthReady = () => {
             let fn = '/var/_localAppDATA/authData.json';
@@ -16,7 +24,6 @@
             } catch (e) {
 
             }
-            return true;
             return (auth.root) ? true : false;
         };
         this.initAuth = (path, branch, callback) => {

@@ -42,8 +42,10 @@
             switch(req.body.cmd) {
 				case 'auth' :
 					var MAuth= pkg.require(env.root+ '/modules/moduleAuth.js');
-					var auth = new MAuth(env, pkg, req, res);
-					auth.action();
+					var auth = new MAuth(env, pkg);
+					auth.action((!req.body.data) ? {} : req.body.data, (data) => {
+						res.send(data);
+					});
 					break;
 
 				case 'resetVHost' :
