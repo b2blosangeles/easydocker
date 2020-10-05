@@ -22,7 +22,10 @@ module.exports = {
       checkAuthExist() {
          var me = this;
          me.root.dataEngine().post({cmd: 'auth', data : {code : 'isAuthReady' }}, function(result) {
-               me.isAuthExist = false;
+               if (result.status === 'success') {
+                  me.isAuthExist = true;
+                 // result.isAuthReady;
+               }
          });   
       }
    }

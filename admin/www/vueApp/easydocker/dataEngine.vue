@@ -12,7 +12,7 @@ module.exports = {
         var me = this;
     },
     methods :{
-        post(data) {
+        post(data, callback) {
             var me = this;
             me.$parent.triggerSpinner = true;
             $.ajax({
@@ -21,10 +21,11 @@ module.exports = {
                 data: data,
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
-                    console.log(result);
+                    callback(result)
                 },
                 error: function (jqXHR, textStatus, errorThrown) { 
                     me.$parent.triggerSpinner = false;
+                    callback(result);
                 },
                 dataType: 'JSON'
             });
@@ -42,7 +43,6 @@ module.exports = {
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
-                    console.log(result);
                 },
                 error: function (jqXHR, textStatus, errorThrown) { 
                     me.$parent.triggerSpinner = false;
@@ -87,7 +87,6 @@ module.exports = {
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
-                    console.log(result);
                 },
                 error: function (jqXHR, textStatus, errorThrown) { 
                     me.$parent.triggerSpinner = false;
