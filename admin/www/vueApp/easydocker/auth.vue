@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isAuth" class="authPage">
+    <div v-if="isAuthExist === false" class="authPage">
          <div class="overlay_auth_cover"></div>
         Auth
     </div>
@@ -11,20 +11,19 @@ module.exports = {
    data: function() {
       return {
          root :  this.$parent.root,
-         isAuth  : false
+         isAuthExist  : null
       }
    },
    mounted() {
       var me = this;
-      setTimeout(
-         function() {
-            me.isAuth = me.checkAuth();
-         }, 3000
-      );
+      me.isAuthExist = me.checkAuthExist();
    },
    methods : {
-      checkAuth() {
-         return true;
+      checkAuthExist() {
+         var me = this;
+         me.root.dataEngine().post({}, function(result) {
+               me.isAuthExist = false;
+         });   
       }
    }
 }

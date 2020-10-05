@@ -12,7 +12,7 @@ module.exports = {
         var me = this;
     },
     methods :{
-        auth() {
+        post() {
             var me = this;
             me.$parent.triggerSpinner = true;
 
