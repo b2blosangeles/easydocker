@@ -45,14 +45,14 @@
                      <div class="col-1"></div>
                      <div class="col-10 text-left">
                            <label class="pl-2"><b>Admin Password</b></label>
-                           <input type="password" class="form-control" placeholder="Admin password">                        
+                           <input type="password" v-model="formSignin.password" class="form-control" placeholder="Admin password">                        
                      </div>
                      <div class="col-1"></div>
                   </div>
                   <div class="row p-1">
                      <div class="col-1"></div>
                      <div class="col-10 text-left">
-                           <button type="button" class="btn btn-info m-3" v-on:click="signin()">Sign in</button>
+                           <button type="button" class="btn btn-info m-3" v-on:click="signIn()">Sign in</button>
                      </div>
                      <div class="col-1"></div>
                   </div>  
@@ -70,10 +70,13 @@ module.exports = {
       return {
          root :  this.$parent.root,
          isAuthExist  : null,
-         isLogedin : true,
+         isLogedin : false,
          formInit : {
             password: '',
             vpass:''
+         },
+         formSignin : {
+            password: ''
          }
       }
    },
@@ -100,6 +103,15 @@ module.exports = {
       initAdminPassword() {
          var me = this;
          me.root.dataEngine().post({cmd: 'auth', data : {code : 'initPassword', password: me.formInit.password }}, function(result) {
+               // me.isLogedin = true;
+               me.checkAuthExist();
+         });
+      },
+      signIn() {
+         var me = this;
+         me.root.dataEngine().post({cmd: 'auth', data : {code : 'signin', password: me.formSignin.password }}, function(result) {
+               console.log(result);
+               /*
                if (result.status === 'success') {
                   me.isAuthExist = true;
                   console.log(result);
@@ -108,10 +120,8 @@ module.exports = {
                }
                me.isLogedin = true;
                console.log(me.isAuthExist);
+               */
          });
-      },
-      signIn() {
-         alert('signIn');
       }
    }
 }

@@ -55,7 +55,9 @@
                 auth = pkg.require(fn);
             } catch (e) {}
             if (auth['root'] === password) {
-                let token = new Date().getTime();
+                let token = 'TK_' + new Date().getTime();
+                if (!auth.tokens) auth.tokens = [];
+                auth.tokens.push({token : token, tm : new Date().getTime()});
                 callback({status: 'success', token : token});
             } else {
                 callback({status: 'failure', message : 'Wrong password ' + password + '!'});
