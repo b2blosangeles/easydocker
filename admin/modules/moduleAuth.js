@@ -10,6 +10,9 @@
                 case 'isAuthReady' :
                     callback({status:'success', isAuthReady : me.isAuthReady()});
                     break;
+                case 'initPassword' :
+                    me.initPassword(data.password, callback);
+                    break;
                 default:
                     callback({status:'failure', message : '404 wrong code of auth!' + data.code});
                     break;
@@ -20,15 +23,26 @@
             let fn = '/var/_localAppDATA/authData.json';
             let auth = {};
             try {
-                auth = require(fn);
+                auth = pkg.require(fn);
             } catch (e) {
 
             }
             return (auth.root) ? true : false;
         };
-        this.initAuth = (path, branch, callback) => {
-
+        this.initPassword = (str, callback) => {
+            let fn = '/var/_localAppDATA/authData.json';
+            let auth = {};
+            try {
+                auth = pkg.require(fn);
+            } catch (e) {}
+            
+            auth['root'] = str;
+            fs.writeFile(fn, JSON.stringify(auth), 
+                (err) => {
+                    callback({status:'success'});
+                });
         };
+
         this.addLoginToken = (token, callback) => {
 
         };
