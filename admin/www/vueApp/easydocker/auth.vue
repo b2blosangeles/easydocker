@@ -1,8 +1,8 @@
 <template>
    <span>
-      <div v-if="isAuthExist === false" class="overlay_auth_frame center-block">
+      <div v-if="!auth.isAuthExist" class="overlay_auth_frame center-block">
          <div class="overlay_auth_cover"></div>
-         <div class="card shadow m-3 p-3 overlay_auth_body" v-if="isAuthExist === false">
+         <div class="card shadow m-3 p-3 overlay_auth_body" v-if="auth.isAuthExist === false">
             <div class="form-group">
                   <label><h3>Initial Authentication Setup aaa</h3> (Setup Admin Password)</label>
             </div>
@@ -34,7 +34,7 @@
             
          </div>
       </div>
-      <div v-if="isAuthExist === true && !isLogin()" class="overlay_auth_frame center-block">
+      <div v-if="auth.isAuthExist === true && !auth.isSignIn" class="overlay_auth_frame center-block">
          <div class="overlay_auth_cover"></div>
          <div class="card shadow m-3 p-3 overlay_auth_body">
             <div class="form-group">
@@ -69,8 +69,11 @@ module.exports = {
    data: function() {
       return {
          root :  this.$parent.root,
-         isAuthExist  : null,
-         isLogedin : false,
+         auth : {
+            token : null,
+            isAuthExist : false,
+            isSignIn : null
+         },
          formInit : {
             password: '',
             vpass:''
@@ -82,46 +85,65 @@ module.exports = {
    },
    mounted() {
       var me = this;
-      me.isAuthExist = me.checkAuthExist();
+      me.checkAuthExist();
+      me.checkIsTokenLogin();
    },
    methods : {
-      isLogin() {
-         return (this.isLogedin) ? true : false
-      },
-      checkAuthExist() {
+      checkIsTokenLogin() {
          var me = this;
-         me.root.dataEngine().post({cmd: 'auth', data : {code : 'isAuthReady' }}, function(result) {
+         let v = localStorage.getItem('easydockerFP');
+         if (v) {
+            me.root.dataEngine().post({cmd: 'auth', data : {code : 'isTokenLogin', token : v }}, function(result) {
                if (result.status === 'success') {
-                  me.isAuthExist = result.isAuthReady;
+                  me.auth.isSignIn = true;
+                  me.auth.token = result.token;
+               } else {
+                  me.auth.isSignIn  = false;
+                  delete me.auth.token;
                }
-         });   
+               me.root.auth = me.auth;
+            });
+         } else {
+            me.auth.isSignIn  = false;
+            delete me.auth.token;
+            me.root.auth = me.auth;
+         }
       },
+
       isInitValid() {
          var me = this;
          return (!me.formInit.password || me.formInit.password !== me.formInit.vpass) ? false : true;
       },
+
+      checkAuthExist() {
+         var me = this;
+         me.root.dataEngine().post({cmd: 'auth', data : {code : 'isAuthReady' }}, function(result) {
+               if (result.status === 'success') {
+                  me.auth.isAuthExist = result.isAuthReady;
+                  me.root.auth = me.auth;
+               }
+         });   
+      },
       initAdminPassword() {
          var me = this;
          me.root.dataEngine().post({cmd: 'auth', data : {code : 'initPassword', password: me.formInit.password }}, function(result) {
-               // me.isLogedin = true;
                me.checkAuthExist();
          });
       },
       signIn() {
          var me = this;
          me.root.dataEngine().post({cmd: 'auth', data : {code : 'signin', password: me.formSignin.password }}, function(result) {
-               console.log(result);
-               /*
                if (result.status === 'success') {
-                  me.isAuthExist = true;
-                  console.log(result);
-               } else {
-                  me.isAuthExist = true;
+                  localStorage.setItem('easydockerFP', result.token);
+                  me.checkIsTokenLogin();
                }
-               me.isLogedin = true;
-               console.log(me.isAuthExist);
-               */
          });
+      },
+      signOff() {
+         var me = this;
+         localStorage.removeItem('easydockerFP');
+         me.checkAuthExist();
+         me.checkIsTokenLogin();
       }
    }
 }

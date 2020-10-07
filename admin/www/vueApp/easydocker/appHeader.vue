@@ -4,7 +4,7 @@
             <div class="container-fluid m-0">
                 <div class="row">
                     <div class="col-2 p-0 m-0 text-left">
-                        <span v-if="isSignin()" >
+                        <span v-if="root.isSignin()" >
                             <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
                                     Restart proxy
                             </a>
@@ -17,12 +17,12 @@
                             <h4>EasyDocker Admin.</h4>
                     </div>
                     <div class="col-2 p-0 m-0 text-right">
-                        <span v-if="isSignin()" >
-                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" v-if="isSignin()" >
+                        <span v-if="root.isSignin()" >
+                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" v-if="root.isSignin()" >
                                     Add a host
                             </a>
 
-                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="signoff()">
+                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
                                     signoff
                             </a>
                         </span>
@@ -46,19 +46,6 @@ module.exports = {
         this.root.token = v;
     },
     methods :{
-        isSignin() {
-            return (!this.root.token) ? false : true
-        },
-        signin() {
-            var me = this;
-            localStorage.setItem('easydockerFP', new Date().toString());
-            let v = localStorage.getItem('easydockerFP');
-            me.root.token = v;
-        },
-        signoff() {
-            localStorage.removeItem('easydockerFP');
-            this.root.token = null;
-        },
         addVHost() {
             var me = this;
             me.$parent.module = (me.$parent.module === 'form') ? 'list' : 'form';

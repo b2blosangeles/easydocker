@@ -8,8 +8,7 @@ $(document).ready(
                     data: function() {
                         return {
                             root : this,
-                            token : null,
-                            isAuth  : false,
+                            auth : {},
                             commonData :{
                                 list : [],
                                 dockers : [],
@@ -25,10 +24,16 @@ $(document).ready(
                     },
                     mounted () {},
                     methods :{
+                        isSignin() {
+                            return (!this.root.auth || !this.root.auth.isSignIn || !this.root.auth.isAuthExist) ? false : true
+                        },
+                        signOff() {
+                            this.getAuth().signOff();
+                        },
                         dataEngine() {
                             return this.$refs.dataEngine
                         },
-                        auth() {
+                        getAuth() {
                             return this.$refs.auth
                         },
                         appBody() {

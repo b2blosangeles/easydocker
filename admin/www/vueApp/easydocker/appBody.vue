@@ -1,11 +1,10 @@
 <template>
     <div>
-        {{root.isAuth}}
-        <span v-if="isSignin()">
+        =={{root.auth}}==
+        <span v-if="root.isSignin()">
           <v-host-form v-if="root.module=='form'"></v-host-form>
           <v-host-list v-if="root.module=='list'" ref="vHostList"></v-host-list>
         </span>
-        <signin-form  v-if="!isSignin()"></signin-form>
     </div>
 </template>
  
@@ -17,16 +16,13 @@ module.exports = {
         }
     },
     mounted() {
-        
+        var me = this;
     },
     methods : {
-        isSignin() {
-            return (!this.root.token) ? false : true
-        }
+
     },
     components: VUEApp.loadComponents({
         LOAD    : {
-            'signinForm' : '/vueApp/easydocker/signinForm.vue'
         }, 
         TPL :{
             'vHostList' : '/vueApp/easydocker/vHostList.vue',
