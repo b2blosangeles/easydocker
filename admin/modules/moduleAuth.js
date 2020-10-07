@@ -1,6 +1,6 @@
 (function() {
     var exec = require('child_process').exec;
-    const SESSION_TIMEOUT = 60000;
+    const SESSION_TIMEOUT = 300000;
     var obj = function(env, pkg) {
         var me = this,
             fs = require('fs'),
