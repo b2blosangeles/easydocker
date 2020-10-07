@@ -1,5 +1,6 @@
 (function() {
     var exec = require('child_process').exec;
+    const SESSION_TIMEOUT = 60000;
     var obj = function(env, pkg) {
         var me = this,
             fs = require('fs'),
@@ -63,8 +64,8 @@
                 if (!auth.tokens) auth.tokens = {};
  
                 for (var o in auth.tokens) {
-                    if (new Date().getTime() - auth.tokens[o] > 60000) {
-                    //   delete auth.tokens[o];
+                    if (new Date().getTime() - auth.tokens[o] > SESSION_TIMEOUT) {
+                       delete auth.tokens[o];
                     }
                 }
                 auth.tokens[token] = new Date().getTime();
@@ -85,7 +86,7 @@
             } catch (e) {}
             if (auth['root']) {
                 for (var o in auth.tokens) {
-                    if (new Date().getTime() - auth.tokens[o] > 60000) {
+                    if (new Date().getTime() - auth.tokens[o] > SESSION_TIMEOUT) {
                        delete auth.tokens[o];
                     }
                 }
