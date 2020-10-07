@@ -38,7 +38,7 @@
          <div class="overlay_auth_cover"></div>
          <div class="card shadow m-3 p-3 overlay_auth_body">
             <div class="form-group">
-                  <label><h3>Sign in</h3></label>
+                  <h4>EasyDocker Admin Signin</h4>
             </div>
             <div class="form-group">
                   <div class="row p-1">
@@ -155,7 +155,7 @@ module.exports = {
    width   : 100%;
    height  : 100%;
    top:0; left:0;
-   min-height : 18em;
+   min-height : 36em;
 }
 .overlay_auth_cover {
     position:fixed;
@@ -172,7 +172,8 @@ module.exports = {
    z-index:8009;
    left:10%;
    right:10%;
-   min-height : 18em;
+   top : 10%;
+   min-height : 36em;
 }
 
 </style>

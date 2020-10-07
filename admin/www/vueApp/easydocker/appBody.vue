@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{root.auth.token }}
+        {{/* oot.auth.token */}}
         <span v-if="root.isSignin()">
           <v-host-form v-if="root.module=='form'"></v-host-form>
           <v-host-list v-if="root.module=='list'" ref="vHostList"></v-host-list>
