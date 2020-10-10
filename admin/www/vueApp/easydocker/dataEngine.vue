@@ -3,7 +3,7 @@
 
 <script>
 module.exports = {
-    props: ['commonData'],
+    props: [],
     data: function() {
         return {
         }
