@@ -6,8 +6,8 @@
             fs = require('fs'),
             exec = require('child_process').exec,
             CP = new pkg.crowdProcess(),
-            fn = '/var/_localAppDATA/authData.json';
-
+            fn = '/var/_localAppDATA/authData.json',
+            fnToken = '/var/_localAppDATA/authToken.json';
         this.action = (data, callback) => {
             switch(data.code) {
                 case 'isAuthReady' :
@@ -47,7 +47,7 @@
                 auth = pkg.require(fn);
             } catch (e) {}
             
-            auth['root'] = str;
+            auth['root'] = pkg.md5(str);
             fs.writeFile(fn, JSON.stringify(auth), 
                 (err) => {
                     callback({status:'success'});
@@ -55,21 +55,25 @@
         };
 
         this.signin = (password, callback) => {
-            let auth = {};
+            let auth = {}, authToken = {};
             try {
                 auth = pkg.require(fn);
             } catch (e) {}
-            if (auth['root'] === password) {
-                let token = 'TK_' + new Date().getTime();
-                if (!auth.tokens) auth.tokens = {};
+
+            try {
+                authToken = pkg.require(fnToken);
+            } catch (e) {}
+
+            if (auth['root'] === pkg.md5(password)) {
+                let token = 'TK_' + pkg.md5(new Date().getTime());
  
-                for (var o in auth.tokens) {
-                    if (new Date().getTime() - auth.tokens[o] > SESSION_TIMEOUT) {
-                       delete auth.tokens[o];
+                for (var o in authToken) {
+                    if (new Date().getTime() - authToken[o] > SESSION_TIMEOUT) {
+                       delete authToken[o];
                     }
                 }
-                auth.tokens[token] = new Date().getTime();
-                fs.writeFile(fn, JSON.stringify(auth), 
+                authToken[token] = new Date().getTime();
+                fs.writeFile(fnToken , JSON.stringify(authToken), 
                 (err) => {
                     callback({status: 'success', token : token});
                 });
@@ -80,25 +84,21 @@
         };
 
         this.isTokenLogin = (token, callback) => {
-            let auth = {};
+            let authToken = {};
             try {
-                auth = pkg.require(fn);
+                authToken = pkg.require(fnToken);
             } catch (e) {}
-            if (auth['root']) {
-                for (var o in auth.tokens) {
-                    if (new Date().getTime() - auth.tokens[o] > SESSION_TIMEOUT) {
-                       delete auth.tokens[o];
-                    }
+            for (var o in authToken) {
+                if (new Date().getTime() - authToken[o] > SESSION_TIMEOUT) {
+                   delete authToken[o];
                 }
-                if (auth.tokens[token]) {
-                    auth.tokens[token] = new Date().getTime();
-                    fs.writeFile(fn, JSON.stringify(auth), 
-                    (err) => {
-                        callback({status: 'success', token : token});
-                    });
-                }
-            } else {
-                callback({status: 'failure', message : 'Wrong token ' + token + '!'});
+            }
+            if (authToken[token]) {
+                authToken[token] = new Date().getTime();
+                fs.writeFile(fnToken, JSON.stringify(authToken), 
+                (err) => {
+                    callback({status: 'success', token : token});
+                });
             }
         };
 
