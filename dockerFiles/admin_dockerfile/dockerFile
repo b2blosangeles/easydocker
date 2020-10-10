@@ -12,7 +12,7 @@ RUN apt-get install -y vim
 RUN npm install ect
 RUN npm install express
 RUN npm install body-parser
-RUN install blueimp-md5
+RUN npm install md5
 
 COPY _entrypoint.sh /var/_entrypoint.sh
 ENTRYPOINT cd /var && sh _entrypoint.sh

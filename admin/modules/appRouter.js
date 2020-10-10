@@ -6,6 +6,11 @@
 			let p = req.params[0],
 				mp = p.match(/\/([^\/]+)(\/|$)/);
 
+			if (mp && mp[1] === 'api') {
+				res.send(pkg.md5(new Date().getTime()));
+				return true
+			}
+
 			if (mp && mp[1] === 'spa-package') {
 				let SPA = pkg.require(__dirname + '/appSpaPackage.js');
 				let spa= new SPA(env, pkg, req, res);
