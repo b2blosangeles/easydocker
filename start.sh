@@ -104,8 +104,6 @@ if [ "$OSENV" = "Mac" ]; then
        fi
        sleep 1
    done
-else
-  echo 'setup cronjob'
 fi
 
 

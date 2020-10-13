@@ -274,7 +274,7 @@
             for (var i = 0;  i < ports.length; i++) {
                 cmd_ports += parseInt(site_config.unidx * 10000) + parseInt(ports[i]);
                 var u_str = 'http://10.10.10.254:' + cmd_ports + '/';
-                var servasname_v = [serverName + '_local', serverName + '.local']
+                var servasname_v = [serverName + '_local', serverName + '.local', serverName + '.shusiou.win'];
                 for (var j = 0; j < servasname_v .length; j++) {
                     str += 'server {' + "\n";
                     str += '    listen       80;' + "\n";
