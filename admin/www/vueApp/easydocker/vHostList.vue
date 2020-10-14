@@ -1,7 +1,7 @@
 <template>
     <div class="card shadow m-2 text-left">
-        <div class="card-body text-right" v-if="module!=='form'">
-            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" >
+        <div class="text-right p-3" v-if="module!=='form'">
+            <a class="btn btn-sm btn-success mt-2 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" >
                 Add a host
             </a>
         </div>
@@ -16,16 +16,14 @@
                                 <h3><b>{{item.name}}</b></h3>
                             </div>
                             <div class="col-9 p-0 m-0 text-left">
-                                Server name: <span class="text-info">{{item.name}}</span>
-                                <span class="ml-3">
+                                <span class="ml-0">
                                     Port : <span class="text-info"> {{outerPorts(item)}}</span>
                                 </span>
                                 <span class="ml-3">
                                     gitHub : <span class="text-info"> {{item.gitHub}}</span>
                                 </span>
-                                <span class="ml-3">
-                            
-                                    <select-branch v-bind:servername="item.name" v-bind:branch="item.branch"></select-branch>
+                                <select-branch v-bind:servername="item.name" v-bind:branch="item.branch"></select-branch>
+                                <span class="ml-0">
                                     branch :
                                     <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item)">{{item.branch}}</button>
                                 </span>
