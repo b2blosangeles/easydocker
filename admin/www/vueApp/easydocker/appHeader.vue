@@ -19,7 +19,7 @@
                 <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('database')">
                     Database
                 </a>
-                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
+                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('list')">
                     Web Site
                 </a>
                 <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
