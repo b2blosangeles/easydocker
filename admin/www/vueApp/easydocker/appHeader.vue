@@ -14,10 +14,10 @@
             </div>
             <div class="container-fluid mt-3 text-left" v-if="root.isSignin()">
                 <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('database')">
-                    Database
+                    Databases
                 </a>
                 <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('list')">
-                    Web Site
+                    Web Sites
                 </a>
                 <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
                     Restart proxy
