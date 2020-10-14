@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{/* oot.auth.token */}}
         <span v-if="root.isSignin()">
           <v-host-form v-if="root.matrix('form')"></v-host-form>
           <v-host-list v-if="root.matrix('list')" ref="vHostList"></v-host-list>

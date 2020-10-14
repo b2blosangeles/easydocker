@@ -28,9 +28,6 @@
                 <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="removeAllHosts()">
                     Remove All Hosts
                 </a>
-                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" v-if="root.isSignin()" >
-                    Add a host
-                </a>
                 <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
                     signoff
                 </a>
@@ -55,10 +52,6 @@ module.exports = {
         clickMenu(v) {
             var me = this;
             me.$parent.module = v;
-        },    
-        addVHost() {
-            var me = this;
-            me.$parent.module = (me.$parent.module === 'form') ? 'list' : 'form';
         },
         restartProxy() {
             var me = this;

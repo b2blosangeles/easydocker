@@ -1,5 +1,10 @@
 <template>
-    <div class="card shadow m-2">
+    <div class="card shadow m-2 text-left">
+        <div class="card-body text-right">
+            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" >
+                Add a host
+            </a>
+        </div>
         <div class="card-body card-list-section">
             <div class="list-group " id="list_section" v-for="item in  root.commonData.list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
@@ -18,7 +23,7 @@
                                     gitHub : <span class="text-info"> {{item.gitHub}}</span>
                                 </span>
                                 <span class="ml-3">
-                             
+                            
                                     <select-branch v-bind:servername="item.name" v-bind:branch="item.branch"></select-branch>
                                     branch :
                                     <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item)">{{item.branch}}</button>
@@ -41,7 +46,7 @@
                 </div>
             </div>
         </div> 
-    </div> 
+    </div>
 </template>
  
 <script>
@@ -62,6 +67,10 @@ module.exports = {
         );
     },
     methods : {
+        addVHost() {
+            var me = this;
+            me.root.module = 'form';
+        },
         getVHostList() {
             var me = this;
             me.root.dataEngine().getVHostList();
