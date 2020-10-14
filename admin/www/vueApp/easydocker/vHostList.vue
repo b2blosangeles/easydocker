@@ -1,11 +1,12 @@
 <template>
     <div class="card shadow m-2 text-left">
-        <div class="card-body text-right">
+        <div class="card-body text-right" v-if="module!=='form'">
             <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" >
                 Add a host
             </a>
         </div>
-        <div class="card-body card-list-section">
+        <v-host-form v-if="module==='form'"></v-host-form>
+        <div class="card-body card-list-section" v-if="module!=='form'">
             <div class="list-group " id="list_section" v-for="item in  root.commonData.list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
 
@@ -55,7 +56,8 @@ module.exports = {
         return {
             list : [],
             root :  this.$parent.root,
-            currentHost : ''
+            currentHost : '',
+            module : ''
         }
     },
     mounted() {
@@ -69,7 +71,7 @@ module.exports = {
     methods : {
         addVHost() {
             var me = this;
-            me.root.module = 'form';
+            me.module = 'form';
         },
         getVHostList() {
             var me = this;
@@ -125,7 +127,7 @@ module.exports = {
             'selectBranch' : '/vueApp/easydocker/popUpModals/selectBranch.vue'
         }, 
         TPL :{
-            
+            'vHostForm' : '/vueApp/easydocker/vHostForm.vue'
         }
     })
 }

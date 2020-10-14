@@ -12,9 +12,6 @@
                     </div>
                 </div>
             </div>
-            <div class="container-fluid text-center p-0 m-0" v-if="root.isSignin()">
-               {{(!$parent.menu) ? '&nbsp;' : $parent.menu}} - {{$parent.module}}
-            </div>
             <div class="container-fluid mt-3 text-left" v-if="root.isSignin()">
                 <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('database')">
                     Database
@@ -41,7 +38,8 @@ module.exports = {
     data: function() {
         return {
             root :  this.$parent.root,
-            list : []
+            list : [],
+            module : ''
         }
     },
     mounted() {

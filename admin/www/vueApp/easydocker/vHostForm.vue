@@ -214,6 +214,7 @@ module.exports = {
                 me.form, function(result) {
                     if (result.status === 'success') {
                         me.cancel();
+                        me.$parent.getVHostList()
                     }
                 }
             );
@@ -228,7 +229,7 @@ module.exports = {
         cancel() {
             var me = this;
             me.reset();
-            me.root.module = (me.root.module === 'form') ? 'list' : 'form';
+            me.$parent.module = '';
         },
         isformValid() {
             var me = this;
