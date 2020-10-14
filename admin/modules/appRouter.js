@@ -31,7 +31,19 @@
 					}
 				});
 			}
-		};	
+		};
+	
+		this.refreshTokenSend = (data) => {
+			var MAuth= pkg.require(env.root+ '/modules/moduleAuth.js');
+			var auth = new MAuth(env, pkg);
+			auth.refreshAuthToken(
+				req.body.authToken,
+				() => {
+					res.send(data);
+				}
+			)
+		};
+
 		this.post = () => {
 			var me = this;
 			var MHosts = pkg.require(env.root+ '/modules/moduleHosts.js');
@@ -60,7 +72,7 @@
 					var hosts = new MHosts(env, pkg);
 					hosts.resetVHost(req.body.serverName,
 						function(data) {
-							res.send(data);
+							me.refreshTokenSend(data);
 						});
 					break;
 				
@@ -69,7 +81,7 @@
 					var hosts = new MHosts(env, pkg);
 					hosts.removeAllHosts(
 						function(data) {
-							res.send(data);
+							me.refreshTokenSend(data);
 						});
 					break;
 				
@@ -77,7 +89,7 @@
 	
 					var hosts = new MHosts(env, pkg);
 					hosts.restartProxy(function(data) {
-						res.send(data);
+						me.refreshTokenSend(data);
 					});
 					break;
 			    
@@ -85,8 +97,8 @@
 
 					var hosts = new MHosts(env, pkg);
 					hosts.pullCode(req.body.serverName,
-						function(data) {
-							res.send(data);
+						(data) => {
+							me.refreshTokenSend(data);
 						});
 					break;
 
@@ -94,52 +106,59 @@
 
 					var hosts = new MHosts(env, pkg);
 					hosts.stopVHost(req.body.serverName,
-						function(data) {
-							res.send(data);
+						(data) => {
+							me.refreshTokenSend(data);
 						});
 					break;
 
 				case 'loadList' :
-		
 					var hosts = new MHosts(env, pkg);
 					hosts.postLoadList(
-						function(data) {
-							res.send(data);
+						(data) => {
+							me.refreshTokenSend(data);
 						});
 					break;
 
 				case 'gitRemoteBranchs' :
-					me.gitRemoteBranchs();
+					me.gitRemoteBranchs(
+						(data) => {
+							me.refreshTokenSend(data);
+						});
 					break;
 
 				case 'gitSwitchBranch' :
 					var hosts = new MHosts(env, pkg);
 					hosts.switchBranch(req.body.serverName, req.body.branch,
-						function(data) {
-							res.send(data);
+						(data) => {
+							me.refreshTokenSend(data);
 					});
 					break;
 
 				case 'gitSiteBranchs' :
-					me.gitSiteBranchs();
+					me.gitSiteBranchs((data) => {
+						me.refreshTokenSend(data);
+					});
 					break;
 
 				case 'loadPublicDockersList' :
-					me.loadPublicDockersList();
+					me.loadPublicDockersList(
+						(data) => {
+						me.refreshTokenSend(data);
+					});
 					break;
 
 				case 'addHost' :
 					var hosts = new MHosts(env, pkg);
-					hosts.addVHost(req.body.data, function(data) {
-						res.send(data);
+					hosts.addVHost(req.body.data, (data) => {
+						me.refreshTokenSend(data);
 					});
 					break;
 
 				case 'deleteHost' :
 					var hosts = new MHosts(env, pkg);
 					hosts.deleteVHost(req.body.serverName,
-						function(data) {
-							res.send(data);
+						(data) => {
+							me.refreshTokenSend(data);
 						});
 					break;
 
@@ -148,27 +167,27 @@
             }
 		};
 
-		this.loadPublicDockersList = () => {
+		this.loadPublicDockersList = (callback) => {
 			var MDockerfile= pkg.require(env.root+ '/modules/moduleDockerfile.js');
 			var dockers = new MDockerfile(env, pkg);
 			dockers.loadPublicDockersList(function(list) {
-			  res.send({status:'successA', list : list });
+				callback({status:'success', list : list });
 			});
 		}
 
-        this.gitRemoteBranchs = () => {
+        this.gitRemoteBranchs = (callback) => {
 			var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
 			var git = new MGit(env, pkg);
 			git.gitRemoteBranchs(req.body.data, function(result) {
-			  res.send(result);
+				callback(result);
 			});
 		}
 
-        this.gitSiteBranchs = () => {
+        this.gitSiteBranchs = (callback) => {
 			var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
 			var git = new MGit(env, pkg);
 			git.gitSiteBranchs(req.body.serverName, function(result) {
-			  res.send(result);
+				callback(result);
 			});
 		}
 		

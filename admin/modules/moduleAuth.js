@@ -101,6 +101,22 @@
                 });
             }
         };
+        
+        this.refreshAuthToken = (token, callback) => {
+            let authToken = {};
+            try {
+                authToken = pkg.require(fnToken);
+            } catch (e) {}
+            if (token && authToken[token]) {
+                authToken[token] = new Date().getTime();
+                fs.writeFile(fnToken, JSON.stringify(authToken), 
+                (err) => {
+                    callback();
+                });
+            } else {
+                callback();
+            }
+        };
 
         this.removeLoginToken = (token, callback) => {
 
