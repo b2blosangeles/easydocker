@@ -122,11 +122,10 @@ module.exports = {
     },
     components: VUEApp.loadComponents({
         LOAD    : {
-            'selectBranch' : '/vueApp/easydocker/popUpModals/selectBranch.vue'
-        }, 
-        TPL :{
+            'selectBranch' : '/vueApp/easydocker/popUpModals/selectBranch.vue',
             'vHostForm' : '/vueApp/easydocker/vHostForm.vue'
-        }
+        }, 
+        TPL :{}
     })
 }
 </script>

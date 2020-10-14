@@ -2,7 +2,6 @@
     "TPL" : [
         "/vueApp/easydocker/auth.vue",
         "/vueApp/easydocker/vHostList.vue",
-        "/vueApp/easydocker/vHostForm.vue",
         "/vueApp/easydocker/popUpModals/switchBranch.vue",
         "/vueApp/easydocker/popUpModals/_frame.vue",
         "/vueApp/easydocker/dataEngine.vue",
