@@ -4,30 +4,36 @@
             <div class="container-fluid m-0">
                 <div class="row">
                     <div class="col-2 p-0 m-0 text-left">
-                        <span v-if="root.isSignin()" >
-                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
-                                    Restart proxy
-                            </a>
-                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="removeAllHosts()">
-                                    Remove All Hosts
-                            </a>
-                        </span>
                     </div>
-                    <div class="col-8 p-0 m-0 text-center">
-                            <h4>EasyDocker Admin.</h4>
+                    <div class="col-8 p-3 m-0 text-center">
+                            <h3>EasyDocker Admin.</h3>
                     </div>
                     <div class="col-2 p-0 m-0 text-right">
-                        <span v-if="root.isSignin()" >
-                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" v-if="root.isSignin()" >
-                                    Add a host
-                            </a>
-
-                            <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
-                                    signoff
-                            </a>
-                        </span>
                     </div>
                 </div>
+            </div>
+            <div class="container-fluid text-center p-0 m-0" v-if="root.isSignin()">
+               {{(!$parent.menu) ? '&nbsp;' : $parent.menu}} - {{$parent.module}}
+            </div>
+            <div class="container-fluid mt-3 text-left" v-if="root.isSignin()">
+                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('database')">
+                    Database
+                </a>
+                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
+                    Web Site
+                </a>
+                <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
+                    Restart proxy
+                </a>
+                <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="removeAllHosts()">
+                    Remove All Hosts
+                </a>
+                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" v-if="root.isSignin()" >
+                    Add a host
+                </a>
+                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
+                    signoff
+                </a>
             </div>
         </div> 
     </div> 
@@ -46,6 +52,10 @@ module.exports = {
         this.root.token = v;
     },
     methods :{
+        clickMenu(v) {
+            var me = this;
+            me.$parent.menu = v;
+        },    
         addVHost() {
             var me = this;
             me.$parent.module = (me.$parent.module === 'form') ? 'list' : 'form';

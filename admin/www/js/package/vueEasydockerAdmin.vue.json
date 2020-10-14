@@ -8,7 +8,8 @@
         "/vueApp/easydocker/dataEngine.vue",
         "/vueApp/easydocker/spinner.vue",
         "/vueApp/easydocker/appHeader.vue",
-        "/vueApp/easydocker/appBody.vue"
+        "/vueApp/easydocker/appBody.vue",
+        "/vueApp/easydocker/dbMysqlList.vue"
     ],
     "JS" : [
         "/js/coffee-script.js",

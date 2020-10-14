@@ -19,7 +19,8 @@ $(document).ready(
                                 formStarted : false
                             },
                             triggerSpinner : false,
-                            module : 'list'
+                            module : 'list',
+                            menu   : ''
                         }
                     },
                     mounted () {},
