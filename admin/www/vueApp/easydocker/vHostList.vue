@@ -1,21 +1,21 @@
 <template>
     <div class="card shadow m-2 text-left">
-        <div class="text-right p-3" v-if="module!=='form'">
-            <a class="btn btn-sm btn-success mt-2 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" >
+        <div class="text-right p-3 pb-0" v-if="module!=='form'">
+            <a class="btn btn-sm btn-success m-3 mb-0 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" >
                 Add a host
             </a>
         </div>
         <v-host-form v-if="module==='form'"></v-host-form>
-        <div class="card-body card-list-section" v-if="module!=='form'">
-            <div class="list-group " id="list_section" v-for="item in  root.commonData.list">
+        <div class="card-body card-list-section  mt-0" v-if="module!=='form'">
+            <div class="list-group" v-for="item in  root.commonData.list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
 
                     <div class="container-fluid m-0">
                         <div class="row">
-                            <div class="col-3 p-0 m-0 text-left">
+                            <div class="col-2 p-0 m-0 text-left">
                                 <h3><b>{{item.name}}</b></h3>
                             </div>
-                            <div class="col-9 p-0 m-0 text-left">
+                            <div class="col-10 p-0 m-0 text-left">
                                 <span class="ml-0">
                                     Port : <span class="text-info"> {{outerPorts(item)}}</span>
                                 </span>
