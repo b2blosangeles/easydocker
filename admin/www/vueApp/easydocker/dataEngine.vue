@@ -19,7 +19,7 @@ module.exports = {
             }
             return data;
         },
-        post(data, callback, isSpinner) {
+        ajaxPost(data, callback, isSpinner) {
             var me = this;
             if (isSpinner) me.$parent.triggerSpinner = true;
             $.ajax({
@@ -211,12 +211,12 @@ module.exports = {
         },
         getDbMysqlList(noSpinner, callback) {
             var me = this;
-            me.post({
+            me.ajaxPost({
                     cmd :'loadList'
                 }, callback, !noSpinner);
         },
         getVHostList(noSpinner, callback) {
-            this.post({
+            this.ajaxPost({
                 cmd :'loadList'
             }, callback, !noSpinner);
         },
