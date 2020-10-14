@@ -23,7 +23,7 @@
                     break;
 
                 case 'isTokenLogin' :
-                    me.isTokenLogin(data.token, callback);
+                    me.isTokenLogin(data.authToken, callback);
                     break;               
 
                 default:

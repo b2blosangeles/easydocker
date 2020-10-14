@@ -93,7 +93,7 @@ module.exports = {
          var me = this;
          let v = localStorage.getItem('easydockerFP');
          if (v) {
-            me.root.dataEngine().ajaxPost({cmd: 'auth', data : {code : 'isTokenLogin', token : v }}, function(result) {
+            me.root.dataEngine().ajaxPost({cmd: 'auth', data : {code : 'isTokenLogin'}}, function(result) {
                if (result.status === 'success') {
                   me.auth.isSignIn = true;
                   me.auth.token = result.token;

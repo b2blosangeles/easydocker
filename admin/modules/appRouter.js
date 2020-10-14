@@ -48,7 +48,9 @@
 				case 'auth' :
 					var MAuth= pkg.require(env.root+ '/modules/moduleAuth.js');
 					var auth = new MAuth(env, pkg);
-					auth.action((!req.body.data) ? {} : req.body.data, (data) => {
+					var data = (!req.body.data) ? {} : req.body.data;
+					if (req.body.authToken) data.authToken = req.body.authToken;
+					auth.action(data, (data) => {
 						res.send(data);
 					});
 					break;
