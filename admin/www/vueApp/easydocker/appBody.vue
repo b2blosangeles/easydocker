@@ -2,9 +2,9 @@
     <div>
         {{/* oot.auth.token */}}
         <span v-if="root.isSignin()">
-          <v-host-form v-if="root.module=='form'"></v-host-form>
-          <v-host-list v-if="root.module=='list'" ref="vHostList"></v-host-list>
-          <db-mysql-list v-if="matrix('database')" ref="vHostList"></db-mysql-list>
+          <v-host-form v-if="root.matrix('form')"></v-host-form>
+          <v-host-list v-if="root.matrix('list')" ref="vHostList"></v-host-list>
+          <db-mysql-list v-if="root.matrix('database')" ref="vHostList"></db-mysql-list>
         </span>
     </div>
 </template>
@@ -20,11 +20,6 @@ module.exports = {
         var me = this;
     },
     methods : {
-        matrix(v) {
-            var me = this;
-            return (v === 'database' && me.root.module=='list' && me.root.menu=='database') ? true :
-            false;
-        }
     },
     components: VUEApp.loadComponents({
         LOAD    : {

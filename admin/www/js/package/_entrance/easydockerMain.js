@@ -42,6 +42,10 @@ $(document).ready(
                         },
                         popUp() {
                             return this.$refs.popUpModal
+                        },
+                        matrix(v) {
+                            var me = this;
+                            return (me.module === v) ? true : false;
                         }
                     },
                     components: VUEApp.loadComponents({

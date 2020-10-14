@@ -54,7 +54,7 @@ module.exports = {
     methods :{
         clickMenu(v) {
             var me = this;
-            me.$parent.menu = v;
+            me.$parent.module = v;
         },    
         addVHost() {
             var me = this;
