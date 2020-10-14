@@ -19,13 +19,13 @@
                 <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('list')">
                     Web Sites
                 </a>
-                <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
+                <!--a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
                     Restart proxy
                 </a>
                 <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="removeAllHosts()">
                     Remove All Hosts
-                </a>
-                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
+                </a-->
+                <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
                     signoff
                 </a>
             </div>
