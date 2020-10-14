@@ -7,7 +7,7 @@
         </div>
         <v-host-form v-if="module==='form'"></v-host-form>
         <div class="card-body card-list-section  mt-0" v-if="module!=='form'">
-            <div class="list-group" v-for="item in  root.commonData.list">
+            <div class="list-group" v-for="item in  list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
 
                     <div class="container-fluid m-0">
@@ -73,7 +73,12 @@ module.exports = {
         },
         getVHostList() {
             var me = this;
-            me.root.dataEngine().getVHostList();
+            me.root.dataEngine().getVHostList(
+                false,
+                function(result) {
+                    me.list = result.list;
+                }
+            );
         },
         deleteVirtualServer(serverName) {
             var me = this;

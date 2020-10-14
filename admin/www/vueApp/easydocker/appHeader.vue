@@ -1,12 +1,12 @@
 <template>
     <div class="card shadow m-2">
-        <div class="card-body alert-warning border border-warning">
+        <div class="card-body alert-secondary border border-secondary">
             <div class="container-fluid m-0">
                 <div class="row">
                     <div class="col-2 p-0 m-0 text-left">
                     </div>
                     <div class="col-8 p-3 m-0 text-center">
-                            <h3>EasyDocker Tool Kit.</h3>
+                            <h2>EasyDocker Tool Kit.</h2>
                     </div>
                     <div class="col-2 p-0 m-0 text-right">
                     </div>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-6 p-30 m-0 text-right">
                         <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
-                            signoff
+                            Sign Off
                         </a>
                     </div>
                 </div>

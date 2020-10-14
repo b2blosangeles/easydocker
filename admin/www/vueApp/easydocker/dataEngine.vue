@@ -12,25 +12,31 @@ module.exports = {
         var me = this;
     },
     methods :{
-        post(data, callback) {
+        withAuth(data) {
+            let v = localStorage.getItem('easydockerFP');
+            if (v) {
+                data.authToken = v;
+            }
+            return data;
+        },
+        post(data, callback, isSpinner) {
             var me = this;
-            me.$parent.triggerSpinner = true;
+            if (isSpinner) me.$parent.triggerSpinner = true;
             $.ajax({
                 type: 'POST',
                 url:'/api',
-                data: data,
+                data: me.withAuth(data),
                 success: function(result) {
-                    me.$parent.triggerSpinner = false;
+                    if (isSpinner) me.$parent.triggerSpinner = false;
                     callback(result)
                 },
                 error: function (jqXHR, textStatus, errorThrown) { 
-                    me.$parent.triggerSpinner = false;
+                    if (isSpinner) me.$parent.triggerSpinner = false;
                     callback(result);
                 },
                 dataType: 'JSON'
             });
         },
-
        restartProxy() {
             var me = this;
             me.$parent.triggerSpinner = true;
@@ -203,27 +209,16 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        getVHostList(noSpinner, callback) {
+        getDbMysqlList(noSpinner, callback) {
             var me = this;
-            if (!noSpinner) {
-                me.$parent.triggerSpinner = true;
-            }
-            $.ajax({
-                type: 'POST',
-                url:'/api',
-                data: {
+            me.post({
                     cmd :'loadList'
-                },
-                success: function(result) {
-                    me.$parent.triggerSpinner = false;
-                    if (callback) callback(result.list);
-                    me.$parent.commonData.list = result.list;
-                },
-                error: function (jqXHR, textStatus, errorThrown) { 
-                    me.$parent.triggerSpinner = false;
-                },
-                dataType: 'JSON'
-            });
+                }, callback, !noSpinner);
+        },
+        getVHostList(noSpinner, callback) {
+            this.post({
+                cmd :'loadList'
+            }, callback, !noSpinner);
         },
         loadPublicDockersList(noSpinner, callback) {
             var me = this;

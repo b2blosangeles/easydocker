@@ -1,13 +1,13 @@
 <template>
     <div class="card shadow m-2">
         <div class="card-body card-list-section">
-            <div class="list-group " id="list_section" v-for="item in  root.commonData.list">
+            <div class="list-group " id="list_section" v-for="item in  list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
 
                     <div class="container-fluid m-0">
                         <div class="row">
                             <div class="col-3 p-0 m-0 text-left">
-                                <h3><b>db {{item.name}}</b></h3>
+                                <h3><b>{{item.name}}</b></h3>
                             </div>
                             <div class="col-9 p-0 m-0 text-left">
                                 Server name: <span class="text-info">{{item.name}}</span>
@@ -64,7 +64,9 @@ module.exports = {
     methods : {
         getVHostList() {
             var me = this;
-           // me.root.dataEngine().getVHostList();
+            me.root.dataEngine().getDbMysqlList(false, function(result){
+                me.list = result.list;
+            });
         },
         deleteVirtualServer(serverName) {
             var me = this;
