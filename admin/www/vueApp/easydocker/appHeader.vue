@@ -13,21 +13,29 @@
                 </div>
             </div>
             <div class="container-fluid mt-3 text-left" v-if="root.isSignin()">
-                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('database')">
-                    MySQL Databases
-                </a>
-                <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('list')">
-                    Web Servers
-                </a>
-                <!--a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
-                    Restart proxy
-                </a>
-                <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="removeAllHosts()">
-                    Remove All Hosts
-                </a-->
-                <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
-                    signoff
-                </a>
+                <div class="row">
+                    <div class="col-6 p-0 m-0 text-left">
+                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('database')">
+                            MySQL Databases
+                        </a>
+                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('list')">
+                            Web Servers
+                        </a>
+                        <!--a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
+                            Restart proxy
+                        </a>
+                        <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="removeAllHosts()">
+                            Remove All Hosts
+                        </a-->
+
+                    </div>
+                    <div class="col-6 p-30 m-0 text-right">
+                        <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
+                            signoff
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div> 
     </div> 
