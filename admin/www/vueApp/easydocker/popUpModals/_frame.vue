@@ -26,11 +26,10 @@ module.exports = {
         var me = this;
     },
    methods :{
-        show(param, caller) {
+        show(param) {
             var me = this;
             me.cfg = param;
             $('#confirm_modal').modal('show');
-            me.caller = caller;
         },
         loadModule() {
            let me = this;

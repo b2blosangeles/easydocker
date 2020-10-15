@@ -31,7 +31,8 @@ $(document).ready(
                         signOff() {
                             this.getAuth().signOff();
                         },
-                        dataEngine() {
+                        dataEngine(caller) {
+                            if (caller) this.$refs.dataEngine.caller = caller;
                             return this.$refs.dataEngine
                         },
                         getAuth() {
@@ -40,7 +41,8 @@ $(document).ready(
                         appBody() {
                             return this.$refs.appBody
                         },
-                        popUp() {
+                        popUp(caller) {
+                            if (caller) this.$refs.popUpModal.caller = caller;
                             return this.$refs.popUpModal
                         },
                         matrix(v) {

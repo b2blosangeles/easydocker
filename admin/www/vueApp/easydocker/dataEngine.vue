@@ -6,6 +6,7 @@ module.exports = {
     props: [],
     data: function() {
         return {
+            caller : null
         }
     },
     created() {

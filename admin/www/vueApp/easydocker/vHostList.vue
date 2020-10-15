@@ -89,12 +89,12 @@ module.exports = {
         },
         deleteVirtualServer(serverName) {
             var me = this;
-            me.root.popUp().show({
+            me.root.popUp(me).show({
                 insideModule: 'confirmDelete',
                 data : {
                     serverName : serverName
                 }
-            }, me);
+            });
         },
 
         switchBranch(item) {
@@ -104,7 +104,7 @@ module.exports = {
                     branch      : item.branch
                 };
 
-            me.root.popUp().show({
+            me.root.popUp(me).show({
                 insideModule: 'switchBranch',
                 data : data
             });            
@@ -134,7 +134,7 @@ module.exports = {
     },
     components: VUEApp.loadComponents({
         LOAD    : {
-            'selectBranch' : '/vueApp/easydocker/popUpModals/selectBranch.vue',
+            'selectBranch' : '/vueApp/easydocker/selectBranch.vue',
             'vHostForm' : '/vueApp/easydocker/vHostForm.vue'
         }, 
         TPL :{}

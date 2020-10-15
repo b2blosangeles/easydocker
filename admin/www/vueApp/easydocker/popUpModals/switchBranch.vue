@@ -19,6 +19,7 @@ module.exports = {
         return {
             branches : [],
             root     :  this.$parent.root,
+            parent : this.$parent,
             form     : {
                 branch : this.$parent.cfg.data.branch
             }
@@ -26,6 +27,7 @@ module.exports = {
     },
     mounted() {
         let me = this;
+        me.close = me.$parent.close;
         me.gitRemoteBranchs(me.$parent.cfg.data.serverName);
     },
     methods :{
@@ -45,9 +47,11 @@ module.exports = {
         },
         switchBranch() {
             let me = this;
-            me.root.dataEngine().switchBranch(me.$parent.cfg.data.serverName, me.form.branch, function(result) {
-                me.root.vHostList().getVHostList();
-                me.$parent.close();
+            let caller = me.parent.caller,
+                serverName = me.$parent.cfg.data.serverName;
+            me.close();
+            me.root.dataEngine().switchBranch(serverName, me.form.branch, function(result) { 
+                caller.getVHostList();
             });
         }
     }
