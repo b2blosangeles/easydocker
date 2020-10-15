@@ -1,12 +1,22 @@
 <template>
     <div class="card shadow m-2 text-left">
-        <div class="text-right p-3 pb-0" >
-            <a class="btn btn-sm btn-success m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module!=='form'" v-on:click="addVServer()" >
-                Add a Server
-            </a>
-            <a class="btn btn-sm btn-secondary m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module==='form'" v-on:click="cancel()" >
-                Cancel
-            </a>
+        <div class="p-3 pb-0" >
+            <div class="row">
+                <div class="col-1 p-3 m-0 text-center">
+                </div>
+                <div class="col-5 p-3 m-0 text-left">
+                    <h3>Web Server List</h3>
+                </div>
+                <div class="col-6 p-0 m-0 text-right">
+                    <a class="btn btn-sm btn-success m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module!=='form'" v-on:click="addVServer()" >
+                        Add a Server
+                    </a>
+                    <a class="btn btn-sm btn-secondary m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module==='form'" v-on:click="cancel()" >
+                        Cancel
+                    </a>
+                </div> 
+            </div>
+
         </div>
         <v-form v-if="module==='form'" server-type="webserver"></v-form>
         <div class="card-body card-list-section  mt-0" v-if="module!=='form'">
