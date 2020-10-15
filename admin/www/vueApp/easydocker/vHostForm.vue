@@ -1,6 +1,7 @@
 <template>
-<div class="card shadow m-2 mr-1">
-    <div class="card-body card-form-section text-left">
+<div class="card shadow m-2 mr-1 p-3">
+    <div class="card-body card-form-section text-left ">
+        <h3 class="p-3 pl-0">Add a server</h3>
         <form>
             <div class="form-group">
                 <label>Repository git URI *</label>
@@ -65,7 +66,7 @@
             <hr/>
             <button type="button" v-if="branches!==null" class="btn btn-info" v-on:click="saveVHost()">Save the virtual host</button>
             <!--button type="button" class="btn btn-warning" v-on:click="reset()">Reset fields</button-->
-            <button type="button" class="btn btn-secondary" v-on:click="cancel()">Cancel</button>
+            <!--button type="button" class="btn btn-secondary" v-on:click="cancel()">Cancel</button-->
             
             <hr/>
             <div class="text-danger p-3"  v-if="!isformValid()">
@@ -213,7 +214,7 @@ module.exports = {
             me.root.dataEngine().saveVHostForm(
                 me.form, function(result) {
                     if (result.status === 'success') {
-                        me.cancel();
+                        me.$parent.cancel();
                         me.$parent.getVHostList()
                     }
                 }
@@ -226,11 +227,12 @@ module.exports = {
             me.errors={};
             me.branches = [];
         },
+        /*
         cancel() {
             var me = this;
             me.reset();
             me.$parent.module = '';
-        },
+        },*/
         isformValid() {
             var me = this;
             return (!Object.keys(me.errors).length) ? true : false;

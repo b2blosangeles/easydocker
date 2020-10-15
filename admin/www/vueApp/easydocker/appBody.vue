@@ -2,7 +2,7 @@
     <div>
         <span v-if="root.isSignin()">
           <v-host-list v-if="root.matrix('list')" ref="vHostList"></v-host-list>
-          <db-mysql-list v-if="root.matrix('database')" ref="vHostList"></db-mysql-list>
+          <db-mysql-list v-if="root.matrix('database')" ref="vDbsList"></db-mysql-list>
         </span>
     </div>
 </template>

@@ -1,8 +1,11 @@
 <template>
     <div class="card shadow m-2 text-left">
-        <div class="text-right p-3 pb-0" v-if="module!=='form'">
-            <a class="btn btn-sm btn-success m-3 mb-0 pull-right" href="JavaScript:void(0)" v-on:click="addVHost()" >
+        <div class="text-right p-3 pb-0" >
+            <a class="btn btn-sm btn-success m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module!=='form'" v-on:click="addVHost()" >
                 Add a host
+            </a>
+            <a class="btn btn-sm btn-secondary m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module==='form'" v-on:click="cancel()" >
+                Cancel
             </a>
         </div>
         <v-host-form v-if="module==='form'"></v-host-form>
@@ -67,6 +70,10 @@ module.exports = {
         );
     },
     methods : {
+        cancel() {
+            var me = this;
+            me.module = '';
+        },
         addVHost() {
             var me = this;
             me.module = 'form';

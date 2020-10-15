@@ -189,7 +189,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        removeVirtualHost(serverName) {
+        removeVirtualHost(serverName, callback) {
             var me = this;
             $('#confirm_modal').modal('hide');
             me.$parent.triggerSpinner = true;
@@ -203,7 +203,8 @@ module.exports = {
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
                     if (result.status === 'success') {
-                            me.$parent.commonData.list = result.list;
+                        callback(result); 
+                        //    me.$parent.commonData.list = result.list;
                     }
                 },
                 dataType: 'JSON'

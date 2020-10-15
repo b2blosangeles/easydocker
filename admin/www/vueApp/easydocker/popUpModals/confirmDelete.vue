@@ -20,7 +20,9 @@ module.exports = {
         execDeletVirtualServer() {
             let me = this;
             let serverName = me.$parent.cfg.data.serverName;
-            me.root.dataEngine().removeVirtualHost(serverName);
+            me.root.dataEngine().removeVirtualHost(serverName, function() {
+                me.root.appBody().$refs.vHostList.getVHostList();
+            });
         }
     }
 }
