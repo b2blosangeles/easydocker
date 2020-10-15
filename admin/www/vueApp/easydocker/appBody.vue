@@ -1,8 +1,8 @@
 <template>
     <div>
         <span v-if="root.isSignin()">
-          <v-host-list v-if="root.matrix('list')" ref="vHostList"></v-host-list>
-          <db-mysql-list v-if="root.matrix('database')" ref="vDbsList"></db-mysql-list>
+          <v-server-list v-if="root.matrix('list')" ref="vServerList"></v-server-list>
+          <v-server-list v-if="root.matrix('database')" ref="vServerList"></v-server-list>
         </span>
     </div>
 </template>
@@ -24,7 +24,7 @@ module.exports = {
            
         }, 
         TPL :{
-            'vHostList' : '/vueApp/easydocker/vHostList.vue',
+            'vServerList' : '/vueApp/easydocker/vServerList.vue',
             'dbMysqlList':'/vueApp/easydocker/dbMysqlList.vue'
         }
     })

@@ -5,7 +5,7 @@
             exec = require('child_process').exec,
             CP = new pkg.crowdProcess();
 
-        var sitesCfgFn = '/var/_localAppDATA/_sites_cfg.json';
+        var sitesCfgFn = '/var/_localAppDATA/_servers_cfg.json';
         var data_dir = '/var/_localAppDATA';
         
         var _env = {};
@@ -23,16 +23,16 @@
             });
         }; 
         
-        this.stopVHost = (serverName, callback) => {
+        this.stopVServer = (serverName, callback) => {
             var site_container = serverName + '-container';
             var cmd = '';
             cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container.toLowerCase() + "\n";
             cmd += 'docker container rm ' + site_container.toLowerCase() + "\n";
-            me.setClone('stopVHost', cmd, callback);
+            me.setClone('stopVServer', cmd, callback);
         };
 
-        this.createStartUpVHosts = (callback) => {
+        this.createStartUpVServers = (callback) => {
             var v = me.getSitesCfg();
             var str = '';
             for (var o in v) {
@@ -41,12 +41,12 @@
             }
             fs.writeFile(data_dir + '/_startUpScript.sh', str, function (err) {
                 setTimeout(() => {
-                    callback({status:'success', message: 'createStartUpVHosts'});
+                    callback({status:'success', message: 'createStartUpVServers'});
                 }, 500)
             });
         };
 
-        this.removeAllHosts = (callback) => {
+        this.removeAllServers = (callback) => {
             setTimeout(
                 () => {
                     callback({status:'success'});
@@ -62,7 +62,7 @@
             });*/
         };
 
-        this.resetVHost = (serverName, callback) => {
+        this.resetVServer = (serverName, callback) => {
             me.addDocker(serverName, function() {
                 callback();
             });
@@ -116,11 +116,12 @@
         }
 
 
-        this.saveSitesHosts = (data, callback) => {
+        this.saveSitesServers = (data, callback) => {
             
             var v = me.getSitesCfg();
             v[data['serverName']] = {
                 gitHub      : data['gitHub'],
+                serverType  : data['serverType'],
                 branch      : data['branch'],
                 publicDocker: data['publicDocker'],
                 unidx       : me.getNewUnIdx(),
@@ -187,9 +188,8 @@
             return unidx_max + 1;
         }
 
-        this.addVHost = (data, callback) => {
+        this.addVServer = (data, callback) => {
             var _f={};
-        //    data.unidx = me.getNewUnIdx();
 
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
@@ -199,8 +199,8 @@
                 });
             };
             
-            _f['SitesHosts'] = function(cbk) {
-                me.saveSitesHosts(data, cbk);
+            _f['SitesServers'] = function(cbk) {
+                me.saveSitesServers(data, cbk);
             };
             
             _f['addDocker'] = function(cbk) {
@@ -214,16 +214,16 @@
             _f['restartProxy'] = function(cbk) {
                 me.restartProxy(cbk);
             };
-            _f['createStartUpVHosts'] = function(cbk) {
-                me.createStartUpVHosts(cbk); 
+            _f['createStartUpVServers'] = function(cbk) {
+                me.createStartUpVServers(cbk); 
             };
             
             CP.serial(_f, function(data) {
-                callback(CP.data.SitesHosts);
+                callback(CP.data.SitesServers);
             }, 30000);
         }
 
-        this.deleteVHost = (serverName, callback) => {
+        this.deleteVServer = (serverName, callback) => {
             var _f = {};
             _f['deleteCode'] = function(cbk) {
                 var site_path = data_dir + '/sites/' + serverName;
@@ -253,8 +253,8 @@
                 me.restartProxy(cbk);
             };
 
-            _f['createStartUpVHosts'] = function(cbk) {
-                me.createStartUpVHosts(cbk); 
+            _f['createStartUpVServers'] = function(cbk) {
+                me.createStartUpVServers(cbk); 
             };
 
             CP.serial(_f, function(data) {

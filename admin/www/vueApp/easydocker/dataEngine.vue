@@ -82,7 +82,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        removeAllHosts() {
+        removeAllServers() {
             var me = this;
             me.$parent.triggerSpinner = true;
 
@@ -90,7 +90,7 @@ module.exports = {
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'removeAllHosts'
+                    cmd :'removeAllServers'
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
@@ -101,7 +101,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        resetVHost(serverName) {
+        resetVServer(serverName) {
             var me = this;
 
             me.$parent.triggerSpinner = true;
@@ -110,7 +110,7 @@ module.exports = {
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'resetVHost',
+                    cmd :'resetVServer',
                     serverName : serverName
                 },
                 success: function(result) {
@@ -146,7 +146,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        stopVHost(serverName) {
+        stopVServer(serverName) {
             var me = this;
 
             me.$parent.triggerSpinner = true;
@@ -155,7 +155,7 @@ module.exports = {
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'stopVHost',
+                    cmd :'stopVServer',
                     serverName : serverName
                 },
                 success: function(result) {
@@ -190,14 +190,14 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        removeVirtualHost(serverName, callback) {
+        removeVirtualServer(serverName, callback) {
             var me = this;
             me.$parent.triggerSpinner = true;
             $.ajax({
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'deleteHost',
+                    cmd :'deleteServer',
                     serverName :serverName
                 },
                 success: function(result) {
@@ -215,7 +215,7 @@ module.exports = {
                     cmd :'getDbMysqlList'
                 }, callback, !noSpinner);
         },
-        getVHostList(noSpinner, callback) {
+        getVServerList(noSpinner, callback) {
             this.ajaxPost({
                 cmd :'loadList'
             }, callback, !noSpinner);
@@ -276,20 +276,20 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        saveVHostForm(data, callback) {
+        saveVServerForm(data, callback) {
             var me = this;
             me.$parent.triggerSpinner = true;
             $.ajax({
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'addHost',
+                    cmd :'addServer',
                     data: data
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
                     if (result.status === 'success') {
-                        // me.getVHostList();
+                        // me.getVServerList();
                     }
                     callback(result); 
                 },

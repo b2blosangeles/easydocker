@@ -51,7 +51,7 @@ module.exports = {
                 serverName = me.$parent.cfg.data.serverName;
             me.close();
             me.root.dataEngine().switchBranch(serverName, me.form.branch, function(result) { 
-                caller.getVHostList();
+                caller.getVServerList();
             });
         }
     }

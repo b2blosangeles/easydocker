@@ -46,7 +46,7 @@
 
 		this.post = () => {
 			var me = this;
-			var MHosts = pkg.require(env.root+ '/modules/moduleHosts.js');
+			var MServers = pkg.require(env.root+ '/modules/moduleServers.js');
 			var MDbs = pkg.require(env.root+ '/modules/moduleMysql.js');
 
 			let p = req.params[0],
@@ -68,19 +68,19 @@
 					});
 					break;
 
-				case 'resetVHost' :
+				case 'resetVServer' :
 	
-					var hosts = new MHosts(env, pkg);
-					hosts.resetVHost(req.body.serverName,
+					var Servers = new MServers(env, pkg);
+					Servers.resetVServer(req.body.serverName,
 						function(data) {
 							me.refreshTokenSend(data);
 						});
 					break;
 				
-				case 'removeAllHosts' :
+				case 'removeAllServers' :
 	
-					var hosts = new MHosts(env, pkg);
-					hosts.removeAllHosts(
+					var Servers = new MServers(env, pkg);
+					Servers.removeAllServers(
 						function(data) {
 							me.refreshTokenSend(data);
 						});
@@ -88,25 +88,25 @@
 				
 				case 'restartProxy' :
 	
-					var hosts = new MHosts(env, pkg);
-					hosts.restartProxy(function(data) {
+					var Servers = new MServers(env, pkg);
+					Servers.restartProxy(function(data) {
 						me.refreshTokenSend(data);
 					});
 					break;
 			    
 				case 'pullCode' :
 
-					var hosts = new MHosts(env, pkg);
-					hosts.pullCode(req.body.serverName,
+					var Servers = new MServers(env, pkg);
+					Servers.pullCode(req.body.serverName,
 						(data) => {
 							me.refreshTokenSend(data);
 						});
 					break;
 
-				case 'stopVHost' :
+				case 'stopVServer' :
 
-					var hosts = new MHosts(env, pkg);
-					hosts.stopVHost(req.body.serverName,
+					var Servers = new MServers(env, pkg);
+					Servers.stopVServer(req.body.serverName,
 						(data) => {
 							me.refreshTokenSend(data);
 						});
@@ -121,8 +121,8 @@
 					break;
 				
 				case 'loadList' :
-					var hosts = new MHosts(env, pkg);
-					hosts.postLoadList(
+					var Servers = new MServers(env, pkg);
+					Servers.postLoadList(
 						(data) => {
 							me.refreshTokenSend(data);
 						});
@@ -136,8 +136,8 @@
 					break;
 
 				case 'gitSwitchBranch' :
-					var hosts = new MHosts(env, pkg);
-					hosts.switchBranch(req.body.serverName, req.body.branch,
+					var Servers = new MServers(env, pkg);
+					Servers.switchBranch(req.body.serverName, req.body.branch,
 						(data) => {
 							me.refreshTokenSend(data);
 					});
@@ -156,16 +156,16 @@
 					});
 					break;
 
-				case 'addHost' :
-					var hosts = new MHosts(env, pkg);
-					hosts.addVHost(req.body.data, (data) => {
+				case 'addServer' :
+					var Servers = new MServers(env, pkg);
+					Servers.addVServer(req.body.data, (data) => {
 						me.refreshTokenSend(data);
 					});
 					break;
 
-				case 'deleteHost' :
-					var hosts = new MHosts(env, pkg);
-					hosts.deleteVHost(req.body.serverName,
+				case 'deleteServer' :
+					var Servers = new MServers(env, pkg);
+					Servers.deleteVServer(req.body.serverName,
 						(data) => {
 							me.refreshTokenSend(data);
 						});

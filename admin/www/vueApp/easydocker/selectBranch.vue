@@ -1,16 +1,15 @@
 <template>
     <div class="text-left">
-        <span v-if="!branches.length || !isCurrentHost()">{{branch}} 
+        <span v-if="!branches.length || !isCurrentServer()">{{branch}} 
             <a href="JavaScript: void(0)" v-on:click="gitRemoteBranchs()">switch branch</a>
         </span>
-        <div v-if="branches.length && isCurrentHost()" class="border border-3 p-1">
+        <div v-if="branches.length && isCurrentServer()" class="border border-3 p-1">
             Switch Branch
             <div class="container m-2">
                 <div class="row">
                     <div class="col-3 p-0 m-0 text-left" v-for="item in branches">
                         <b v-if="item === branch">*</b>
                         <a href="JavaScript: void(0)" v-on:click="switchBranch(item)">{{item}}</a>
-                        
                     </div>
                 </div>
             </div>
@@ -34,12 +33,12 @@ module.exports = {
         let me = this;
     },
     methods :{
-        isCurrentHost() {
-            return (this.$parent.currentHost === this.servername) ? true : false;
+        isCurrentServer() {
+            return (this.$parent.currentServer === this.servername) ? true : false;
         },
         gitRemoteBranchs() {
             var me = this;
-            me.$parent.currentHost = me.servername;
+            me.$parent.currentServer = me.servername;
             me.root.dataEngine().gitSiteBranchs(me.servername, function(result) {
                 if (result.status === 'success') {
                     me.branches = result.list.branches;
@@ -52,8 +51,7 @@ module.exports = {
             var me = this;
             me.branches = [];
             me.root.dataEngine().switchBranch(me.servername, branch, function(result) {
-                console.log('result');
-                me.$parent.getVHostList();
+                me.$parent.getVServerList();
                 me.branches = [];
             });        
         }

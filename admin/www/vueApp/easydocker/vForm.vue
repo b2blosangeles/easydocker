@@ -1,7 +1,7 @@
 <template>
 <div class="card shadow m-2 mr-1 p-3">
     <div class="card-body card-form-section text-left ">
-        <h3 class="p-3 pl-0">Add a server</h3>
+        <h3 class="p-3 pl-0">Add a server - {{serverType}}</h3>
         <form>
             <div class="form-group">
                 <label>Repository git URI *</label>
@@ -28,8 +28,8 @@
             </div>
 
             <div class="form-group" v-if="branches!==null" >
-                <label>Host ServerName * </label>
-                <input type="text" class="form-control" maxlength="64" v-model="form.serverName" placeholder="Host ServerName">
+                <label>Server Name * </label>
+                <input type="text" class="form-control" maxlength="64" v-model="form.serverName" placeholder="Server Name">
             </div>
 
 
@@ -64,7 +64,7 @@
                     </div>
             </div>
             <hr/>
-            <button type="button" v-if="branches!==null" class="btn btn-info" v-on:click="saveVHost()">Save the virtual host</button>
+            <button type="button" v-if="branches!==null" class="btn btn-info" v-on:click="saveVServer()">Save the virtual host</button>
             <!--button type="button" class="btn btn-warning" v-on:click="reset()">Reset fields</button-->
             <!--button type="button" class="btn btn-secondary" v-on:click="cancel()">Cancel</button-->
             
@@ -82,7 +82,9 @@
  
 <script>
 module.exports = {
+    props : ['serverType'],
     data: function() {
+        var me = this;
         return {
             root :  this.$parent.root,
             errors: {},
@@ -94,6 +96,7 @@ module.exports = {
                 branch      : '',
                 siteDocker  : false,
                 publicDocker: '',
+                serverType  : me.serverType,
                 docker: {
                     type : '',
                     ports : [],
@@ -205,17 +208,17 @@ module.exports = {
             me.form.docker = v.setting;
             me.$forceUpdate();
         },
-        saveVHost() {
+        saveVServer() {
             var me = this;
             me.formValidation();
             if (!me.isformValid()) {
                 return false;
             } 
-            me.root.dataEngine().saveVHostForm(
+            me.root.dataEngine().saveVServerForm(
                 me.form, function(result) {
                     if (result.status === 'success') {
                         me.$parent.cancel();
-                        me.$parent.getVHostList()
+                        me.$parent.getVServerList()
                     }
                 }
             );

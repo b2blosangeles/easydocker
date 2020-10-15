@@ -1,18 +1,17 @@
 <template>
     <div class="card shadow m-2 text-left">
         <div class="text-right p-3 pb-0" >
-            <a class="btn btn-sm btn-success m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module!=='form'" v-on:click="addVHost()" >
-                Add a host
+            <a class="btn btn-sm btn-success m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module!=='form'" v-on:click="addVServer()" >
+                Add a Server
             </a>
             <a class="btn btn-sm btn-secondary m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module==='form'" v-on:click="cancel()" >
                 Cancel
             </a>
         </div>
-        <v-host-form v-if="module==='form'"></v-host-form>
+        <v-form v-if="module==='form'" server-type="webserver"></v-form>
         <div class="card-body card-list-section  mt-0" v-if="module!=='form'">
             <div class="list-group" v-for="item in  list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
-
                     <div class="container-fluid m-0">
                         <div class="row">
                             <div class="col-2 p-0 m-0 text-left">
@@ -33,10 +32,10 @@
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name)">
                                     Delete
                                 </a>
-                                <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="resetVHost(item.name)">
+                                <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="resetVServer(item.name)">
                                     Reboot
                                 </a>
-                                <a class="btn btn-sm btn-danger m-1" href="JavaScript:void(0)" v-on:click="stopVHost(item.name)">
+                                <a class="btn btn-sm btn-danger m-1" href="JavaScript:void(0)" v-on:click="stopVServer(item.name)">
                                     Stop
                                 </a>
                                 <a class="btn btn-sm btn-success m-1" href="JavaScript:void(0)" v-on:click="pullCode(item.name)">
@@ -57,7 +56,7 @@ module.exports = {
         return {
             list : [],
             root :  this.$parent.root,
-            currentHost : '',
+            currentServer : '',
             module : ''
         }
     },
@@ -65,7 +64,7 @@ module.exports = {
         var me = this;
         setTimeout(
             function() {
-                me.getVHostList()
+                me.getVServerList()
             }, 50
         );
     },
@@ -74,13 +73,13 @@ module.exports = {
             var me = this;
             me.module = '';
         },
-        addVHost() {
+        addVServer() {
             var me = this;
             me.module = 'form';
         },
-        getVHostList() {
+        getVServerList() {
             var me = this;
-            me.root.dataEngine().getVHostList(
+            me.root.dataEngine().getVServerList(
                 false,
                 function(result) {
                     me.list = result.list;
@@ -110,17 +109,17 @@ module.exports = {
             });            
         },
 
-        stopVHost(serverName) {
+        stopVServer(serverName) {
             var me = this;
-            me.root.dataEngine().stopVHost(serverName);
+            me.root.dataEngine().stopVServer(serverName);
         },
         pullCode(serverName) {
             var me = this;
             me.root.dataEngine().pullCode(serverName);
         },       
-        resetVHost(serverName) {
+        resetVServer(serverName) {
             var me = this;
-            me.root.dataEngine().resetVHost(serverName);
+            me.root.dataEngine().resetVServer(serverName);
         },
         outerPorts(item) {
             var me = this;
@@ -135,7 +134,7 @@ module.exports = {
     components: VUEApp.loadComponents({
         LOAD    : {
             'selectBranch' : '/vueApp/easydocker/selectBranch.vue',
-            'vHostForm' : '/vueApp/easydocker/vHostForm.vue'
+            'vForm' : '/vueApp/easydocker/vForm.vue'
         }, 
         TPL :{}
     })
