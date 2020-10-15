@@ -17,6 +17,7 @@ module.exports = {
     props: [],
     data: function() {
         return {
+            caller : null,
             cfg : {},
             root :  this.$parent.root
         }
@@ -25,10 +26,11 @@ module.exports = {
         var me = this;
     },
    methods :{
-        show(param) {
+        show(param, caller) {
             var me = this;
             me.cfg = param;
             $('#confirm_modal').modal('show');
+            me.caller = caller;
         },
         loadModule() {
            let me = this;
@@ -38,6 +40,7 @@ module.exports = {
         close() {
             var me = this;
             me.cfg = {};
+            me.caller = null;
             $('#confirm_modal').modal('hide');
        }
    },

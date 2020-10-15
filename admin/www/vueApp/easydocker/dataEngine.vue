@@ -191,7 +191,6 @@ module.exports = {
         },
         removeVirtualHost(serverName, callback) {
             var me = this;
-            $('#confirm_modal').modal('hide');
             me.$parent.triggerSpinner = true;
             $.ajax({
                 type: 'POST',
@@ -203,8 +202,7 @@ module.exports = {
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
                     if (result.status === 'success') {
-                        callback(result); 
-                        //    me.$parent.commonData.list = result.list;
+                        callback(result);
                     }
                 },
                 dataType: 'JSON'

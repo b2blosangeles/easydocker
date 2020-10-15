@@ -94,7 +94,7 @@ module.exports = {
                 data : {
                     serverName : serverName
                 }
-            });
+            }, me);
         },
 
         switchBranch(item) {

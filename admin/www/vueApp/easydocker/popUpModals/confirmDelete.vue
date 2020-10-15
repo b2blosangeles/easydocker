@@ -10,18 +10,23 @@ module.exports = {
     props: [],
     data: function() {
         return {
-            root :  this.$parent.root
+            root :  this.$parent.root,
+            parent : this.$parent
         }
     },
     mounted() {
         let me = this;
+        me.close = me.parent.close;
     },
     methods :{
         execDeletVirtualServer() {
             let me = this;
-            let serverName = me.$parent.cfg.data.serverName;
+            let serverName = me.$parent.cfg.data.serverName,
+                caller = me.parent.caller;
             me.root.dataEngine().removeVirtualHost(serverName, function() {
-                me.root.appBody().$refs.vHostList.getVHostList();
+                me.close();
+                caller.getVHostList();
+               
             });
         }
     }
