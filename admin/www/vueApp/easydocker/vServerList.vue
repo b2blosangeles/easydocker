@@ -64,8 +64,10 @@
 module.exports = {
     props : ['serverType'],
     data: function() {
+        let me = this;
         return {
             list : [],
+            // serverType : me.serverType,
             root :  this.$parent.root,
             currentServer : '',
             module : ''
@@ -78,6 +80,12 @@ module.exports = {
                 me.getVServerList()
             }, 50
         );
+    }, 
+    watch: {
+        serverType: function(val) {
+          var me = this;
+          me.getVServerList();
+      }
     },
     methods : {
         cancel() {
@@ -93,7 +101,10 @@ module.exports = {
             me.root.dataEngine().getVServerList(
                 false,
                 function(result) {
-                    me.list = result.list;
+                    me.list = result.list.filter(function(item) {
+                        return (item.serverType === me.serverType)
+                    });
+                    // me.$forceUpdate();
                 }
             );
         },
