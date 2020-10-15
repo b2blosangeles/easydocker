@@ -52,14 +52,6 @@
                     callback({status:'success'});
                 }, 6000
             );
-            
-            /*
-
-            var cmd = 'docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)';
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    callback({status:'success'});
-            });*/
         };
 
         this.resetVHost = (serverName, callback) => {
