@@ -5,7 +5,7 @@
                 <div class="col-1 p-3 m-0 text-center">
                 </div>
                 <div class="col-5 p-3 m-0 text-left">
-                    <h3>Web Servers</h3>
+                    <h3>Web Servers - {{serverType}}</h3>
                 </div>
                 <div class="col-6 p-0 m-0 text-right">
                     <a class="btn btn-sm btn-success m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module!=='form'" v-on:click="addVServer()" >
@@ -62,6 +62,7 @@
  
 <script>
 module.exports = {
+    props : ['serverType'],
     data: function() {
         return {
             list : [],
