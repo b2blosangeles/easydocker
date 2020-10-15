@@ -1,7 +1,6 @@
 <template>
-<div class="card shadow m-2 mr-1 p-3">
+<div class="card shadow m-2 mr-1 p-3 mt-0">
     <div class="card-body card-form-section text-left ">
-        <h3 class="p-3 pl-0">Add a server - {{serverType}}</h3>
         <form>
             <div class="form-group">
                 <label>Repository git URI *</label>
@@ -310,6 +309,10 @@ module.exports = {
 
 input.dockerfile[readonly] {
   background-color:transparent;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
 }
 
 </style>
