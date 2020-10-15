@@ -23,9 +23,9 @@ module.exports = {
             let me = this;
             let serverName = me.$parent.cfg.data.serverName,
                 caller = me.parent.caller;
-            me.root.dataEngine().removeVirtualHost(serverName, function() {
+            me.root.dataEngine().removeVirtualServer(serverName, function() {
                 me.close();
-                caller.getVHostList();
+                caller.getVServerList();
                
             });
         }
