@@ -47,6 +47,7 @@
 		this.post = () => {
 			var me = this;
 			var MHosts = pkg.require(env.root+ '/modules/moduleHosts.js');
+			var MDbs = pkg.require(env.root+ '/modules/moduleMysql.js');
 
 			let p = req.params[0],
 				mp = p.match(/\/([^\/]+)(\/|$)/);
@@ -110,7 +111,15 @@
 							me.refreshTokenSend(data);
 						});
 					break;
-
+					
+				case 'getDbMysqlList' :
+					var dbs = new MDbs(env, pkg);
+					dbs.postLoadList(
+						(data) => {
+							me.refreshTokenSend(data);
+						});
+					break;
+				
 				case 'loadList' :
 					var hosts = new MHosts(env, pkg);
 					hosts.postLoadList(

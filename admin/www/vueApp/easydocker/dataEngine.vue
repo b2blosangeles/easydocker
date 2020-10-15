@@ -212,7 +212,7 @@ module.exports = {
         getDbMysqlList(noSpinner, callback) {
             var me = this;
             me.ajaxPost({
-                    cmd :'loadList'
+                    cmd :'getDbMysqlList'
                 }, callback, !noSpinner);
         },
         getVHostList(noSpinner, callback) {
