@@ -7,7 +7,8 @@
                     <h3 v-if="module==='form'"  class="ml-4 text-capitalize">Add a {{serverType}}</h3>
                 </div>
                 <div class="col-6 p-0 m-0 text-right">
-                    <a class="btn btn-sm btn-success m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module!=='form'" v-on:click="addVServer()" >
+                    <a class="btn btn-sm btn-success m-3 mb-0 pull-right"
+                        href="JavaScript:void(0)" v-if="module!=='form'" v-on:click="addVServer()" >
                         Add a {{serverType}}
                     </a>
                     <a class="btn btn-sm btn-secondary m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module==='form'" v-on:click="cancel()" >
@@ -16,7 +17,8 @@
                 </div> 
             </div>
         </div>
-        <v-form v-if="module==='form'" v-bind:server-type="serverType"></v-form>
+        <v-form-web-server v-if="module==='form' && serverType === 'webserver'" erver-type="webserver"></v-form-web-server>
+        <v-form-db-server v-if="module==='form' && serverType === 'database'" server-type="database"></v-form-db-server>
         <div class="card-body card-list-section  mt-0" v-if="module!=='form'">
             <div class="list-group" v-for="item in  list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
@@ -155,7 +157,8 @@ module.exports = {
     components: VUEApp.loadComponents({
         LOAD    : {
             'selectBranch' : '/vueApp/easydocker/selectBranch.vue',
-            'vForm' : '/vueApp/easydocker/vForm.vue'
+            'vFormWebServer' : '/vueApp/easydocker/vFormWebServer.vue',
+            'vFormDbServer' : '/vueApp/easydocker/vFormDbServer.vue'
         }, 
         TPL :{}
     })

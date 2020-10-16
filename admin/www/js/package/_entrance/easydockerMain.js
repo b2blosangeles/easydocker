@@ -19,7 +19,7 @@ $(document).ready(
                                 formStarted : false
                             },
                             triggerSpinner : false,
-                            module : 'list',
+                            module : 'webservers',
                             menu   : ''
                         }
                     },

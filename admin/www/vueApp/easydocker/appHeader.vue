@@ -15,12 +15,16 @@
             <div class="container-fluid mt-3 text-left" v-if="root.isSignin()">
                 <div class="row">
                     <div class="col-6 p-0 m-0 text-left">
-                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('database')">
+                        <button class="btn btn-sm btn-success m-1 pull-right" 
+                            :disabled = "isDisabled('databases')"
+                            v-on:click="clickMenu('databases')">
                             MySQL Databases
-                        </a>
-                        <a class="btn btn-sm btn-success m-1 pull-right" href="JavaScript:void(0)" v-on:click="clickMenu('list')">
+                        </button>
+                        <button class="btn btn-sm btn-success m-1 pull-right" 
+                            :disabled = "isDisabled('webservers')"
+                            v-on:click="clickMenu('webservers')">
                             Web Servers
-                        </a>
+                        </button>
                         <!--a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="restartProxy()">
                             Restart proxy
                         </a>
@@ -55,6 +59,9 @@ module.exports = {
         this.root.token = v;
     },
     methods :{
+        isDisabled(v) {
+            return (this.$parent.module === v);
+        },
         clickMenu(v) {
             var me = this;
             me.$parent.module = v;
