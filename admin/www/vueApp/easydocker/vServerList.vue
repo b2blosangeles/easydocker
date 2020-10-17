@@ -17,7 +17,7 @@
                 </div> 
             </div>
         </div>
-        <v-form-web-server v-if="module==='form' && serverType === 'webserver'" erver-type="webserver"></v-form-web-server>
+        <v-form-web-server v-if="module==='form' && serverType === 'webserver'" server-type="webserver"></v-form-web-server>
         <v-form-db-server v-if="module==='form' && serverType === 'database'" server-type="database"></v-form-db-server>
         <div class="card-body card-list-section  mt-0" v-if="module!=='form'">
             <div class="list-group" v-for="item in  list">

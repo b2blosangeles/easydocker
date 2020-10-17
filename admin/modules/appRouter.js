@@ -46,8 +46,8 @@
 
 		this.post = () => {
 			var me = this;
-			var MServers = pkg.require(env.root+ '/modules/moduleServers.js');
-			var MDbs = pkg.require(env.root+ '/modules/moduleMysql.js');
+			var MServers = pkg.require(env.root+ '/modules/moduleServers/webserver.js');
+			var MDbs = pkg.require(env.root+ '/modules/moduleServers/dbserver.js');
 
 			let p = req.params[0],
 				mp = p.match(/\/([^\/]+)(\/|$)/);

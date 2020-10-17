@@ -106,6 +106,8 @@ module.exports = {
     },
     mounted() {
         var me = this;
+        console.log('me.serverType==>');
+        console.log(me.serverType);
         setTimeout(
             function() {
                 me.loadPublicDockersList()
