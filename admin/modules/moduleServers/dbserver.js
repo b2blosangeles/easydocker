@@ -52,14 +52,6 @@
                     callback({status:'success'});
                 }, 6000
             );
-            
-            /*
-
-            var cmd = 'docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)';
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    callback({status:'success'});
-            });*/
         };
 
         this.resetVServer = (serverName, callback) => {
@@ -98,11 +90,6 @@
             str += 'echo "${v}\n${p}" > /etc/hosts' + "\n";
             me.setClone('saveEtcHosts', str, callback);
         }
-        
-        this.restartProxy = (callback) => {
-            var cmd = 'sh ' +  _env.code_folder + '/scriptStartup/nginx_proxy.sh ' + _env.data_folder;
-            me.setClone('restartProxy', cmd, callback);
-        };
         
         this.postLoadList = (callback) => { // use this
             var sites_list = me.getSitesCfg();
@@ -194,7 +181,7 @@
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
-                git.gitClone(data, function(result) {
+                git.gitClone('/var/_localAppDATA/MysqlDBs', data, function(result) {
                     cbk(true);
                 });
             };
@@ -207,13 +194,6 @@
                 me.addDocker(data.serverName, cbk);
             };
             
-            _f['addProxyConfig'] = function(cbk) {
-                me.addProxyConfig(data.serverName, cbk);
-            };
-
-            _f['restartProxy'] = function(cbk) {
-                me.restartProxy(cbk);
-            };
             _f['createStartUpVServers'] = function(cbk) {
                 me.createStartUpVServers(cbk); 
             };
@@ -226,7 +206,7 @@
         this.deleteVServer = (serverName, callback) => {
             var _f = {};
             _f['deleteCode'] = function(cbk) {
-                var site_path = data_dir + '/sites/' + serverName;
+                var site_path = data_dir + '/mysqlDBs/' + serverName;
                 cmd = 'rm -fr ' + site_path;
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
@@ -241,16 +221,8 @@
                 });
             };
 
-            _f['removeProxyConfig'] = function(cbk) {
-                me.removeProxyConfig(serverName, cbk);
-            };
-
             _f['removeDocker'] = function(cbk) {
                 me.removeDocker(serverName, cbk);
-            };
-
-            _f['restartProxy'] = function(cbk) {
-                me.restartProxy(cbk);
             };
 
             _f['createStartUpVServers'] = function(cbk) {
@@ -262,96 +234,44 @@
             }, 30000);
         };
 
-        this.addProxyConfig = (serverName, callback) => {
-            var proxy_fn = data_dir + '/proxy/' + serverName+'.local';
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-
-            var cmd_ports  = '';
-            var str = '';
-
-            let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
-            for (var i = 0;  i < ports.length; i++) {
-                cmd_ports += parseInt(site_config.unidx * 10000) + parseInt(ports[i]);
-                var u_str = 'http://10.10.10.254:' + cmd_ports + '/';
-                var servasname_v = [serverName + '_local', serverName + '.local', serverName + '.shusiou.win'];
-                for (var j = 0; j < servasname_v .length; j++) {
-                    str += 'server {' + "\n";
-                    str += '    listen       80;' + "\n";
-                    str += '    server_name  ' + servasname_v[j] + ';' + "\n";
-                    str += '    location / {' + "\n";
-                    str += '        proxy_cache                     off;' + "\n";
-                    str += '        proxy_pass ' + u_str + ';' + "\n";
-                    str += '        proxy_redirect     off;' + "\n";
-                    str += '        proxy_set_header   Host $host;' + "\n";
-                    str += '        sub_filter ' + u_str + ' http://$host/;' + "\n";
-                    str += '        sub_filter ' + u_str + ' http://$host/;' + "\n";
-                    str += '        sub_filter_once off;' + "\n";
-                    str += '      }' + "\n";
-                    str += '}' + "\n";
-                }
-            }
-            fs.writeFile(proxy_fn, str, function (err) {
-                callback(true);
-            });
-        }
-
-        this.removeProxyConfig = (serverName, callback) => {
-            var proxy_fn = data_dir + '/proxy/' + serverName+'.local';
-            var cmd = 'rm -fr ' + proxy_fn;
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    callback({status:'success'});
-            });
-        }
-
         this.getDockerPath = (serverName) => {
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-            var p = '';
-
-            if (!site_config.publicDocker) {
-                p = _env.data_folder + '/sites/' + serverName + '/docker/';
-            } else {
-                p = _env.code_folder + '/dockerFiles/' + site_config.publicDocker + '/';
-            }
-           return p;
-        }
-
-        this.getDockerFileFn = (serverName) => {
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-           return me.getDockerPath(serverName) + site_config.docker.dockerFile;
+            return _env.data_folder + '/mysqlDBs/' + serverName + '/docker/';
         }
 
         this.getSiteImageName = (serverName) => {
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-            return ((!site_config.publicDocker) ? serverName : site_config.publicDocker).toLowerCase() + '-image';
+            return serverName + '-image';
         }
 
         this.addDockerCMD = (serverName) => {
            
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
-            var site_image = me.getSiteImageName(serverName);
-            var site_container = (serverName + '-container').toLowerCase();
+            var site_container = ('mysql-' + serverName + '-container').toLowerCase();
             
             var cmd = '';
             
             cmd += 'cd ' + me.getDockerPath(serverName) + "\n";
-            cmd += 'docker build -f ' + me.getDockerFileFn(serverName) + ' -t ' + site_image + ' .' + "\n";
             cmd += 'echo "Start docker app ..' + serverName + ' "' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n"; 
+            cmd += 'docker pull mysql/mysql-server:5.7' + "\n"; 
+
+            // docker run --name=mysql_aa -p 3306:3306 -d mysql/mysql-server:5.7
+
+            // echo $(docker logs mysql_aa 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,"")}1') > /Users/johnxu/_easydocker_DATA/PASS_aa
+
             var cmd_ports  = '';
             let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
             for (var i = 0;  i < ports.length; i++) {
                 cmd_ports += ' -p ' + (parseInt(site_config.unidx * 10000) + parseInt(ports[i])) + ':' + ports[i] + ' ';
             }
             
-            var site_path =  _env.data_folder + '/sites/' + serverName;
-            cmd += 'docker run -d ' + cmd_ports + ' -v "'+ site_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' ' + site_image  + "\n";
+            var site_path =  _env.data_folder + '/mysqlDBs/' + serverName;
+           
+            cmd += 'docker run -d ' + cmd_ports + ' -v "'+ 
+            site_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' mysql/mysql-server:5.7 ' + "\n";
+            
+            cmd += "docker logs mysql_aa 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,\"\")}1') > " + site_path + '/adminPass';
             
             return cmd;
         }
@@ -366,7 +286,6 @@
             cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n";
-            cmd += 'docker image rm -f ' + serverName.toLowerCase() + '-image' + "\n";
             me.setClone('removeDocker', cmd, callback);
         }
     }

@@ -194,7 +194,7 @@
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
-                git.gitClone(data, function(result) {
+                git.gitClone('/var/_localAppDATA/sites', data, function(result) {
                     cbk(true);
                 });
             };

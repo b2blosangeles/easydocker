@@ -190,7 +190,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        removeVirtualServer(serverName, callback) {
+        removeVirtualServer(data, callback) {
             var me = this;
             me.$parent.triggerSpinner = true;
             $.ajax({
@@ -198,7 +198,7 @@ module.exports = {
                 url:'/api',
                 data: {
                     cmd :'deleteServer',
-                    serverName :serverName
+                    data : data
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;

@@ -21,9 +21,12 @@ module.exports = {
     methods :{
         execDeletVirtualServer() {
             let me = this;
-            let serverName = me.$parent.cfg.data.serverName,
+            let cfg = {
+                    serverName : me.$parent.cfg.data.serverName,
+                    serverType : me.$parent.cfg.data.serverType
+                }
                 caller = me.parent.caller;
-            me.root.dataEngine().removeVirtualServer(serverName, function() {
+            me.root.dataEngine().removeVirtualServer(cfg, function() {
                 me.close();
                 caller.getVServerList();
                

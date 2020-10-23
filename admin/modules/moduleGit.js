@@ -122,10 +122,7 @@
 
         }
 
-        this.gitClone = (gitRecord, callback) => {
-            
-            var dirn = '/var/_localAppDATA/sites';
-            
+        this.gitClone = (dirn, gitRecord, callback) => {            
             var regex = /^(git|ssh|https?|git@[-\w.]+):(\/\/)?(.*@|)(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
             var uri_a = gitRecord.gitHub.match(regex);
             var uri = uri_a[1] + '://' + ((!gitRecord.serverrName) ? '' : 

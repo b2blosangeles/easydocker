@@ -40,7 +40,7 @@
                                     branch :
                                     <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item)">{{item.branch}}</button>
                                 </span>
-                                <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name)">
+                                <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name, item.serverType)">
                                     Delete
                                 </a>
                                 <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="resetVServer(item.name)">
@@ -109,12 +109,13 @@ module.exports = {
                 }
             );
         },
-        deleteVirtualServer(serverName) {
+        deleteVirtualServer(serverName, serverType) {
             var me = this;
             me.root.popUp(me).show({
                 insideModule: 'confirmDelete',
                 data : {
-                    serverName : serverName
+                    serverName : serverName,
+                    serverType : serverType
                 }
             });
         },

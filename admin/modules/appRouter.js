@@ -157,18 +157,33 @@
 					break;
 
 				case 'addServer' :
-					var Servers = new MServers(env, pkg);
-					Servers.addVServer(req.body.data, (data) => {
-						me.refreshTokenSend(data);
-					});
+					if (req.body.data.serverType === 'database') {
+						var Dbs = new MDbs(env, pkg);
+						Dbs.addVServer(req.body.data, (data) => {
+							me.refreshTokenSend(data);
+						});
+					} else {
+						var Servers = new MServers(env, pkg);
+						Servers.addVServer(req.body.data, (data) => {
+							me.refreshTokenSend(data);
+						});
+					}
+	
 					break;
 
 				case 'deleteServer' :
-					var Servers = new MServers(env, pkg);
-					Servers.deleteVServer(req.body.serverName,
-						(data) => {
+					if (req.body.data.serverType === 'database') {
+						var Dbs = new MDbs(env, pkg);
+						Dbs.deleteVServer(req.body.data.serverName, (data) => {
 							me.refreshTokenSend(data);
 						});
+					} else {
+						var Servers = new MServers(env, pkg);
+						Servers.deleteVServer(req.body.data.serverName,
+							(data) => {
+								me.refreshTokenSend(data);
+							});
+					}
 					break;
 
               default :
