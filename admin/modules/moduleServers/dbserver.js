@@ -181,7 +181,7 @@
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
-                git.gitClone('/var/_localAppDATA/MysqlDBs', data, function(result) {
+                git.gitClone('/var/_localAppDATA/DBSCfg', data, function(result) {
                     cbk(true);
                 });
             };
@@ -206,7 +206,7 @@
         this.deleteVServer = (serverName, callback) => {
             var _f = {};
             _f['deleteCode'] = function(cbk) {
-                var site_path = data_dir + '/mysqlDBs/' + serverName;
+                var site_path = data_dir + '/DBSCfg/' + serverName;
                 cmd = 'rm -fr ' + site_path;
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
@@ -235,7 +235,11 @@
         };
 
         this.getDockerPath = (serverName) => {
-            return _env.data_folder + '/mysqlDBs/' + serverName + '/docker/';
+            return _env.data_folder + '/DBSCfg/' + serverName + '/docker/';
+        }
+
+        this.getDBPath = (serverName) => {
+            return _env.data_folder + '/DBS/' + serverName + '/';
         }
 
         this.getSiteImageName = (serverName) => {
@@ -243,14 +247,19 @@
         }
 
         this.addDockerCMD = (serverName) => {
-           
+           var me = this;
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
             var site_container = ('mysql-' + serverName + '-container').toLowerCase();
             
+            var site_path =  me.getDockerPath(serverName);
+            var db_path =  me.getDBPath(serverName);
+
             var cmd = '';
             
-            cmd += 'cd ' + me.getDockerPath(serverName) + "\n";
+            cmd += 'mkdir -fr ' + site_path + "\n";
+            cmd += 'mkdir -fr ' + db_path + "\n";
+            cmd += 'cd ' + site_path + "\n";
             cmd += 'echo "Start docker app ..' + serverName + ' "' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n"; 
@@ -266,12 +275,12 @@
                 cmd_ports += ' -p ' + (parseInt(site_config.unidx * 10000) + parseInt(ports[i])) + ':' + ports[i] + ' ';
             }
             
-            var site_path =  _env.data_folder + '/mysqlDBs/' + serverName;
-           
-            cmd += 'docker run -d ' + cmd_ports + ' -v "'+ 
-            site_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' mysql/mysql-server:5.7 ' + "\n";
             
-            cmd += "docker logs mysql_aa 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,\"\")}1') > " + site_path + '/adminPass';
+
+            cmd += 'docker run -d ' + cmd_ports + ' -v "'+ 
+            db_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' mysql/mysql-server:5.7 ' + "\n";
+            
+            cmd += "docker logs mysql_aa 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,\"\")}1') > " + db_path + '/adminPass';
             
             return cmd;
         }
