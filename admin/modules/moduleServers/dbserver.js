@@ -258,6 +258,7 @@
             var cmd = '';
             
             cmd += 'mkdir -fr ' + site_path + "\n";
+            cmd += 'rm -fr ' + db_path + "\n";
             cmd += 'mkdir -fr ' + db_path + "\n";
             cmd += 'cd ' + site_path + "\n";
             cmd += 'echo "Start docker app ..' + serverName + ' "' + "\n";
@@ -265,22 +266,16 @@
             cmd += 'docker container rm ' + site_container + "\n"; 
             cmd += 'docker pull mysql/mysql-server:5.7' + "\n"; 
 
-            // docker run --name=mysql_aa -p 3306:3306 -d mysql/mysql-server:5.7
-
-            // echo $(docker logs mysql_aa 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,"")}1') > /Users/johnxu/_easydocker_DATA/PASS_aa
-
             var cmd_ports  = '';
             let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
             for (var i = 0;  i < ports.length; i++) {
                 cmd_ports += ' -p ' + (parseInt(site_config.unidx * 10000) + parseInt(ports[i])) + ':' + ports[i] + ' ';
             }
             
-            
-
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ 
-            db_path + '":/var/_localApp  --network network_easydocker --name ' + site_container + ' mysql/mysql-server:5.7 ' + "\n";
+            site_path + '":/var/_localApp  -v "'+ db_path + '":/var/lib/mysql  --network network_easydocker --name ' + site_container + ' mysql/mysql-server:5.7 ' + "\n";
             
-            cmd += "docker logs mysql_aa 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,\"\")}1') > " + db_path + '/adminPass';
+            cmd += "docker logs " + site_container + " 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,\"\")}1') > " + db_path + '/adminPass';
             
             return cmd;
         }
