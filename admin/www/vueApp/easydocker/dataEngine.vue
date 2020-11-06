@@ -101,7 +101,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        resetVServer(serverName) {
+        resetVServer(serverName, serverType) {
             var me = this;
 
             me.$parent.triggerSpinner = true;
@@ -111,7 +111,8 @@ module.exports = {
                 url:'/api',
                 data: {
                     cmd :'resetVServer',
-                    serverName : serverName
+                    serverName : serverName,
+                    serverType : serverType
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
@@ -146,7 +147,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        stopVServer(serverName) {
+        stopVServer(serverName, serverType) {
             var me = this;
 
             me.$parent.triggerSpinner = true;
@@ -156,7 +157,8 @@ module.exports = {
                 url:'/api',
                 data: {
                     cmd :'stopVServer',
-                    serverName : serverName
+                    serverName : serverName,
+                    serverType : serverType
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;

@@ -69,12 +69,18 @@
 					break;
 
 				case 'resetVServer' :
-	
-					var Servers = new MServers(env, pkg);
-					Servers.resetVServer(req.body.serverName,
-						function(data) {
+					if (req.body.serverType === 'database') {
+						var Dbs = new MDbs(env, pkg);
+						Dbs.resetVServer(req.body.serverName, (data) => {
 							me.refreshTokenSend(data);
 						});
+					} else {
+						var Servers = new MServers(env, pkg);
+						Servers.resetVServer(req.body.serverName,
+							function(data) {
+								me.refreshTokenSend(data);
+							});
+					}
 					break;
 				
 				case 'removeAllServers' :
@@ -87,7 +93,7 @@
 					break;
 				
 				case 'restartProxy' :
-	
+
 					var Servers = new MServers(env, pkg);
 					Servers.restartProxy(function(data) {
 						me.refreshTokenSend(data);
@@ -104,12 +110,18 @@
 					break;
 
 				case 'stopVServer' :
-
-					var Servers = new MServers(env, pkg);
-					Servers.stopVServer(req.body.serverName,
-						(data) => {
+					if (req.body.serverType === 'database') {
+						var Dbs = new MDbs(env, pkg);
+						Dbs.stopVServer(req.body.serverName, (data) => {
 							me.refreshTokenSend(data);
 						});
+					} else {
+						var Servers = new MServers(env, pkg);
+						Servers.stopVServer(req.body.serverName,
+							(data) => {
+								me.refreshTokenSend(data);
+							});
+					}
 					break;
 					
 				case 'getDbMysqlList' :

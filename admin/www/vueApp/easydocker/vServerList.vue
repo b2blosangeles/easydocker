@@ -43,13 +43,13 @@
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name, item.serverType)">
                                     Delete
                                 </a>
-                                <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="resetVServer(item.name)">
+                                <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="resetVServer(item.name, item.serverType)">
                                     Reboot
                                 </a>
-                                <a class="btn btn-sm btn-danger m-1" href="JavaScript:void(0)" v-on:click="stopVServer(item.name)">
+                                <a class="btn btn-sm btn-danger m-1" href="JavaScript:void(0)" v-on:click="stopVServer(item.name, item.serverType)">
                                     Stop
                                 </a>
-                                <a class="btn btn-sm btn-success m-1" href="JavaScript:void(0)" v-on:click="pullCode(item.name)">
+                                <a class="btn btn-sm btn-success m-1" href="JavaScript:void(0)" v-on:click="pullCode(item.name, item.serverType)">
                                     Pull code
                                 </a>
                             </div>
@@ -133,17 +133,17 @@ module.exports = {
             });            
         },
 
-        stopVServer(serverName) {
+        stopVServer(serverName, serverType) {
             var me = this;
-            me.root.dataEngine().stopVServer(serverName);
+            me.root.dataEngine().stopVServer(serverName, serverType);
         },
         pullCode(serverName) {
             var me = this;
             me.root.dataEngine().pullCode(serverName);
         },       
-        resetVServer(serverName) {
+        resetVServer(serverName, serverType) {
             var me = this;
-            me.root.dataEngine().resetVServer(serverName);
+            me.root.dataEngine().resetVServer(serverName, serverType);
         },
         outerPorts(item) {
             var me = this;

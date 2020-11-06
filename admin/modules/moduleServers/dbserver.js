@@ -15,7 +15,7 @@
 
 
         this.pullCode = (serverName, callback) => {
-            var site_path = data_dir + '/sites/' + serverName;
+            var site_path = data_dir + '/DBS/' + serverName;
             var cmd = 'cd ' + site_path + ' && git pull';
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
@@ -24,7 +24,7 @@
         }; 
         
         this.stopVServer = (serverName, callback) => {
-            var site_container = serverName + '-container';
+            let site_container = ('mysql-' + serverName + '-container').toLowerCase();
             var cmd = '';
             cmd += 'echo "Start docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container.toLowerCase() + "\n";
@@ -273,7 +273,7 @@
             }
             
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ 
-            site_path + '":/var/_localApp  -v "'+ db_path + '":/var/lib/mysql  --network network_easydocker --name ' + site_container + ' mysql/mysql-server:5.7 ' + "\n";
+            db_path + '":/var/_localApp  -v "'+ db_path + '":/var/lib/mysql  --network network_easydocker --name ' + site_container + ' mysql/mysql-server:5.7 ' + "\n";
             
             cmd += "docker logs " + site_container + " 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,\"\")}1') > " + db_path + '/adminPass';
             
@@ -285,9 +285,9 @@
         }
 
         this.removeDocker = (serverName, callback) => {
-            var site_container = serverName.toLowerCase() + '-container';
+            var site_container = ('mysql-' + serverName + '-container').toLowerCase();
             var cmd = '';
-            cmd += 'echo "Start docker app .."' + "\n";
+            cmd += 'echo "Stop docker app .."' + "\n";
             cmd += 'docker container stop ' + site_container + "\n";
             cmd += 'docker container rm ' + site_container + "\n";
             me.setClone('removeDocker', cmd, callback);
