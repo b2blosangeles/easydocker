@@ -203,7 +203,7 @@
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
-                git.gitCloneToFolder(me.siteCodePath(data.serverName), '.', data, function(result) {
+                git.gitCloneToFolder(me.siteCodePath(data.serverName), data, function(result) {
                     cbk(true);
                 });
             };

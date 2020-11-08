@@ -146,7 +146,7 @@
             });
         }
 
-        this.gitCloneToFolder = (dirn, folder, gitRecord, callback) => {            
+        this.gitCloneToFolder = (dirn, gitRecord, callback) => {            
             var regex = /^(git|ssh|https?|git@[-\w.]+):(\/\/)?(.*@|)(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
             var uri_a = gitRecord.gitHub.match(regex);
             var uri = uri_a[1] + '://' + ((!gitRecord.serverrName) ? '' : 
@@ -156,9 +156,9 @@
             }
             var branchName = gitRecord.branch;
 
-            var cmd = 'mkdir -p ' + dirn + ' && cd ' + dirn + ' && rm -fr ' + folder + ' && git clone ' + 
-                    uri + ' ' + folder +  ' && ' + 
-                    'cd ' + folder  + ' && git checkout ' + branchName;
+            var cmd = 'rm -fr ' + dirn + ' && mkdir -p ' + dirn + ' && cd ' + dirn + 
+                ' && git clone ' +  uri + ' ' + gitRecord.serverName +  ' . && ' + 
+                    'cd ' + dirn + ' && git checkout ' + branchName;
 
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
