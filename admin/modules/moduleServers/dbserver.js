@@ -13,10 +13,34 @@
             _env = require(data_dir + '/_env.json');
         } catch (e) {}
 
+        this.sitesPath = () => {
+            return data_dir + '/DBS';
+        }
 
+        this.sitePath = (serverName) => {
+            return this.sitesPath() + '/' + serverName;
+        }
+        this.siteCodePath = (serverName) => {
+            return this.sitePath(serverName) + '/code';
+        }
+        this.siteDataPath = (serverName) => {
+            return this.sitePath(serverName) + '/data';
+        }
+        this.siteContainer = (serverName) => {
+            return ('mysql-' + serverName + '-container').toLowerCase();
+        }
+
+        this.dockerPath = (serverName) => {
+            return _env.data_folder + '/DBS/' + serverName;
+        }
+        this.dockerCodePath = (serverName) => {
+            return this.dockerPath(serverName) + '/code';
+        }
+        this.dockerDataPath = (serverName) => {
+            return this.dockerPath(serverName) + '/data';
+        }
         this.pullCode = (serverName, callback) => {
-            var site_path = data_dir + '/DBS/' + serverName;
-            var cmd = 'cd ' + site_path + ' && git pull';
+            var cmd = 'cd ' + this.siteCodePath() + ' && git pull';
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
                     callback({status:'success'});
@@ -24,11 +48,10 @@
         }; 
         
         this.stopVServer = (serverName, callback) => {
-            let site_container = ('mysql-' + serverName + '-container').toLowerCase();
             var cmd = '';
             cmd += 'echo "Start docker app .."' + "\n";
-            cmd += 'docker container stop ' + site_container.toLowerCase() + "\n";
-            cmd += 'docker container rm ' + site_container.toLowerCase() + "\n";
+            cmd += 'docker container stop ' + this.siteContainer(serverName) + "\n";
+            cmd += 'docker container rm ' + this.siteContainer(serverName) + "\n";
             me.setClone('stopVServer', cmd, callback);
         };
 
@@ -101,7 +124,6 @@
             }
             callback({status:'success', list : list });
         }
-
 
         this.saveSitesServers = (data, callback) => {
             
@@ -177,15 +199,15 @@
 
         this.addVServer = (data, callback) => {
             var _f={};
-
+ 
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
-                git.gitClone('/var/_localAppDATA/DBSCfg', data, function(result) {
+                git.gitCloneToFolder(me.siteCodePath(data.serverName), '.', data, function(result) {
                     cbk(true);
                 });
             };
-            
+       
             _f['SitesServers'] = function(cbk) {
                 me.saveSitesServers(data, cbk);
             };
@@ -197,17 +219,16 @@
             _f['createStartUpVServers'] = function(cbk) {
                 me.createStartUpVServers(cbk); 
             };
-            
-            CP.serial(_f, function(data) {
+           
+            CP.serial(_f, function(result) {
                 callback(CP.data.SitesServers);
             }, 30000);
         }
 
         this.deleteVServer = (serverName, callback) => {
-            var _f = {};
+            const   _f = {};
             _f['deleteCode'] = function(cbk) {
-                var site_path = data_dir + '/DBSCfg/' + serverName;
-                cmd = 'rm -fr ' + site_path;
+                cmd = 'rm -fr ' + me.sitePath(serverName);;
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
                         cbk(true);
@@ -234,36 +255,17 @@
             }, 30000);
         };
 
-        this.getDockerPath = (serverName) => {
-            return _env.data_folder + '/DBSCfg/' + serverName + '/docker/';
-        }
 
-        this.getDBPath = (serverName) => {
-            return _env.data_folder + '/DBS/' + serverName + '/';
-        }
-
-        this.getSiteImageName = (serverName) => {
-            return serverName + '-image';
-        }
 
         this.addDockerCMD = (serverName) => {
-           var me = this;
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-            var site_container = ('mysql-' + serverName + '-container').toLowerCase();
-            
-            var site_path =  me.getDockerPath(serverName);
-            var db_path =  me.getDBPath(serverName);
-
+            var site_config = me.getSitesCfg().serverName;
             var cmd = '';
-            
-            cmd += 'mkdir -fr ' + site_path + "\n";
-            cmd += 'rm -fr ' + db_path + "\n";
-            cmd += 'mkdir -fr ' + db_path + "\n";
-            cmd += 'cd ' + site_path + "\n";
+            cmd += 'rm -fr ' + me.dockerPath(serverName)  + "\n";
+            cmd += 'mkdir -fr ' + me.dockerDataPath(serverName)  + "\n";
+            cmd += 'mkdir -fr ' + me.dockerCodePath(serverName)  + "\n";
+            cmd += me.removeDockerCMD();
+            cmd += 'cd ' + me.dockerCodePath(serverName) + "\n";
             cmd += 'echo "Start docker app ..' + serverName + ' "' + "\n";
-            cmd += 'docker container stop ' + site_container + "\n";
-            cmd += 'docker container rm ' + site_container + "\n"; 
             cmd += 'docker pull mysql/mysql-server:5.7' + "\n"; 
 
             var cmd_ports  = '';
@@ -273,24 +275,29 @@
             }
             
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ 
-            db_path + '":/var/_localApp  -v "'+ db_path + '":/var/lib/mysql  --network network_easydocker --name ' + site_container + ' mysql/mysql-server:5.7 ' + "\n";
+            me.dockerCodePath(serverName) + '":/var/_localApp  -v "'+ me.dockerDataPath(serverName)  + 
+                '":/var/lib/mysql  --network network_easydocker --name ' + me.siteContainer(serverName) + 
+                ' mysql/mysql-server:5.7 ' + "\n";
             
-            cmd += "docker logs " + site_container + " 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,\"\")}1') > " + db_path + '/adminPass';
+            cmd += "docker logs " + me.siteContainer(serverName) + " 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,\"\")}1') > " + me.dockerCodePath(serverName) + '/adminPass';
             
             return cmd;
         }
+
+        this.removeDockerCMD = (serverName) => {
+            var cmd = '';
+            cmd += 'echo "Stop docker app .."' + "\n";
+            cmd += 'docker container stop ' + me.siteContainer(serverName) + "\n";
+            cmd += 'docker container rm ' + me.siteContainer(serverName) + "\n";
+            return cmd;
+         }
 
         this.addDocker = (serverName, callback) => {
             me.setClone('addDocker', me.addDockerCMD(serverName), callback);
         }
 
         this.removeDocker = (serverName, callback) => {
-            var site_container = ('mysql-' + serverName + '-container').toLowerCase();
-            var cmd = '';
-            cmd += 'echo "Stop docker app .."' + "\n";
-            cmd += 'docker container stop ' + site_container + "\n";
-            cmd += 'docker container rm ' + site_container + "\n";
-            me.setClone('removeDocker', cmd, callback);
+            me.setClone('removeDocker', me.removeDockerCMD(serverName), callback);
         }
     }
     module.exports = obj;

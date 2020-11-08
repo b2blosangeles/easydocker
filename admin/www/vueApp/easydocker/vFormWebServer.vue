@@ -31,7 +31,7 @@
                 <input type="text" class="form-control" maxlength="64" v-model="form.serverName" placeholder="Server Name">
             </div>
 
-
+            
             <div class="form-group" v-if="branches!==null" >
                 <label>Branche</label>
                 <select class="form-control" :required="true" @change="onBranchSelect($event)" v-model="form.branch">
@@ -42,6 +42,7 @@
                     >{{ option.branch }}</option>
                 </select>
             </div>
+            
             <div v-if="form.docker.dockerFile">
                  <hr/>
                 ports: {{ form.docker.ports }}   Docker file: {{form.docker.dockerFile}}  Type: {{form.docker.type}}

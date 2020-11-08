@@ -145,6 +145,30 @@
                     }
             });
         }
+
+        this.gitCloneToFolder = (dirn, folder, gitRecord, callback) => {            
+            var regex = /^(git|ssh|https?|git@[-\w.]+):(\/\/)?(.*@|)(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
+            var uri_a = gitRecord.gitHub.match(regex);
+            var uri = uri_a[1] + '://' + ((!gitRecord.serverrName) ? '' : 
+                (encodeURIComponent(gitRecord.userName) + ':' + encodeURIComponent(gitRecord.password) + '@'));
+            for (var i=4; i < uri_a.length; i++) {
+                uri +=  uri_a[i];
+            }
+            var branchName = gitRecord.branch;
+
+            var cmd = 'mkdir -p ' + dirn + ' && cd ' + dirn + ' && rm -fr ' + folder + ' && git clone ' + 
+                    uri + ' ' + folder +  ' && ' + 
+                    'cd ' + folder  + ' && git checkout ' + branchName;
+
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    if (!error) {
+                        callback({status : 'success'});
+                    } else {
+                        callback({status : 'failure', message : error.message});
+                    }
+            });
+        }
     }
 
     module.exports = obj;
