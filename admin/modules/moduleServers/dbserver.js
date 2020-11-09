@@ -255,14 +255,11 @@
             }, 30000);
         };
 
-
-
         this.addDockerCMD = (serverName) => {
             var site_config = me.getSitesCfg().serverName;
             var cmd = '';
             cmd += 'mkdir -fr ' + me.dockerDataPath(serverName)  + "\n";
             cmd += 'mkdir -fr ' + me.dockerCodePath(serverName)  + "\n";
-            cmd += me.removeDockerCMD();
             cmd += 'cd ' + me.dockerCodePath(serverName) + "\n";
             cmd += 'echo "Start docker app ..' + serverName + ' "' + "\n";
             cmd += 'docker pull mysql/mysql-server:5.7' + "\n"; 
@@ -283,7 +280,7 @@
             return cmd;
         }
 
-        this.removeDockerCMD = (serverName) => {
+        this.removeDockerContainerCMD = (serverName) => {
             var cmd = '';
             cmd += 'echo "Stop docker app .."' + "\n";
             cmd += 'docker container stop ' + me.siteContainer(serverName) + "\n";
@@ -292,11 +289,11 @@
          }
 
         this.addDocker = (serverName, callback) => {
-            me.setClone('addDocker', me.addDockerCMD(serverName), callback);
+            me.setClone('addDocker', removeDockerContainerCMD(serverName) + me.addDockerCMD(serverName), callback);
         }
 
         this.removeDocker = (serverName, callback) => {
-            me.setClone('removeDocker', me.removeDockerCMD(serverName), callback);
+            me.setClone('removeDocker', me.removeDockerContainerCMD(serverName), callback);
         }
     }
     module.exports = obj;
