@@ -157,7 +157,7 @@
             var branchName = gitRecord.branch;
 
             var cmd = 'rm -fr ' + dirn + ' && mkdir -p ' + dirn + ' && cd ' + dirn + 
-                ' && git clone ' +  uri + ' ' + gitRecord.serverName +  ' . && ' + 
+                ' && git clone ' +  uri + ' . && ' + 
                     'cd ' + dirn + ' && git checkout ' + branchName;
 
             exec(cmd, {maxBuffer: 1024 * 2048},

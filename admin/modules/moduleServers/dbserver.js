@@ -260,7 +260,6 @@
         this.addDockerCMD = (serverName) => {
             var site_config = me.getSitesCfg().serverName;
             var cmd = '';
-            cmd += 'rm -fr ' + me.dockerPath(serverName)  + "\n";
             cmd += 'mkdir -fr ' + me.dockerDataPath(serverName)  + "\n";
             cmd += 'mkdir -fr ' + me.dockerCodePath(serverName)  + "\n";
             cmd += me.removeDockerCMD();
