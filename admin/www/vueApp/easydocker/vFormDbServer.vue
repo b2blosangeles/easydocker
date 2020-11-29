@@ -42,9 +42,9 @@
                     >{{ option.branch }}</option>
                 </select>
             </div>
-            <div v-if="form.docker.dockerFile">
+            <div v-if="form.docker.type">
                  <hr/>
-                ports: {{ form.docker.ports }}   Docker file: {{form.docker.dockerFile}}  Type: {{form.docker.type}}
+                ports: {{ form.docker.ports }}  Type: {{form.docker.type}}
                  <hr/>
             </div>
             <div class="form-group" v-if=" branches !== null && !form.siteDocker">
