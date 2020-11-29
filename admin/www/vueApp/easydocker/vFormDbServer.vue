@@ -48,11 +48,11 @@
                  <hr/>
             </div>
             <div class="form-group" v-if=" branches !== null && !form.siteDocker">
-                <label>Dockerfile</label>
+                <label>docker Setting</label>
                     <div class="dropdown">
-                        <input type="text" data-toggle="dropdown"  class="form-control dockerfile" v-model="form.publicDocker" 
+                        <input type="text" data-toggle="dropdown"  class="form-control dockerSetting" v-model="form.publicDocker" 
                         aria-haspopup="true" aria-expanded="false"
-                        placeholder="Select your Dockerfile" readonly />
+                        placeholder="Select your docker Setting" readonly />
                         
                         <div class="dropdown-menu dropdown-pick-docker shadow border-secondary rounded-0 border-width-1" >
                             <div v-for="(v, k) in publicDockers" class="dropdown-item" v-bind:class="{ 'bg-even': !(k%2), 'bg-odd': (k%2) }">
@@ -98,8 +98,7 @@ module.exports = {
                 serverType  : me.serverType,
                 docker: {
                     type : '',
-                    ports : [],
-                    dockerFile : ''
+                    ports : []
                 },
             }
         }
@@ -124,8 +123,7 @@ module.exports = {
                 publicDocker: '',
                 docker: {
                         type : '',
-                        ports : [],
-                        dockerFile : ''
+                        ports : []
                 }
             };
 
@@ -139,8 +137,7 @@ module.exports = {
             me.form.publicDocker = '';
             me.form.docker = {
                     type : '',
-                    ports : [],
-                    dockerFile : ''
+                    ports : []
                 };
 
         },
@@ -276,8 +273,8 @@ module.exports = {
                 me.errors.serverName = 'ServerName required.';
             }
 
-            if (!me.form.docker.dockerFile) {
-                me.errors.dockerFile = 'DockerFile required.';
+            if (!me.form.docker.type) {
+                me.errors.dockerSetting = 'Docker Setting required.';
             }
             
         }
@@ -307,7 +304,7 @@ module.exports = {
 .bg-even {  min-height : 6em;  border-bottom: 1px dashed; border-color: #aaa; }
 .border-width-1 {  border-width: 6px; border-color: #999}
 
-input.dockerfile[readonly] {
+input.dockerSetting[readonly] {
   background-color:transparent;
 }
 
