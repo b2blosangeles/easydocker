@@ -255,25 +255,32 @@
             }, 30000);
         };
 
+        this.getImageName = (serverName) => {
+            return 'db-' + serverName + '-image';
+        }
+
         this.addDockerCMD = (serverName) => {
-            var site_config = me.getSitesCfg().serverName;
+            var site_config = me.getSitesCfg()[serverName];
+            var db_image = me.getImageName(serverName);
+
             var cmd = '';
             cmd += 'mkdir -fr ' + me.dockerDataPath(serverName)  + "\n";
             cmd += 'mkdir -fr ' + me.dockerCodePath(serverName)  + "\n";
+
             cmd += 'cd ' + me.dockerCodePath(serverName) + "\n";
+            cmd += 'docker build -f ' + me.dockerCodePath(serverName) + '/docker/dockerFile'  + ' -t ' + db_image + ' .' + "\n";
+
             cmd += 'echo "Start docker app ..' + serverName + ' "' + "\n";
-            cmd += 'docker pull mysql/mysql-server:5.7' + "\n"; 
 
             var cmd_ports  = '';
             let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
             for (var i = 0;  i < ports.length; i++) {
                 cmd_ports += ' -p ' + (parseInt(site_config.unidx * 10000) + parseInt(ports[i])) + ':' + ports[i] + ' ';
             }
-            
             cmd += 'docker run -d ' + cmd_ports + ' -v "'+ 
             me.dockerCodePath(serverName) + '":/var/_localApp  -v "'+ me.dockerDataPath(serverName)  + 
                 '":/var/lib/mysql  --network network_easydocker --name ' + me.siteContainer(serverName) + 
-                ' mysql/mysql-server:5.7 ' + "\n";
+                ' ' + db_image + "\n";
             
             cmd += "docker logs " + me.siteContainer(serverName) + " 2>&1 | grep 'GENERATED' | awk '{gsub(/^[^:]+: /,\"\")}1') > " + me.dockerCodePath(serverName) + '/adminPass';
             
@@ -289,7 +296,7 @@
          }
 
         this.addDocker = (serverName, callback) => {
-            me.setClone('addDocker', removeDockerContainerCMD(serverName) + me.addDockerCMD(serverName), callback);
+            me.setClone('addDocker', me.removeDockerContainerCMD(serverName) + me.addDockerCMD(serverName), callback);
         }
 
         this.removeDocker = (serverName, callback) => {
