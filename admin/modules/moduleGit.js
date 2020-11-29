@@ -99,7 +99,7 @@
                 for (var i = 0; i < branches.length; i++) {
                     _f1['p_' + i] = (function(i) {
                         return function(cbk1) {
-                            var cmd = 'svn cat ' + uri + '/branches/' + branches[i] + '/docker/setting.json';
+                            var cmd = 'svn cat ' + uri + '/branches/' + branches[i] + '/dockerSetting/config.json';
                             exec(cmd, {maxBuffer: 1024 * 2048},
                                 function(error, stdout, stderr) {
                                     var setting = [];
