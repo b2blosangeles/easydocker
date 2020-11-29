@@ -322,7 +322,7 @@
         this.getDockerFileFn = (serverName) => {
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
-           return me.getDockerPath(serverName) + site_config.docker.dockerFile;
+           return me.getDockerPath(serverName) + '/docker/dockerFile';
         }
 
         this.getSiteImageName = (serverName) => {

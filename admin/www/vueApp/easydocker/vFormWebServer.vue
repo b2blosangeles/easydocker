@@ -194,7 +194,7 @@ module.exports = {
             var me = this;
             if (me.branches) {
                 for (var i = 0; i < me.branches.length; i++) {
-                    if (me.form.branch === me.branches[i].branch && me.branches[i].dockerSetting.dockerFile) {
+                    if (me.form.branch === me.branches[i].branch && me.branches[i].dockerSetting.type) {
                         me.form.siteDocker = true;
                         me.form.docker = me.branches[i].dockerSetting;
                         me.$forceUpdate();
