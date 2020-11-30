@@ -277,7 +277,7 @@ module.exports = {
             }
 
             if (!me.form.docker.type) {
-                me.errors.dockerSetting = 'Docker Setting required.';
+                me.errors.dockerSetting = 'Docker Setting Required.';
             }
             
         }

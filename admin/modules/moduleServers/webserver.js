@@ -312,9 +312,9 @@
             var p = '';
 
             if (!site_config.publicDocker) {
-                p = _env.data_folder + '/sites/' + serverName + '/docker/';
+                p = _env.data_folder + '/sites/' + serverName + '/dockerSetting';
             } else {
-                p = _env.code_folder + '/dockerFiles/' + site_config.publicDocker + '/';
+                p = _env.code_folder + '/publicDockers/' + site_config.publicDocker;
             }
            return p;
         }
@@ -322,7 +322,7 @@
         this.getDockerFileFn = (serverName) => {
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
-           return me.getDockerPath(serverName) + '/docker/dockerFile';
+           return me.getDockerPath(serverName) + '/dockerFile';
         }
 
         this.getSiteImageName = (serverName) => {
