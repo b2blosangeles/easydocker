@@ -21,7 +21,7 @@
                                     if (!err) {
                                         let setting = {};
                                         try {
-                                            setting = pkg.require(dirname + '/' + files[i] + '/setting.json');
+                                            setting = pkg.require(dirname + '/' + files[i] + '/config.json');
                                         } catch (e) {
 
                                         }

@@ -1,4 +1,4 @@
 {
-  "type"  : "webServer",
-  "localPort" : [80, 81]
+  "type"        : "webServer",
+  "ports"       : [3000]
 }
