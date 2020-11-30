@@ -68,7 +68,6 @@ module.exports = {
         let me = this;
         return {
             list : [],
-            // serverType : me.serverType,
             root :  this.$parent.root,
             currentServer : '',
             module : ''
@@ -105,7 +104,7 @@ module.exports = {
                     me.list = result.list.filter(function(item) {
                         return (item.serverType === me.serverType)
                     });
-                    // me.$forceUpdate();
+                    me.module = '';
                 }
             );
         },
