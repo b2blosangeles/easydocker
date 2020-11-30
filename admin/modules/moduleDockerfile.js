@@ -5,7 +5,7 @@
 
         this.loadPublicDockersList = (callback) => {
             var me = this;
-            var dirname = '/var/_localDockerFiles';
+            var dirname = '/var/_publicDockers';
             var _f = {};
             fs.readdir(dirname, (err, files) => {
                 var list = [];
