@@ -86,17 +86,10 @@
 					break;
 			    
 				case 'pullCode' :
-
-					var Servers = new MServers(req.body.serverType, env, pkg);
-					Servers.pullCode(req.body.serverName,
-						(data) => {
-							me.refreshTokenSend(data);
-						});
-					break;
-
+				case 'stopVServer' :
 				case 'stopVServer' :
 					var Servers = new MServers(req.body.serverType, env, pkg);
-					Servers.stopVServer(req.body.serverName,
+					Servers[req.body.cmd](req.body.serverName,
 						(data) => {
 							me.refreshTokenSend(data);
 						});
@@ -155,7 +148,7 @@
 					});
 					break;
 
-				case 'deleteServer' :
+				case 'deleteVServer' :
 					var Servers = new MServers(req.body.data.serverType, env, pkg);
 					Servers.deleteVServer(req.body.data.serverName,
 						(data) => {

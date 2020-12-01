@@ -199,7 +199,7 @@ module.exports = {
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'deleteServer',
+                    cmd :'deleteVServer',
                     data : data
                 },
                 success: function(result) {
