@@ -30,6 +30,7 @@
                             </div>
                             <div class="col-10 p-0 m-0 text-left">
                                 <span class="ml-0">
+                                    Type: <span class="text-info">{{item.docker.type}}</span> 
                                     Port : <span class="text-info"> {{outerPorts(item)}}</span>
                                 </span>
                                 <span class="ml-3">

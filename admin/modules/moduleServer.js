@@ -15,7 +15,8 @@
 
 
         this.pullCode = (serverName, callback) => {
-            var site_path = data_dir + '/sites/' + serverName;
+            const site_config = me.getSiteConfig(serverName); 
+            var site_path = data_dir + '/' + site_config.type + '/' + serverName;
             var cmd = 'cd ' + site_path + ' && git pull';
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
@@ -182,13 +183,14 @@
         }
 
         this.addVServer = (data, callback) => {
+            const site_config = me.getSiteConfig(serverName); 
             var _f={};
 
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
                 
-                git.gitCloneToFolder('/var/_localAppDATA/sites/' + data.serverName, data, function(result) {
+                git.gitCloneToFolder('/var/_localAppDATA/' + site_config.type + '/' + data.serverName, data, function(result) {
                     cbk(true);
                 });
             };
@@ -218,6 +220,7 @@
         }
 
         this.deleteVServer = (serverName, callback) => {
+            const site_config = me.getSiteConfig(serverName); 
             var _f = {};
 
             _f['removeDocker'] = function(cbk) {
@@ -225,7 +228,8 @@
             };
 
             _f['deleteCode'] = function(cbk) {
-                var site_path = data_dir + '/sites/' + serverName;
+                const site_config = me.getSiteConfig(serverName); 
+                var site_path = data_dir + '/' + site_config.type + '/' + serverName;
                 cmd = 'rm -fr ' + site_path;
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
@@ -301,12 +305,11 @@
         }
 
         this.getDockerPath = (serverName) => {
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
+            const site_config = me.getSiteConfig(serverName); 
             var p = '';
 
             if (!site_config.publicDocker) {
-                p = _env.data_folder + '/sites/' + serverName + '/dockerSetting';
+                p = _env.data_folder + '/' + site_config.type + '/' + serverName + '/dockerSetting';
             } else {
                 p = _env.code_folder + '/publicDockers/' + site_config.publicDocker;
             }
@@ -314,7 +317,8 @@
         }
 
         this.getDockerTemplatePath = (serverName) => {
-            return data_dir + '/sites/' + serverName + '/dockerSetting/scriptTemplate';
+            const site_config = me.getSiteConfig(serverName); 
+            return data_dir + '/' + site_config.type + '/' + serverName + '/dockerSetting/scriptTemplate';
         }
 
         this.getDockerFileFn = (serverName) => {
@@ -337,7 +341,7 @@
 
         this.addDockerCMD = (serverName) => {
            
-            var site_config = me.getSiteConfig(serverName);  
+            const site_config = me.getSiteConfig(serverName);  
             let cmd = '';
             let code = '';
             
@@ -355,7 +359,7 @@
                 siteImage       : me.getSiteImageName(serverName),
                 siteContainer   : (serverName + '-container').toLowerCase(),
                 cmdPorts        : cmdPorts,
-                sitePath        : (_env.data_folder + '/sites/' + serverName)
+                sitePath        : (_env.data_folder + '/' + site_config.type + '/' + serverName)
             }
             try {
                 const tpl = pkg.ECT({ watch: true, cache: false, root: me.getDockerTemplatePath(serverName) + '/', ext : '.tpl' });
