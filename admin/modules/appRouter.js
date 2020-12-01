@@ -68,28 +68,13 @@
 					});
 					break;
 
-				case 'resetVServer' :
-					if (req.body.serverType === 'database') {
-						var Dbs = new MDbs(env, pkg);
-						Dbs.resetVServer(req.body.serverName, (data) => {
-							me.refreshTokenSend(data);
-						});
-					} else {
-						var Servers = new MServers('webserver', env, pkg);
-						Servers.resetVServer(req.body.serverName,
-							function(data) {
-								me.refreshTokenSend(data);
-							});
-					}
-					break;
-				
-				case 'removeAllServers' :
-	
-					var Servers = new MServers('webserver', env, pkg);
-					Servers.removeAllServers(
+				case 'startVServer' :
+					var Servers = new MServers(req.body.serverType, env, pkg);
+					Servers.startVServer(req.body.serverName,
 						function(data) {
 							me.refreshTokenSend(data);
 						});
+
 					break;
 				
 				case 'restartProxy' :
@@ -164,33 +149,18 @@
 					break;
 
 				case 'addServer' :
-					if (req.body.data.serverType === 'database') {
-						var Dbs = new MDbs(env, pkg);
-						Dbs.addVServer(req.body.data, (data) => {
-							me.refreshTokenSend(data);
-						});
-					} else {
-						var Servers = new MServers('webserver', env, pkg);
-						Servers.addVServer(req.body.data, (data) => {
-							me.refreshTokenSend(data);
-						});
-					}
-	
+					var Servers = new MServers(req.body.data.serverType, env, pkg);
+					Servers.addVServer(req.body.data, (data) => {
+						me.refreshTokenSend(data);
+					});
 					break;
 
 				case 'deleteServer' :
-					if (req.body.data.serverType === 'database') {
-						var Dbs = new MDbs(env, pkg);
-						Dbs.deleteVServer(req.body.data.serverName, (data) => {
+					var Servers = new MServers(req.body.data.serverType, env, pkg);
+					Servers.deleteVServer(req.body.data.serverName,
+						(data) => {
 							me.refreshTokenSend(data);
 						});
-					} else {
-						var Servers = new MServers('webserver', env, pkg);
-						Servers.deleteVServer(req.body.data.serverName,
-							(data) => {
-								me.refreshTokenSend(data);
-							});
-					}
 					break;
 
               default :

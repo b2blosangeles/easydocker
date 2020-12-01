@@ -60,7 +60,11 @@
         }; 
 
         this.stopVServer = (serverName, callback) => {
-            me.setClone('stopVServer', me.templateCMD('removeDockerApp.tpl', serverName), callback);
+            me.setClone('stopVServer-' + serverName, me.templateCMD('removeDockerApp.tpl', serverName), callback);
+        };
+
+        this.startVServer = (serverName, callback) => {
+            me.setClone('startDockerServer-' + serverName, me.templateCMD('addDockerApp.tpl', serverName), callback);
         };
 
         this.createStartUpVServers = (callback) => {
@@ -85,11 +89,7 @@
             );
         };
 
-        this.resetVServer = (serverName, callback) => {
-            me.addDocker(serverName, function() {
-                callback();
-            });
-        };
+
         
         this.setClone = (code, str, callback) => {
             fs.writeFile(data_dir + '/_cron/' + code + '_' + new Date().getTime() + '.sh', str, function (err) {
@@ -339,11 +339,11 @@
         }
 
         this.addDocker = (serverName, callback) => {
-            me.setClone('addDocker', me.templateCMD('addDockerApp.tpl', serverName), callback);
+            me.setClone('addDocker-' + serverName, me.templateCMD('addDockerApp.tpl', serverName), callback);
         }
 
         this.removeDocker = (serverName, callback) => {
-            me.setClone('removeDocker', me.templateCMD('removeDockerApp.tpl', serverName), callback);
+            me.setClone('removeDocker-' + serverName, me.templateCMD('removeDockerApp.tpl', serverName), callback);
         }
     }
     module.exports = obj;

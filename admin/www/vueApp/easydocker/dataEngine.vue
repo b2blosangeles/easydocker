@@ -101,7 +101,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        resetVServer(serverName, serverType) {
+        startVServer(record) {
             var me = this;
 
             me.$parent.triggerSpinner = true;
@@ -110,9 +110,9 @@ module.exports = {
                 type: 'POST',
                 url:'/api',
                 data: {
-                    cmd :'resetVServer',
-                    serverName : serverName,
-                    serverType : serverType
+                    cmd :'startVServer',
+                    serverName : record.name,
+                    serverType : record.serverType
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;

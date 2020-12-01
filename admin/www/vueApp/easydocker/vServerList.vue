@@ -41,10 +41,10 @@
                                     branch :
                                     <button class="btn btn-sm btn-success" href="JavaScript:void(0)" v-on:click="switchBranch(item)">{{item.branch}}</button>
                                 </span>
-                                <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name, item.serverType)">
+                                <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item)">
                                     Delete
                                 </a>
-                                <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="resetVServer(item)">
+                                <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="startVServer(item)">
                                     Start
                                 </a>
                                 <a class="btn btn-sm btn-danger m-1" href="JavaScript:void(0)" v-on:click="stopVServer(item)">
@@ -109,13 +109,13 @@ module.exports = {
                 }
             );
         },
-        deleteVirtualServer(serverName, serverType) {
+        deleteVirtualServer(record) {
             var me = this;
             me.root.popUp(me).show({
                 insideModule: 'confirmDelete',
                 data : {
-                    serverName : serverName,
-                    serverType : serverType
+                    serverName : record.name,
+                    serverType : record.serverType
                 }
             });
         },
@@ -141,9 +141,9 @@ module.exports = {
             var me = this;
             me.root.dataEngine().pullCode(record);
         },       
-        resetVServer(serverName, serverType) {
+        startVServer(record) {
             var me = this;
-            me.root.dataEngine().resetVServer(serverName, serverType);
+            me.root.dataEngine().startVServer(record);
         },
         outerPorts(item) {
             var me = this;
