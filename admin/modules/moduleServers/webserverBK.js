@@ -22,15 +22,6 @@
                     callback({status:'success'});
             });
         }; 
-        
-        this.stopVServer = (serverName, callback) => {
-            var site_container = serverName + '-container';
-            var cmd = '';
-            cmd += 'echo "Start docker app .."' + "\n";
-            cmd += 'docker container stop ' + site_container.toLowerCase() + "\n";
-            cmd += 'docker container rm ' + site_container.toLowerCase() + "\n";
-            me.setClone('stopVServer', cmd, callback);
-        };
 
         this.createStartUpVServers = (callback) => {
             var v = me.getSitesCfg();
@@ -371,10 +362,18 @@
         this.addDocker = (serverName, callback) => {
             me.setClone('addDocker_' + serverName, me.addDockerCMD(serverName), callback);
         }
-        
+
+        this.stopVServer = (serverName, callback) => {
+            var site_container = serverName + '-container';
+            var cmd = '';
+            cmd += 'echo "Stop docker app .."' + "\n";
+            cmd += 'docker container stop ' + site_container.toLowerCase() + "\n";
+            cmd += 'docker container rm ' + site_container.toLowerCase() + "\n";
+            me.setClone('stopVServer_' + serverName, cmd, callback);
+        };
+
         this.removeDocker = (serverName, callback) => {
             let cmd = '';
-            let code = '';
             let cfg = {
                 serverName      : serverName,
                 dockerPath      : me.getDockerPath(serverName),
@@ -383,11 +382,11 @@
             }
             try {
                 const tpl = pkg.ECT({ watch: true, cache: false, root: me.getDockerTemplatePath(serverName) + '/', ext : '.tpl' });
-                code += tpl.render('removeDockerApp.tpl', cfg);
+                cmd = tpl.render('removeDockerApp.tpl', cfg);
             } catch(e) {
-                code += 'echo "' + e.message + '"' + "\n";
+                cmd = 'echo "' + e.message + '"' + "\n";
             }
-            cmd += code;
+
             me.setClone('removeDocker_' + serverName, cmd, callback);
         }
     }
