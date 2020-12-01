@@ -15,8 +15,7 @@
 
 
         this.pullCode = (serverName, callback) => {
-            const site_config = me.getSiteConfig(serverName); 
-            var site_path = data_dir + '/' + site_config.type + '/' + serverName;
+            var site_path = data_dir + '/' + me.getSiteType(serverName) + '/' + serverName;
             var cmd = 'cd ' + site_path + ' && git pull';
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
@@ -46,14 +45,6 @@
                     callback({status:'success'});
                 }, 6000
             );
-            
-            /*
-
-            var cmd = 'docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)';
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    callback({status:'success'});
-            });*/
         };
 
         this.resetVServer = (serverName, callback) => {
@@ -183,14 +174,13 @@
         }
 
         this.addVServer = (data, callback) => {
-            const site_config = me.getSiteConfig(serverName); 
             var _f={};
 
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
                 
-                git.gitCloneToFolder('/var/_localAppDATA/' + site_config.type + '/' + data.serverName, data, function(result) {
+                git.gitCloneToFolder('/var/_localAppDATA/' + me.getSiteType(serverName) + '/' + data.serverName, data, function(result) {
                     cbk(true);
                 });
             };
@@ -220,7 +210,6 @@
         }
 
         this.deleteVServer = (serverName, callback) => {
-            const site_config = me.getSiteConfig(serverName); 
             var _f = {};
 
             _f['removeDocker'] = function(cbk) {
@@ -228,8 +217,7 @@
             };
 
             _f['deleteCode'] = function(cbk) {
-                const site_config = me.getSiteConfig(serverName); 
-                var site_path = data_dir + '/' + site_config.type + '/' + serverName;
+                var site_path = data_dir + '/' + me.getSiteType(serverName) + '/' + serverName;
                 cmd = 'rm -fr ' + site_path;
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
@@ -309,7 +297,7 @@
             var p = '';
 
             if (!site_config.publicDocker) {
-                p = _env.data_folder + '/' + site_config.type + '/' + serverName + '/dockerSetting';
+                p = _env.data_folder + '/' + me.getSiteType(serverName) + '/' + serverName + '/dockerSetting';
             } else {
                 p = _env.code_folder + '/publicDockers/' + site_config.publicDocker;
             }
@@ -317,8 +305,7 @@
         }
 
         this.getDockerTemplatePath = (serverName) => {
-            const site_config = me.getSiteConfig(serverName); 
-            return data_dir + '/' + site_config.type + '/' + serverName + '/dockerSetting/scriptTemplate';
+            return data_dir + '/' + me.getSiteType(serverName) + '/' + serverName + '/dockerSetting/scriptTemplate';
         }
 
         this.getDockerFileFn = (serverName) => {
@@ -339,6 +326,12 @@
             return (!site_config.publicDocker) ? site_config : site_config.publicDocker;
         }
 
+
+        this.getSiteType = (serverName) => {
+            const site_config = me.getSiteConfig(serverName);
+            return site_config.docker.type;
+        }
+
         this.addDockerCMD = (serverName) => {
            
             const site_config = me.getSiteConfig(serverName);  
@@ -354,12 +347,13 @@
 
             let cfg = {
                 serverName      : serverName,
+                serverType      : me.getSiteType(serverName),
                 dockerPath      : me.getDockerPath(serverName),
                 dockerFile      : me.getDockerFileFn(serverName),
                 siteImage       : me.getSiteImageName(serverName),
                 siteContainer   : (serverName + '-container').toLowerCase(),
                 cmdPorts        : cmdPorts,
-                sitePath        : (_env.data_folder + '/' + site_config.type + '/' + serverName)
+                sitePath        : (_env.data_folder + '/' + me.getSiteType(serverName) + '/' + serverName)
             }
             try {
                 const tpl = pkg.ECT({ watch: true, cache: false, root: me.getDockerTemplatePath(serverName) + '/', ext : '.tpl' });
@@ -379,6 +373,7 @@
             let cmd = '';
             let cfg = {
                 serverName      : serverName,
+                serverType      : me.getSiteType(serverName),
                 dockerPath      : me.getDockerPath(serverName),
                 siteImage       : me.getSiteImageName(serverName),
                 siteContainer   : (serverName + '-container').toLowerCase()
@@ -396,6 +391,7 @@
             let cmd = '';
             let cfg = {
                 serverName      : serverName,
+                serverType      : me.getSiteType(serverName),
                 dockerPath      : me.getDockerPath(serverName),
                 siteImage       : me.getSiteImageName(serverName),
                 siteContainer   : (serverName + '-container').toLowerCase()
