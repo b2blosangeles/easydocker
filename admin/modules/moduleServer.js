@@ -214,7 +214,8 @@
             };
 
             _f['deleteCode'] = function(cbk) {
-                var site_path = data_dir + '/' + me.getSiteType(serverName) + '/' + serverName;
+                // var site_path = data_dir + '/' + me.getSiteType(serverName) + '/' + serverName;
+                var site_path = me.sitePath(serverName);
                 cmd = 'rm -fr ' + site_path;
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
@@ -302,21 +303,21 @@
            return p;
         }
         // =====
-        this.sitesPath = (serverName) => {
-            return data_dir + '/' + me.getSiteType(serverName);
+        this.sitesPath = (type) => {
+            return data_dir + '/' + type;
         }
 
         this.sitePath = (serverName) => {
-            return this.sitesPath() + '/' + serverName;
+            return me.sitesPath(me.getSiteType(serverName)) + '/' + serverName;
         }
         this.siteCodePath = (serverName) => {
-            return this.sitePath(serverName) + '/code';
+            return me.sitePath(serverName) + '/code';
         }
         this.siteDataPath = (serverName) => {
-            return this.sitePath(serverName) + '/data';
+            return me.sitePath(serverName) + '/data';
         }
         this.siteDockerTemplatePath = (serverName) => {
-            return me.siteCodePath + '/dockerSetting/scriptTemplate';
+            return me.siteCodePath() + '/dockerSetting/scriptTemplate';
         }
         //----
         this.dockerPath = (serverName) => {
