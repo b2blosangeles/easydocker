@@ -23,14 +23,7 @@
             });
         }; 
         
-        this.stopVServer = (serverName, callback) => {
-            var site_container = serverName + '-container';
-            var cmd = '';
-            cmd += 'echo "Start docker app .."' + "\n";
-            cmd += 'docker container stop ' + site_container.toLowerCase() + "\n";
-            cmd += 'docker container rm ' + site_container.toLowerCase() + "\n";
-            me.setClone('stopVServer', cmd, callback);
-        };
+ 
 
         this.createStartUpVServers = (callback) => {
             var v = me.getSitesCfg();
@@ -336,15 +329,21 @@
             return ((!site_config.publicDocker) ? serverName : site_config.publicDocker).toLowerCase() + '-image';
         }
 
+        this.getSiteConfig = (serverName) => {
+            var sites_list = me.getSitesCfg();
+            var site_config = sites_list[serverName];
+            return (!site_config.publicDocker) ? site_config : site_config.publicDocker;
+        }
+
         this.addDockerCMD = (serverName) => {
            
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];  
+            var site_config = me.getSiteConfig(serverName);  
             let cmd = '';
             let code = '';
             
             var cmdPorts  = '';
             let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
+            
             for (var i = 0;  i < ports.length; i++) {
                 cmdPorts += ' -p ' + (parseInt(site_config.unidx * 10000) + parseInt(ports[i])) + ':' + ports[i] + ' ';
             }
@@ -372,9 +371,8 @@
             me.setClone('addDocker_' + serverName, me.addDockerCMD(serverName), callback);
         }
         
-        this.removeDocker = (serverName, callback) => {
+        this.stopVServer = (serverName, callback) => {
             let cmd = '';
-            let code = '';
             let cfg = {
                 serverName      : serverName,
                 dockerPath      : me.getDockerPath(serverName),
@@ -383,11 +381,27 @@
             }
             try {
                 const tpl = pkg.ECT({ watch: true, cache: false, root: me.getDockerTemplatePath(serverName) + '/', ext : '.tpl' });
-                code += tpl.render('removeDockerApp.tpl', cfg);
+                cmd = tpl.render('stopDockerApp.tpl', cfg);
             } catch(e) {
-                code += 'echo "' + e.message + '"' + "\n";
+                cmd = 'echo "' + e.message + '"' + "\n";
             }
-            cmd += code;
+            me.setClone('stopDocker_' + serverName, cmd, callback);
+        };
+
+        this.removeDocker = (serverName, callback) => {
+            let cmd = '';
+            let cfg = {
+                serverName      : serverName,
+                dockerPath      : me.getDockerPath(serverName),
+                siteImage       : me.getSiteImageName(serverName),
+                siteContainer   : (serverName + '-container').toLowerCase()
+            }
+            try {
+                const tpl = pkg.ECT({ watch: true, cache: false, root: me.getDockerTemplatePath(serverName) + '/', ext : '.tpl' });
+                cmd = tpl.render('removeDockerApp.tpl', cfg);
+            } catch(e) {
+                cmd = 'echo "' + e.message + '"' + "\n";
+            }
             me.setClone('removeDocker_' + serverName, cmd, callback);
         }
     }
