@@ -177,7 +177,7 @@
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
                 
-                git.gitCloneToFolder('/var/_localAppDATA/' + data.docker.type + '/' + data.serverName, data, function(result) {
+                git.gitCloneToFolder(data_dir + '/' + data.docker.type + '/' + data.serverName + '/code', data, function(result) {
                     cbk(true);
                 });
             };
