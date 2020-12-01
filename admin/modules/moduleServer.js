@@ -13,16 +13,13 @@
             _env = require(data_dir + '/_env.json');
         } catch (e) {}
 
-
         this.pullCode = (serverName, callback) => {
-            var site_path = data_dir + '/' + me.getSiteType(serverName) + '/' + serverName;
-            var cmd = 'cd ' + site_path + ' && git pull';
+            var cmd = 'cd ' + this.siteCodePath() + ' && git pull';
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
                     callback({status:'success'});
             });
         }; 
-        
  
 
         this.createStartUpVServers = (callback) => {
@@ -45,14 +42,6 @@
                     callback({status:'success'});
                 }, 6000
             );
-            
-            /*
-
-            var cmd = 'docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)';
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    callback({status:'success'});
-            });*/
         };
 
         this.resetVServer = (serverName, callback) => {
@@ -312,11 +301,35 @@
             }
            return p;
         }
-
-        this.getDockerTemplatePath = (serverName) => {
-            return data_dir + '/' + me.getSiteType(serverName) + '/' + serverName + '/dockerSetting/scriptTemplate';
+        // =====
+        this.sitesPath = (serverName) => {
+            return data_dir + '/' + me.getSiteType(serverName);
         }
 
+        this.sitePath = (serverName) => {
+            return this.sitesPath() + '/' + serverName;
+        }
+        this.siteCodePath = (serverName) => {
+            return this.sitePath(serverName) + '/code';
+        }
+        this.siteDataPath = (serverName) => {
+            return this.sitePath(serverName) + '/data';
+        }
+        this.siteDockerTemplatePath = (serverName) => {
+            return me.siteCodePath + '/dockerSetting/scriptTemplate';
+        }
+        //----
+        this.dockerPath = (serverName) => {
+            return _env.data_folder + '/' + me.getSiteType(serverName) + '/' + serverName;
+        }
+        this.dockerCodePath = (serverName) => {
+            return this.dockerPath(serverName) + '/code';
+        }
+        this.dockerDataPath = (serverName) => {
+            return this.dockerPath(serverName) + '/data';
+        }
+
+        // =====
         this.getDockerFileFn = (serverName) => {
             var sites_list = me.getSitesCfg();
             var site_config = sites_list[serverName];
@@ -361,10 +374,12 @@
                 siteImage       : me.getSiteImageName(serverName),
                 siteContainer   : (serverName + '-container').toLowerCase(),
                 cmdPorts        : cmdPorts,
-                sitePath        : (_env.data_folder + '/' + me.getSiteType(serverName) + '/' + serverName)
+                sitePath        : (_env.data_folder + '/' + me.getSiteType(serverName) + '/' + serverName),
+                dockerCodePath  : me.dockerCodePath(serverName),
+                dockerCodePath  : me.dockerDataPath(serverName)
             }
             try {
-                const tpl = pkg.ECT({ watch: true, cache: false, root: me.getDockerTemplatePath(serverName) + '/', ext : '.tpl' });
+                const tpl = pkg.ECT({ watch: true, cache: false, root: me.siteDockerTemplatePath(serverName) + '/', ext : '.tpl' });
                 code += tpl.render('addDockerApp.tpl', cfg);
             } catch(e) {
                 code += 'echo "' + e.message + '"' + "\n";
@@ -386,7 +401,7 @@
                 siteContainer   : (serverName + '-container').toLowerCase()
             }
             try {
-                const tpl = pkg.ECT({ watch: true, cache: false, root: me.getDockerTemplatePath(serverName) + '/', ext : '.tpl' });
+                const tpl = pkg.ECT({ watch: true, cache: false, root: me.siteDockerTemplatePath(serverName) + '/', ext : '.tpl' });
                 cmd = tpl.render('stopDockerApp.tpl', cfg);
             } catch(e) {
                 cmd = 'echo "' + e.message + '"' + "\n";
@@ -403,7 +418,7 @@
                 siteContainer   : (serverName + '-container').toLowerCase()
             }
             try {
-                const tpl = pkg.ECT({ watch: true, cache: false, root: me.getDockerTemplatePath(serverName) + '/', ext : '.tpl' });
+                const tpl = pkg.ECT({ watch: true, cache: false, root: me.siteDockerTemplatePath(serverName) + '/', ext : '.tpl' });
                 cmd = tpl.render('removeDockerApp.tpl', cfg);
             } catch(e) {
                 cmd = 'echo "' + e.message + '"' + "\n";
