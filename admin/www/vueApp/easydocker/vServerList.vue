@@ -44,7 +44,7 @@
                                     Delete
                                 </a>
                                 <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="resetVServer(item.name, item.serverType)">
-                                    Reboot
+                                    Start
                                 </a>
                                 <a class="btn btn-sm btn-danger m-1" href="JavaScript:void(0)" v-on:click="stopVServer(item.name, item.serverType)">
                                     Stop
