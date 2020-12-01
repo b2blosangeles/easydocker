@@ -147,7 +147,7 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        stopVServer(serverName, serverType) {
+        stopVServer(record) {
             var me = this;
 
             me.$parent.triggerSpinner = true;
@@ -157,8 +157,8 @@ module.exports = {
                 url:'/api',
                 data: {
                     cmd :'stopVServer',
-                    serverName : serverName,
-                    serverType : serverType
+                    serverName : record.name,
+                    serverType : record.serverType
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;
@@ -170,9 +170,8 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
-        pullCode(serverName) {
+        pullCode(record) {
             var me = this;
-
             me.$parent.triggerSpinner = true;
 
             $.ajax({
@@ -180,7 +179,8 @@ module.exports = {
                 url:'/api',
                 data: {
                     cmd :'pullCode',
-                    serverName : serverName
+                    serverName : record.name,
+                    serverType : record.serverType
                 },
                 success: function(result) {
                     me.$parent.triggerSpinner = false;

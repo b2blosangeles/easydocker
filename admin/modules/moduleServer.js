@@ -1,5 +1,5 @@
 (function() {
-    var obj = function(env, pkg) {
+    var obj = function(serverType, env, pkg) {
         var me = this,
             fs = require('fs'),
             exec = require('child_process').exec,
@@ -13,21 +13,62 @@
             _env = require(data_dir + '/_env.json');
         } catch (e) {}
 
+        // ==== 
+        this.sitesPath = () => {
+            return data_dir + '/' + serverType;
+        }
+
+        this.sitePath = (serverName) => {
+            return this.sitesPath() + '/' + serverName;
+        }
+        this.siteCodePath = (serverName) => {
+            return this.sitePath(serverName) + '/code';
+        }
+        this.siteDataPath = (serverName) => {
+            return this.sitePath(serverName) + '/data';
+        }
+
+        this.siteDockerTemplatePath = (serverName) => {
+            return me.siteCodePath(serverName) + '/dockerSetting/scriptTemplate';
+        }
+
+        this.siteContainer = (serverName) => {
+            return (serverType + '-' + serverName + '-container').toLowerCase();
+        }
+
+        this.getImageName = (serverName) => {
+            return (serverType + '-' + serverName + '-image').toLowerCase();
+        }
+
+        this.dockerPath = (serverName) => {
+            return _env.data_folder + '/' + serverType + '/' + serverName;
+        }
+        this.dockerCodePath = (serverName) => {
+            return this.dockerPath(serverName) + '/code';
+        }
+        this.dockerDataPath = (serverName) => {
+            return this.dockerPath(serverName) + '/data';
+        }
+        // ===========
+        
         this.pullCode = (serverName, callback) => {
-            var cmd = 'cd ' + this.siteCodePath() + ' && git pull';
+            var cmd = 'cd ' + this.siteCodePath(serverName) + ' && git pull';
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
-                    callback({status:'success'});
+                    callback({status:'successA'});
             });
         }; 
- 
+
+        this.stopVServer = (serverName, callback) => {
+            me.setClone('stopVServer', me.templateCMD('removeDockerApp.tpl', serverName), callback);
+        };
 
         this.createStartUpVServers = (callback) => {
             var v = me.getSitesCfg();
             var str = '';
             for (var o in v) {
                 str += "## --- Start " + o + " ---\n";
-                str += me.addDockerCMD(o);
+                str += me.templateCMD('addDockerApp.tpl', o);
             }
             fs.writeFile(data_dir + '/_startUpScript.sh', str, function (err) {
                 setTimeout(() => {
@@ -81,11 +122,6 @@
             me.setClone('saveEtcHosts', str, callback);
         }
         
-        this.restartProxy = (callback) => {
-            var cmd = 'sh ' +  _env.code_folder + '/scriptStartup/nginx_proxy.sh ' + _env.data_folder;
-            me.setClone('restartProxy', cmd, callback);
-        };
-        
         this.postLoadList = (callback) => { // use this
             var sites_list = me.getSitesCfg();
             var list = [];
@@ -96,7 +132,6 @@
             }
             callback({status:'success', list : list });
         }
-
 
         this.saveSitesServers = (data, callback) => {
             
@@ -114,17 +149,52 @@
             });
         }
 
-        this.switchBranch = (serverName, branch, callback) => {
-            var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
-            var git = new MGit(env, pkg);
-            git.gitSwitchBranch(serverName, branch, function(result) {
-                var v = me.getSitesCfg();
-                if (v[serverName]) {
-                    v[serverName].branch = branch
-                }
-                me.saveSitesCfg(v, () => {
-                    callback({status:'success'});
+        this.pullCode = (serverName, callback) => {
+            var cmd = 'cd ' + me.siteCodePath(serverName) + ' && git pull';
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    callback({status:'successA'});
+            });
+        }; 
+
+        this.gitSiteBranchs = (serverName, callback) => {
+            var _f = {};
+            _f['getBranches'] = function(cbk) {
+                var cmd = 'cd ' + me.siteCodePath(serverName) + ' && git branch -r';
+                exec(cmd, {maxBuffer: 1024 * 2048},
+                    function(error, stdout, stderr) {
+                        var branches = [];
+                        var list = stdout.split(/\s+/);
+                        if (!error) {
+                            for (var i in list) {
+                                let regs = /^origin\/([a-z0-9\-\_]+)$/i;
+                                if (regs.test(list[i])) {
+                                    var item = list[i].replace(/^origin\//i, '');
+                                    if (item !== 'HEAD' && branches.indexOf(item) === -1) {
+                                        branches.push(item);
+                                    }
+                                }
+                            }
+                            cbk({status : 'success', branches : branches });
+                        } else {
+                            cbk({status : 'failure', message : error.message});
+                        }
+    
+                        
                 });
+            }
+            CP.serial(_f, (dataCP) => {
+                callback({status : 'success', list : CP.data.getBranches});
+            }, 30000);
+
+        }
+
+        this.gitSwitchBranch = (serverName, branch, callback) => {
+            var dirn = '/var/_localAppDATA/sites/' + serverName;
+            var cmd = 'cd ' + dirn + ' && git checkout ' + branch;
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    callback({status : 'success'});                       
             });
         }
 
@@ -137,6 +207,12 @@
                 }
             } catch (e) {}
             return v;
+        }
+
+        this.getSiteConfig = (serverName) => {
+            var sites_list = me.getSitesCfg();
+            var site_config = sites_list[serverName];
+            return (!site_config.publicDocker) ? site_config : site_config.publicDocker;
         }
 
         this.saveSitesCfg = (v, callback) => {
@@ -172,16 +248,15 @@
 
         this.addVServer = (data, callback) => {
             var _f={};
-
+ 
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
-                
-                git.gitCloneToFolder(data_dir + '/' + data.docker.type + '/' + data.serverName + '/code', data, function(result) {
+                git.gitCloneToFolder(me.siteCodePath(data.serverName), data, function(result) {
                     cbk(true);
                 });
             };
-            
+       
             _f['SitesServers'] = function(cbk) {
                 me.saveSitesServers(data, cbk);
             };
@@ -190,33 +265,24 @@
                 me.addDocker(data.serverName, cbk);
             };
             
-            _f['addProxyConfig'] = function(cbk) {
-                me.addProxyConfig(data.serverName, cbk);
-            };
-
-            _f['restartProxy'] = function(cbk) {
-                me.restartProxy(cbk);
-            };
             _f['createStartUpVServers'] = function(cbk) {
                 me.createStartUpVServers(cbk); 
             };
-            
-            CP.serial(_f, function(data) {
+           
+            CP.serial(_f, function(result) {
                 callback(CP.data.SitesServers);
             }, 30000);
         }
 
         this.deleteVServer = (serverName, callback) => {
-            var _f = {};
+            const   _f = {};
 
             _f['removeDocker'] = function(cbk) {
                 me.removeDocker(serverName, cbk);
             };
 
             _f['deleteCode'] = function(cbk) {
-                // var site_path = data_dir + '/' + me.getSiteType(serverName) + '/' + serverName;
-                var site_path = me.sitePath(serverName);
-                cmd = 'rm -fr ' + site_path;
+                cmd = 'rm -fr ' + me.sitePath(serverName);;
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
                         cbk(true);
@@ -230,14 +296,6 @@
                 });
             };
 
-            _f['removeProxyConfig'] = function(cbk) {
-                me.removeProxyConfig(serverName, cbk);
-            };
-
-            _f['restartProxy'] = function(cbk) {
-                me.restartProxy(cbk);
-            };
-
             _f['createStartUpVServers'] = function(cbk) {
                 me.createStartUpVServers(cbk); 
             };
@@ -247,184 +305,45 @@
             }, 30000);
         };
 
-        this.addProxyConfig = (serverName, callback) => {
-            var proxy_fn = data_dir + '/proxy/' + serverName+'.local';
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-
-            var cmd_ports  = '';
-            var str = '';
-
-            let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
-            for (var i = 0;  i < ports.length; i++) {
-                cmd_ports += parseInt(site_config.unidx * 10000) + parseInt(ports[i]);
-                var u_str = 'http://10.10.10.254:' + cmd_ports + '/';
-                var servasname_v = [serverName + '_local', serverName + '.local', serverName + '.shusiou.win'];
-                for (var j = 0; j < servasname_v .length; j++) {
-                    str += 'server {' + "\n";
-                    str += '    listen       80;' + "\n";
-                    str += '    server_name  ' + servasname_v[j] + ';' + "\n";
-                    str += '    location / {' + "\n";
-                    str += '        proxy_cache                     off;' + "\n";
-                    str += '        proxy_pass ' + u_str + ';' + "\n";
-                    str += '        proxy_redirect     off;' + "\n";
-                    str += '        proxy_set_header   Host $host;' + "\n";
-                    str += '        sub_filter ' + u_str + ' http://$host/;' + "\n";
-                    str += '        sub_filter ' + u_str + ' http://$host/;' + "\n";
-                    str += '        sub_filter_once off;' + "\n";
-                    str += '      }' + "\n";
-                    str += '}' + "\n";
-                }
-            }
-            fs.writeFile(proxy_fn, str, function (err) {
-                callback(true);
-            });
-        }
-
-        this.removeProxyConfig = (serverName, callback) => {
-            var proxy_fn = data_dir + '/proxy/' + serverName+'.local';
-            var cmd = 'rm -fr ' + proxy_fn;
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    callback({status:'success'});
-            });
-        }
-
-        this.getDockerPath = (serverName) => {
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-            var p = '';
-
-            if (!site_config.publicDocker) {
-                p = _env.data_folder + '/' + me.getSiteType(serverName) + '/' + serverName + '/dockerSetting';
-            } else {
-                p = _env.code_folder + '/publicDockers/' + site_config.publicDocker;
-            }
-           return p;
-        }
-        // =====
-        this.sitesPath = (type) => {
-            return data_dir + '/' + type;
-        }
-
-        this.sitePath = (serverName) => {
-            return me.sitesPath(me.getSiteType(serverName)) + '/' + serverName;
-        }
-        this.siteCodePath = (serverName) => {
-            return me.sitePath(serverName) + '/code';
-        }
-        this.siteDataPath = (serverName) => {
-            return me.sitePath(serverName) + '/data';
-        }
-        this.siteDockerTemplatePath = (serverName) => {
-            return me.siteCodePath() + '/dockerSetting/scriptTemplate';
-        }
-        //----
-        this.dockerPath = (serverName) => {
-            return _env.data_folder + '/' + me.getSiteType(serverName) + '/' + serverName;
-        }
-        this.dockerCodePath = (serverName) => {
-            return this.dockerPath(serverName) + '/code';
-        }
-        this.dockerDataPath = (serverName) => {
-            return this.dockerPath(serverName) + '/data';
-        }
-
-        // =====
-        this.getDockerFileFn = (serverName) => {
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-           return me.getDockerPath(serverName) + '/dockerFile';
-        }
-
-        this.getSiteImageName = (serverName) => {
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-            return ((!site_config.publicDocker) ? serverName : site_config.publicDocker).toLowerCase() + '-image';
-        }
-
-        
-        this.getSiteConfig = (serverName) => {
-            var sites_list = me.getSitesCfg();
-            var site_config = sites_list[serverName];
-            return (!site_config.publicDocker) ? site_config : site_config.publicDocker;
-        }
-
-        this.getSiteType = (serverName) => {
+        this.dockerConfig = (serverName) => {
             var site_config = me.getSiteConfig(serverName);
-            return site_config.docker.type;
-        }
-
-        this.addDockerCMD = (serverName) => {
-           
-            var site_config = me.getSiteConfig(serverName);  
-            let cmd = '';
-            let code = '';
-            
             var cmdPorts  = '';
             let ports = (!site_config || !site_config.docker) ? [] : site_config.docker.ports;
-            
             for (var i = 0;  i < ports.length; i++) {
                 cmdPorts += ' -p ' + (parseInt(site_config.unidx * 10000) + parseInt(ports[i])) + ':' + ports[i] + ' ';
             }
-
-            let cfg = {
-                serverName      : serverName,
-                dockerPath      : me.getDockerPath(serverName),
-                dockerFile      : me.getDockerFileFn(serverName),
-                siteImage       : me.getSiteImageName(serverName),
-                siteContainer   : (serverName + '-container').toLowerCase(),
-                cmdPorts        : cmdPorts,
-                sitePath        : (_env.data_folder + '/' + me.getSiteType(serverName) + '/' + serverName),
-                dockerCodePath  : me.dockerCodePath(serverName),
-                dockerCodePath  : me.dockerDataPath(serverName)
+            return {
+                serverName          : serverName,
+                dockerCodePath      : me.dockerCodePath(serverName),
+                dockerSettingPath   : me.dockerCodePath(serverName) + '/dockerSetting',
+                dockerDataPath      : me.dockerDataPath(serverName),
+                dockerFile          : me.dockerCodePath(serverName) + '/dockerSetting/dockerFile',
+                siteImage           : me.getImageName(serverName),
+                siteContainer       : me.siteContainer(serverName),
+                cmdPorts            : cmdPorts,
+                sitePath            : me.sitePath(serverName),
+                siteCodePath        : me.siteCodePath(serverName),
+                siteDataPath        : me.siteDataPath(serverName)
             }
+        }
+
+        this.templateCMD = (tplName, serverName) => {
+            let cmd = '';
             try {
                 const tpl = pkg.ECT({ watch: true, cache: false, root: me.siteDockerTemplatePath(serverName) + '/', ext : '.tpl' });
-                code += tpl.render('addDockerApp.tpl', cfg);
+                cmd = tpl.render(tplName, me.dockerConfig(serverName));
             } catch(e) {
-                code += 'echo "' + e.message + '"' + "\n";
+                cmd = 'echo "' + e.message + '"' + "\n";
             }
-            cmd += code;
             return cmd;
         }
 
         this.addDocker = (serverName, callback) => {
-            me.setClone('addDocker_' + serverName, me.addDockerCMD(serverName), callback);
+            me.setClone('addDocker', me.templateCMD('addDockerApp.tpl', serverName), callback);
         }
-        
-        this.stopVServer = (serverName, callback) => {
-            let cmd = '';
-            let cfg = {
-                serverName      : serverName,
-                dockerPath      : me.getDockerPath(serverName),
-                siteImage       : me.getSiteImageName(serverName),
-                siteContainer   : (serverName + '-container').toLowerCase()
-            }
-            try {
-                const tpl = pkg.ECT({ watch: true, cache: false, root: me.siteDockerTemplatePath(serverName) + '/', ext : '.tpl' });
-                cmd = tpl.render('stopDockerApp.tpl', cfg);
-            } catch(e) {
-                cmd = 'echo "' + e.message + '"' + "\n";
-            }
-            me.setClone('stopDocker_' + serverName, cmd, callback);
-        };
 
         this.removeDocker = (serverName, callback) => {
-            let cmd = '';
-            let cfg = {
-                serverName      : serverName,
-                dockerPath      : me.getDockerPath(serverName),
-                siteImage       : me.getSiteImageName(serverName),
-                siteContainer   : (serverName + '-container').toLowerCase()
-            }
-            try {
-                const tpl = pkg.ECT({ watch: true, cache: false, root: me.siteDockerTemplatePath(serverName) + '/', ext : '.tpl' });
-                cmd = tpl.render('removeDockerApp.tpl', cfg);
-            } catch(e) {
-                cmd = 'echo "' + e.message + '"' + "\n";
-            }
-            me.setClone('removeDocker_' + serverName, cmd, callback);
+            me.setClone('removeDocker', me.templateCMD('removeDockerApp.tpl', serverName), callback);
         }
     }
     module.exports = obj;

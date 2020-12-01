@@ -44,13 +44,13 @@
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="deleteVirtualServer(item.name, item.serverType)">
                                     Delete
                                 </a>
-                                <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="resetVServer(item.name, item.serverType)">
+                                <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="resetVServer(item)">
                                     Start
                                 </a>
-                                <a class="btn btn-sm btn-danger m-1" href="JavaScript:void(0)" v-on:click="stopVServer(item.name, item.serverType)">
+                                <a class="btn btn-sm btn-danger m-1" href="JavaScript:void(0)" v-on:click="stopVServer(item)">
                                     Stop
                                 </a>
-                                <a class="btn btn-sm btn-success m-1" href="JavaScript:void(0)" v-on:click="pullCode(item.name, item.serverType)">
+                                <a class="btn btn-sm btn-success m-1" href="JavaScript:void(0)" v-on:click="pullCode(item)">
                                     Pull code
                                 </a>
                             </div>
@@ -120,7 +120,7 @@ module.exports = {
             });
         },
 
-        switchBranch(item) {
+        switchBranch(record) {
             let me = this,
                 data = {
                     serverName  : item.name,
@@ -133,13 +133,13 @@ module.exports = {
             });            
         },
 
-        stopVServer(serverName, serverType) {
+        stopVServer(record) {
             var me = this;
-            me.root.dataEngine().stopVServer(serverName, serverType);
+            me.root.dataEngine().stopVServer(record);
         },
-        pullCode(serverName) {
+        pullCode(record) {
             var me = this;
-            me.root.dataEngine().pullCode(serverName);
+            me.root.dataEngine().pullCode(record);
         },       
         resetVServer(serverName, serverType) {
             var me = this;

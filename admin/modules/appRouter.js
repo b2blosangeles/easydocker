@@ -75,7 +75,7 @@
 							me.refreshTokenSend(data);
 						});
 					} else {
-						var Servers = new MServers(env, pkg);
+						var Servers = new MServers('webserver', env, pkg);
 						Servers.resetVServer(req.body.serverName,
 							function(data) {
 								me.refreshTokenSend(data);
@@ -85,7 +85,7 @@
 				
 				case 'removeAllServers' :
 	
-					var Servers = new MServers(env, pkg);
+					var Servers = new MServers('webserver', env, pkg);
 					Servers.removeAllServers(
 						function(data) {
 							me.refreshTokenSend(data);
@@ -94,7 +94,7 @@
 				
 				case 'restartProxy' :
 
-					var Servers = new MServers(env, pkg);
+					var Servers = new MServers('webserver', env, pkg);
 					Servers.restartProxy(function(data) {
 						me.refreshTokenSend(data);
 					});
@@ -102,7 +102,7 @@
 			    
 				case 'pullCode' :
 
-					var Servers = new MServers(env, pkg);
+					var Servers = new MServers(req.body.serverType, env, pkg);
 					Servers.pullCode(req.body.serverName,
 						(data) => {
 							me.refreshTokenSend(data);
@@ -110,20 +110,13 @@
 					break;
 
 				case 'stopVServer' :
-					if (req.body.serverType === 'database') {
-						var Dbs = new MDbs(env, pkg);
-						Dbs.stopVServer(req.body.serverName, (data) => {
+					var Servers = new MServers(req.body.serverType, env, pkg);
+					Servers.stopVServer(req.body.serverName,
+						(data) => {
 							me.refreshTokenSend(data);
 						});
-					} else {
-						var Servers = new MServers(env, pkg);
-						Servers.stopVServer(req.body.serverName,
-							(data) => {
-								me.refreshTokenSend(data);
-							});
-					}
 					break;
-					
+				/*	
 				case 'getDbMysqlList' :
 					var dbs = new MDbs(env, pkg);
 					dbs.postLoadList(
@@ -131,9 +124,9 @@
 							me.refreshTokenSend(data);
 						});
 					break;
-				
+				*/
 				case 'loadList' :
-					var Servers = new MServers(env, pkg);
+					var Servers = new MServers('webserver', env, pkg);
 					Servers.postLoadList(
 						(data) => {
 							me.refreshTokenSend(data);
@@ -148,7 +141,7 @@
 					break;
 
 				case 'gitSwitchBranch' :
-					var Servers = new MServers(env, pkg);
+					var Servers = new MServers('webserver', env, pkg);
 					Servers.switchBranch(req.body.serverName, req.body.branch,
 						(data) => {
 							me.refreshTokenSend(data);
@@ -156,9 +149,11 @@
 					break;
 
 				case 'gitSiteBranchs' :
-					me.gitSiteBranchs((data) => {
-						me.refreshTokenSend(data);
-					});
+					var Servers = new MServers(req.body.serverType, env, pkg);
+					Servers.gitSiteBranchs(req.body.serverName,
+						(data) => {
+							me.refreshTokenSend(data);
+						});
 					break;
 
 				case 'loadPublicDockersList' :
@@ -175,7 +170,7 @@
 							me.refreshTokenSend(data);
 						});
 					} else {
-						var Servers = new MServers(env, pkg);
+						var Servers = new MServers('webserver', env, pkg);
 						Servers.addVServer(req.body.data, (data) => {
 							me.refreshTokenSend(data);
 						});
@@ -190,7 +185,7 @@
 							me.refreshTokenSend(data);
 						});
 					} else {
-						var Servers = new MServers(env, pkg);
+						var Servers = new MServers('webserver', env, pkg);
 						Servers.deleteVServer(req.body.data.serverName,
 							(data) => {
 								me.refreshTokenSend(data);
