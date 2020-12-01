@@ -156,9 +156,9 @@ module.exports = {
     },
     components: VUEApp.loadComponents({
         LOAD    : {
-            'selectBranch' : '/vueApp/easydocker/selectBranch.vue',
+            'selectBranch'   : '/vueApp/easydocker/selectBranch.vue',
             'vFormWebServer' : '/vueApp/easydocker/vFormWebServer.vue',
-            'vFormDbServer' : '/vueApp/easydocker/vFormDbServer.vue'
+            'vFormDbServer'  : '/vueApp/easydocker/vFormDbServer.vue'
         }, 
         TPL :{}
     })

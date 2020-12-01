@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-var ECT = require('ect');
 var bodyParser = require('body-parser');
 var path = require('path');
 
@@ -19,11 +18,10 @@ var pkg = {
     },
     md5 : require('md5'),
     crowdProcess : require(__dirname + '/vendor/crowdProcess/crowdProcess.js'),
-    tpl : ECT({ watch: true, cache: false, root: __dirname + '/views', ext : '.ect' })
+    ECT : require('ect')
 }
 
-    
-app.engine('ect', pkg.tpl.render);
+app.engine('ect', pkg.ECT({ watch: true, cache: false, root: __dirname + '/views', ext : '.ect' }).render);
 
 app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies   

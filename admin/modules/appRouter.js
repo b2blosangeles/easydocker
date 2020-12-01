@@ -46,7 +46,7 @@
 
 		this.post = () => {
 			var me = this;
-			var MServers = pkg.require(env.root+ '/modules/moduleServers/webserver.js');
+			var MServers = pkg.require(env.root+ '/modules/moduleServer.js');
 			var MDbs = pkg.require(env.root+ '/modules/moduleServers/dbserver.js');
 
 			let p = req.params[0],
