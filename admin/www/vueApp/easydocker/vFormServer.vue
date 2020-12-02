@@ -2,6 +2,7 @@
 <div class="card shadow m-2 mr-1 p-3 mt-0">
     <div class="card-body card-form-section text-left ">
         <form>
+        =={{form.serverType}}==
             <div class="form-group">
                 <label>Repository git URI *</label>
                 <input type="text" class="form-control" v-model="form.gitHub" @input="changedGit" placeholder="Repository git URI">
@@ -29,17 +30,6 @@
             <div class="form-group" v-if="branches!==null" >
                 <label>Server Name * </label>
                 <input type="text" class="form-control" maxlength="64" v-model="form.serverName" placeholder="Server Name">
-            </div>
-
-           <div class="form-group" v-if="branches!==null" >
-                <label>Server Type {{form.serverType}}</label>
-                <select class="form-control" :required="true" @change="onBranchSelect($event)" v-model="form.serverType">
-                    <option 
-                    v-for="(v, k) in serverTypes" 
-                    v-bind:value="k"
-                    :selected="k ==  form.serverType"
-                    >{{ v }} - {{ k }}</option>
-                </select>
             </div>
 
             <div class="form-group" v-if="branches!==null" >
@@ -100,10 +90,6 @@ module.exports = {
             errors: {},
             publicDockers     : [],
             branches : null,
-            serverTypes : {
-                'database' : 'Database',
-                'webserver' : 'Web Server'
-            },
             form : {
                 serverName  : '',
                 gitHub      : '',
@@ -207,6 +193,7 @@ module.exports = {
                     if (me.form.branch === me.branches[i].branch && me.branches[i].dockerSetting.type) {
                         me.form.siteDocker = true;
                         me.form.docker = me.branches[i].dockerSetting;
+                        me.form.serverType = me.form.docker.type;
                         me.$forceUpdate();
                     }
                 }
@@ -225,7 +212,9 @@ module.exports = {
             me.formValidation();
             if (!me.isformValid()) {
                 return false;
-            } 
+            }
+            console.log(me.form);
+            return true;
             me.root.dataEngine().saveVServerForm(
                 me.form, function(result) {
                     if (result.status === 'success') {
