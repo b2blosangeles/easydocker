@@ -1,5 +1,6 @@
 {
     "TPL" : [
+        "/vueApp/easydocker/appRoot.vue",
         "/vueApp/easydocker/auth.vue",
         "/vueApp/easydocker/vServerList.vue",
         "/vueApp/easydocker/popUpModals/switchBranch.vue",
