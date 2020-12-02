@@ -31,7 +31,17 @@
                 <input type="text" class="form-control" maxlength="64" v-model="form.serverName" placeholder="Server Name">
             </div>
 
-            
+           <div class="form-group" v-if="branches!==null" >
+                <label>Server Type {{form.serverType}}</label>
+                <select class="form-control" :required="true" @change="onBranchSelect($event)" v-model="form.serverType">
+                    <option 
+                    v-for="(v, k) in serverTypes" 
+                    v-bind:value="k"
+                    :selected="k ==  form.serverType"
+                    >{{ v }} - {{ k }}</option>
+                </select>
+            </div>
+
             <div class="form-group" v-if="branches!==null" >
                 <label>Branche</label>
                 <select class="form-control" :required="true" @change="onBranchSelect($event)" v-model="form.branch">
@@ -90,6 +100,10 @@ module.exports = {
             errors: {},
             publicDockers     : [],
             branches : null,
+            serverTypes : {
+                'database' : 'Database',
+                'webserver' : 'Web Server'
+            },
             form : {
                 serverName  : '',
                 gitHub      : '',
@@ -106,8 +120,6 @@ module.exports = {
     },
     mounted() {
         var me = this;
-        console.log('me.serverType==>');
-        console.log(me.serverType);
         setTimeout(
             function() {
                 me.loadPublicDockersList()
@@ -146,6 +158,7 @@ module.exports = {
         },
         changedGit(e) {
             var me = this;
+            me.form.gitHub = e.target.value.replace(/^\s+|\s+$/g, '');
             me.cleanForm();
         },
         loadPublicDockersList() {

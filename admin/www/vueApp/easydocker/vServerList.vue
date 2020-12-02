@@ -17,8 +17,8 @@
                 </div> 
             </div>
         </div>
-        <v-form-web-server v-if="module==='form' && serverType === 'webserver'" server-type="webserver"></v-form-web-server>
-        <v-form-db-server v-if="module==='form' && serverType === 'database'" server-type="database"></v-form-db-server>
+        <v-form-server v-if="module==='form'" :server-type="serverType"></v-form-server>
+
         <div class="card-body card-list-section  mt-0" v-if="module!=='form'">
             <div class="list-group" v-for="item in  list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
@@ -158,8 +158,7 @@ module.exports = {
     components: VUEApp.loadComponents({
         LOAD    : {
             'selectBranch'   : '/vueApp/easydocker/selectBranch.vue',
-            'vFormWebServer' : '/vueApp/easydocker/vFormWebServer.vue',
-            'vFormDbServer'  : '/vueApp/easydocker/vFormDbServer.vue'
+            'vFormServer' : '/vueApp/easydocker/vFormServer.vue'
         }, 
         TPL :{}
     })

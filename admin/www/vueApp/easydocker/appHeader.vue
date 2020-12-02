@@ -18,7 +18,7 @@
                         <button class="btn btn-sm btn-success m-1 pull-right" 
                             :disabled = "isDisabled('databases')"
                             v-on:click="clickMenu('databases')">
-                            MySQL Databases
+                            MySQL Databases {{$parent.module}}
                         </button>
                         <button class="btn btn-sm btn-success m-1 pull-right" 
                             :disabled = "isDisabled('webservers')"
