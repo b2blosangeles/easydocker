@@ -31,7 +31,7 @@ module.exports = {
                 formStarted : false
             },
             triggerSpinner : false,
-            module : 'webservers',
+            module : 'list',
             menu   : ''
         }
     },

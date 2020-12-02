@@ -2,14 +2,14 @@
     "TPL" : [
         "/vueApp/easydocker/appRoot.vue",
         "/vueApp/easydocker/auth.vue",
-        "/vueApp/easydocker/vServerList.vue",
         "/vueApp/easydocker/popUpModals/switchBranch.vue",
         "/vueApp/easydocker/popUpModals/_frame.vue",
         "/vueApp/easydocker/dataEngine.vue",
         "/vueApp/easydocker/spinner.vue",
         "/vueApp/easydocker/appHeader.vue",
         "/vueApp/easydocker/appBody.vue",
-        "/vueApp/easydocker/dbMysqlList.vue"
+        "/vueApp/easydocker/vServerList.vue",
+        "/vueApp/easydocker/vFormServer.vue"
     ],
     "JS" : [
         "/js/coffee-script.js",

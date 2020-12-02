@@ -2,24 +2,11 @@
     <div class="card shadow m-2 text-left">
         <div class="p-3 pb-0" >
             <div class="row">
-                <div class="col-6 p-3 m-0 text-left">
-                    <h3 v-if="module!=='form'"  class="ml-4 text-capitalize">{{serverType}} List</h3>
-                    <h3 v-if="module==='form'"  class="ml-4 text-capitalize">Add a {{serverType}}</h3>
-                </div>
-                <div class="col-6 p-0 m-0 text-right">
-                    <a class="btn btn-sm btn-success m-3 mb-0 pull-right"
-                        href="JavaScript:void(0)" v-if="module!=='form'" v-on:click="addVServer()" >
-                        Add a {{serverType}}
-                    </a>
-                    <a class="btn btn-sm btn-secondary m-3 mb-0 pull-right" href="JavaScript:void(0)" v-if="module==='form'" v-on:click="cancel()" >
-                        Cancel
-                    </a>
-                </div> 
+                <div class="col-12 p-3 m-0 text-left">
+                    <h3 class="ml-4 text-capitalize">{{serverType}} List</h3>
             </div>
         </div>
-        <v-form-server v-if="module==='form'" :server-type="serverType"></v-form-server>
-
-        <div class="card-body card-list-section  mt-0" v-if="module!=='form'">
+        <div class="card-body card-list-section  mt-0">
             <div class="list-group" v-for="item in  list">
                 <div class="list-group-item list-group-item-action flex-column align-items-start m-1">
                     <div class="container-fluid m-0">
@@ -64,11 +51,12 @@
  
 <script>
 module.exports = {
-    props : ['serverType'],
+    props : [],
     data: function() {
         let me = this;
         return {
             list : [],
+            serverType : 'webserver',
             root :  this.$parent.root,
             currentServer : '',
             module : ''
@@ -89,21 +77,15 @@ module.exports = {
       }
     },
     methods : {
-        cancel() {
-            var me = this;
-            me.module = '';
-        },
-        addVServer() {
-            var me = this;
-            me.module = 'form';
-        },
         getVServerList() {
             var me = this;
             me.root.dataEngine().getVServerList(
                 false,
                 function(result) {
+                    console.log(result);
                     me.list = result.list.filter(function(item) {
-                        return (item.serverType === me.serverType)
+                        return true; 
+                       // (item.serverType === me.serverType)
                     });
                     me.module = '';
                 }
@@ -157,8 +139,7 @@ module.exports = {
     },
     components: VUEApp.loadComponents({
         LOAD    : {
-            'selectBranch'   : '/vueApp/easydocker/selectBranch.vue',
-            'vFormServer' : '/vueApp/easydocker/vFormServer.vue'
+            'selectBranch'   : '/vueApp/easydocker/selectBranch.vue'
         }, 
         TPL :{}
     })
