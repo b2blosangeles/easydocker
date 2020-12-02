@@ -5,13 +5,12 @@
             <div class="col-10 pt-6 text-center">
                 <app-header></app-header>
                 <app-body ref="appBody"></app-body>
-    
+                <auth ref="auth"></auth>
             </div>
             <div class="col-1 p-0"></div>
         </div>
         <data-engine ref="dataEngine"></data-engine>
         <pop-up-modal ref="popUpModal"></pop-up-modal>
-        <auth ref="auth"></auth>
         <spinner></spinner>     
     </div>
 </template>
@@ -36,36 +35,35 @@ module.exports = {
             menu   : ''
         }
     },
-                    mounted () {},
-                methods :{
-                    isSignin() {
-                        return (!this.root.auth || !this.root.auth.isSignIn || !this.root.auth.isAuthExist) ? false : true
-                    },
-                    signOff() {
-                        this.getAuth().signOff();
-                    },
-                    dataEngine(caller) {
-                        if (caller) this.$refs.dataEngine.caller = caller;
-                        return this.$refs.dataEngine
-                    },
-                    getAuth() {
-                        return this.$refs.auth
-                    },
-                    appBody() {
-                        return this.$refs.appBody
-                    },
-                    popUp(caller) {
-                        if (caller) this.$refs.popUpModal.caller = caller;
-                        return this.$refs.popUpModal
-                    },
-                    matrix(v) {
-                        var me = this;
-                        return (me.module === v) ? true : false;
-                    }
-                    },
+    mounted () {},
+    methods :{
+        isSignin() {
+            return (!this.root.auth || !this.root.auth.isSignIn || !this.root.auth.isAuthExist) ? false : true
+        },
+        signOff() {
+            this.getAuth().signOff();
+        },
+        dataEngine(caller) {
+            if (caller) this.$refs.dataEngine.caller = caller;
+            return this.$refs.dataEngine
+        },
+        getAuth() {
+            return this.$refs.auth
+        },
+        appBody() {
+            return this.$refs.appBody
+        },
+        popUp(caller) {
+            if (caller) this.$refs.popUpModal.caller = caller;
+            return this.$refs.popUpModal
+        },
+        matrix(v) {
+            var me = this;
+            return (me.module === v) ? true : false;
+        }
+    },
     components: VUEApp.loadComponents({
         LOAD    : {
-           
         }, 
         TPL :{
             'auth'      : '/vueApp/easydocker/auth.vue',
