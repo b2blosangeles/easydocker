@@ -55,16 +55,26 @@
             var cmd = 'cd ' + this.siteCodePath(serverName) + ' && git pull';
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
-                    callback({status:'successA'});
+                    callback({status:'success'});
             });
         }; 
 
+        this.viewLogs = (serverName, callback) => {
+            var _f = {};
+            _f['sendClone'] = function(cbk) {
+                me.setCron('afterAddDocker-' + serverName, me.templateCMD('afterAddDockerApp.tpl', serverName), cbk);
+            }
+            CP.serial(_f, function(data) {
+                callback({status:'successC'});
+            }, 30000);
+        }; 
+
         this.stopVServer = (serverName, callback) => {
-            me.setClone('stopVServer-' + serverName, me.templateCMD('removeDockerApp.tpl', serverName), callback);
+            me.setCron('stopVServer-' + serverName, me.templateCMD('removeDockerApp.tpl', serverName), callback);
         };
 
         this.startVServer = (serverName, callback) => {
-            me.setClone('startDockerServer-' + serverName, me.templateCMD('addDockerApp.tpl', serverName), callback);
+            me.setCron('startDockerServer-' + serverName, me.templateCMD('addDockerApp.tpl', serverName), callback);
         };
 
         this.createStartUpVServers = (callback) => {
@@ -90,8 +100,7 @@
         };
 
 
-        
-        this.setClone = (code, str, callback) => {
+        this.setCron = (code, str, callback) => {
             fs.writeFile(data_dir + '/_cron/' + code + '_' + new Date().getTime() + '.sh', str, function (err) {
                 setTimeout(() => {
                     callback({status:'success', message: code});
@@ -119,7 +128,7 @@
             }
             str += (!sites_list || !Object.keys(sites_list).length) ? '"' : '${MARKE}"' + "\n";
             str += 'echo "${v}\n${p}" > /etc/hosts' + "\n";
-            me.setClone('saveEtcHosts', str, callback);
+            me.setCron('saveEtcHosts', str, callback);
         }
         
         this.postLoadList = (callback) => { // use this
@@ -148,14 +157,6 @@
                 callback({status:'success', list : me.getSitesCfg()});
             });
         }
-
-        this.pullCode = (serverName, callback) => {
-            var cmd = 'cd ' + me.siteCodePath(serverName) + ' && git pull';
-            exec(cmd, {maxBuffer: 1024 * 2048},
-                function(error, stdout, stderr) {
-                    callback({status:'successA'});
-            });
-        }; 
 
         this.gitSiteBranchs = (serverName, callback) => {
             var _f = {};
@@ -264,11 +265,13 @@
             _f['addDocker'] = function(cbk) {
                 me.addDocker(data.serverName, cbk);
             };
-            
+
             _f['createStartUpVServers'] = function(cbk) {
                 me.createStartUpVServers(cbk); 
             };
-           
+   
+
+
             CP.serial(_f, function(result) {
                 callback(CP.data.SitesServers);
             }, 30000);
@@ -339,11 +342,11 @@
         }
 
         this.addDocker = (serverName, callback) => {
-            me.setClone('addDocker-' + serverName, me.templateCMD('addDockerApp.tpl', serverName), callback);
+            me.setCron('addDocker-' + serverName, me.templateCMD('addDockerApp.tpl', serverName), callback);
         }
 
         this.removeDocker = (serverName, callback) => {
-            me.setClone('removeDocker-' + serverName, me.templateCMD('removeDockerApp.tpl', serverName), callback);
+            me.setCron('removeDocker-' + serverName, me.templateCMD('removeDockerApp.tpl', serverName), callback);
         }
     }
     module.exports = obj;

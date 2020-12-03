@@ -82,7 +82,7 @@
  
 <script>
 module.exports = {
-    props : ['serverType'],
+    props : [],
     data: function() {
         var me = this;
         return {
@@ -96,7 +96,7 @@ module.exports = {
                 branch      : '',
                 siteDocker  : false,
                 publicDocker: '',
-                serverType  : me.serverType,
+                serverType  : '',
                 docker: {
                     type : '',
                     ports : []
@@ -214,12 +214,13 @@ module.exports = {
                 return false;
             }
             console.log(me.form);
-            return true;
+            
             me.root.dataEngine().saveVServerForm(
                 me.form, function(result) {
                     if (result.status === 'success') {
-                        me.$parent.cancel();
-                        me.$parent.getVServerList()
+                        // me.$parent.cancel();
+                        // me.$parent.getVServerList();
+                        me.root.module = 'list';
                     }
                 }
             );

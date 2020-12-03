@@ -86,6 +86,7 @@
 					break;
 			    
 				case 'pullCode' :
+				case 'viewLogs' :
 				case 'stopVServer' :
 				case 'stopVServer' :
 					var Servers = new MServers(req.body.serverType, env, pkg);
@@ -108,6 +109,14 @@
 					Servers.postLoadList(
 						(data) => {
 							me.refreshTokenSend(data);
+						});
+					break;
+
+				case 'getDBAuth' : // --- todo
+					var Servers = new MServers(req.body.data.serverType, env, pkg);
+					Servers.postLoadList(
+						(data) => {
+							me.getDBAuth(data);
 						});
 					break;
 
