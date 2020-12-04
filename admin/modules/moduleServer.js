@@ -24,9 +24,6 @@
         this.siteCodePath = (serverName) => {
             return this.sitePath(serverName) + '/code';
         }
-        this.siteDataPath = (serverName) => {
-            return this.sitePath(serverName) + '/data';
-        }
 
         this.siteDockerTemplatePath = (serverName) => {
             return me.siteCodePath(serverName) + '/dockerSetting/scriptTemplate';
@@ -189,7 +186,7 @@
             }, 30000);
 
         }
-
+        // --- TODO---
         this.gitSwitchBranch = (serverName, branch, callback) => {
             var dirn = '/var/_localAppDATA/sites/' + serverName;
             var cmd = 'cd ' + dirn + ' && git checkout ' + branch;
@@ -247,9 +244,27 @@
             return unidx_max + 1;
         }
 
+        this.makeid = (length) => {
+            var result           = '';
+            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+               result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+         }
+
+        this.saveRandomCode = (serverName, randomCode, callback) => {
+            fs.writeFile(me.siteCodePath(serverName) + '/adminRoot/auth.data', randomCode, function (err) {
+                callback(err)
+            });
+        }
+
         this.addVServer = (data, callback) => {
             var _f={};
- 
+            
+            var randomCode = me.makeid(12);
+
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');
                 var git = new MGit(env, pkg);
@@ -258,19 +273,29 @@
                 });
             };
        
+            _f['prepareFolder'] = function(cbk) {
+                let cmd = 'mkdir -fr ' + me.siteCodePath(data.serverName) + '/adminRoot';
+                exec(cmd, {maxBuffer: 1024 * 2048},
+                    function(error, stdout, stderr) {
+                        cbk(true);
+                });
+            };
+
             _f['SitesServers'] = function(cbk) {
                 me.saveSitesServers(data, cbk);
             };
             
+            _f['saveRandomCode'] = function(cbk) {
+                me.saveRandomCode(data.serverName,  randomCode, cbk);
+            };
+            
             _f['addDocker'] = function(cbk) {
-                me.addDocker(data.serverName, cbk);
+                me.addDocker(data.serverName, cbk, randomCode);
             };
 
             _f['createStartUpVServers'] = function(cbk) {
                 me.createStartUpVServers(cbk); 
             };
-   
-
 
             CP.serial(_f, function(result) {
                 callback(CP.data.SitesServers);
@@ -325,24 +350,27 @@
                 siteContainer       : me.siteContainer(serverName),
                 cmdPorts            : cmdPorts,
                 sitePath            : me.sitePath(serverName),
-                siteCodePath        : me.siteCodePath(serverName),
-                siteDataPath        : me.siteDataPath(serverName)
+                siteCodePath        : me.siteCodePath(serverName)
             }
         }
 
-        this.templateCMD = (tplName, serverName) => {
+        this.templateCMD = (tplName, serverName, randomKey) => {
             let cmd = '';
+            let cfg =  me.dockerConfig(serverName);
+            if (randomKey) {
+                cfg.randomKey = randomKey;
+            }
             try {
                 const tpl = pkg.ECT({ watch: true, cache: false, root: me.siteDockerTemplatePath(serverName) + '/', ext : '.tpl' });
-                cmd = tpl.render(tplName, me.dockerConfig(serverName));
+                cmd = tpl.render(tplName, cfg);
             } catch(e) {
                 cmd = 'echo "' + e.message + '"' + "\n";
             }
             return cmd;
         }
 
-        this.addDocker = (serverName, callback) => {
-            me.setCron('addDocker-' + serverName, me.templateCMD('addDockerApp.tpl', serverName), callback);
+        this.addDocker = (serverName, callback, randomKey) => {
+            me.setCron('addDocker-' + serverName, me.templateCMD('addDockerApp.tpl', serverName, randomKey), callback);
         }
 
         this.removeDocker = (serverName, callback) => {
