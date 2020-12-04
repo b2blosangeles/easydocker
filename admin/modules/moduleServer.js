@@ -255,7 +255,7 @@
          }
 
         this.saveRandomCode = (serverName, randomCode, callback) => {
-            fs.writeFile(me.siteCodePath(serverName) + '/auth.data', randomCode, function (err) {
+            fs.writeFile(me.siteCodePath(serverName) + '/adminRoot/auth.data', randomCode, function (err) {
                 callback(err)
             });
         }
