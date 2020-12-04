@@ -7,7 +7,17 @@
 				mp = p.match(/\/([^\/]+)(\/|$)/);
 
 			if (mp && mp[1] === 'api') {
-				res.send(pkg.md5(new Date().getTime()));
+				// res.send(pkg.md5(new Date().getTime()));
+				
+				var MgetApi= pkg.require(env.root+ '/modules/moduleGetApi.js');
+				
+				var mgetapi = new MgetApi(env, pkg);
+				mgetapi.sendIt(mp,
+					(data) => {
+						res.send(data);
+					}
+				);
+				
 				return true
 			}
 
