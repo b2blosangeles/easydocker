@@ -255,7 +255,7 @@
          }
 
         this.saveRandomCode = (serverName, randomCode, callback) => {
-            fs.writeFile(me.siteCodePath(serverName) + '/adminRoot/auth.data', randomCode, function (err) {
+            fs.writeFile(me.siteCodePath(serverName) + '/auth.data', randomCode, function (err) {
                 callback(err)
             });
         }
@@ -274,7 +274,7 @@
             };
        
             _f['prepareFolder'] = function(cbk) {
-                let cmd = 'mkdir -fr ' + me.siteCodePath(data.serverName) + '/adminRoot';
+                let cmd = 'mkdir -p ' + me.siteCodePath(data.serverName) + '/adminRoot';
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
                         cbk(true);
