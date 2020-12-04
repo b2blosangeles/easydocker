@@ -263,7 +263,7 @@
         this.addVServer = (data, callback) => {
             var _f={};
             
-            var randomCode = me.makeid(12);
+            var randomCode = me.makeid(32);
 
             _f['cloneCode'] = function(cbk) {
                 var MGit = pkg.require(env.root+ '/modules/moduleGit.js');

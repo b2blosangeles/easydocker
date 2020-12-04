@@ -2,7 +2,6 @@
 <div class="card shadow m-2 mr-1 p-3 mt-0">
     <div class="card-body card-form-section text-left ">
         <form>
-        =={{form.serverType}}==
             <div class="form-group">
                 <label>Repository git URI *</label>
                 <input type="text" class="form-control" v-model="form.gitHub" @input="changedGit" placeholder="Repository git URI">
