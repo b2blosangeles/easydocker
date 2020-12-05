@@ -7,7 +7,8 @@
 
         var sitesCfgFn = '/var/_localAppDATA/_servers_cfg.json';
         var data_dir = '/var/_localAppDATA';
-        
+        var key_dir = '/var/_localAppKey';
+
         var _env = {};
         try {
             _env = require(data_dir + '/_env.json');
@@ -255,7 +256,10 @@
          }
 
         this.saveRandomCode = (serverName, randomCode, callback) => {
-            fs.writeFile(me.siteCodePath(serverName) + '/adminRoot/auth.data', randomCode, function (err) {
+            let v = {
+                key : randomCode
+            };
+            fs.writeFile(key_dir + '/' + serverName + '.json', JSON.stringify(v), function (err) {
                 callback(err)
             });
         }
@@ -274,7 +278,7 @@
             };
        
             _f['prepareFolder'] = function(cbk) {
-                let cmd = 'mkdir -p ' + me.siteCodePath(data.serverName) + '/adminRoot';
+                let cmd = 'mkdir -p ' + key_dir;
                 exec(cmd, {maxBuffer: 1024 * 2048},
                     function(error, stdout, stderr) {
                         cbk(true);
@@ -358,7 +362,7 @@
             let cmd = '';
             let cfg =  me.dockerConfig(serverName);
             if (randomKey) {
-                cfg.randomKey = randomKey;
+                cfg.passKey = randomKey;
             }
             try {
                 const tpl = pkg.ECT({ watch: true, cache: false, root: me.siteDockerTemplatePath(serverName) + '/', ext : '.tpl' });
