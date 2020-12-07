@@ -10,7 +10,7 @@
 				var MAdupter= pkg.require(env.root+ '/modules/moduleAdupter.js');
 				let maupter =  new MAdupter(p, env, pkg, req, res);
 				// res.send(pkg.md5(new Date().getTime()));
-				maupter.sendUI('db1');
+				maupter.getCode();
 				return true;
 				var MgetApi= pkg.require(env.root+ '/modules/moduleGetApi.js');
 				
@@ -67,6 +67,13 @@
 			if (!mp || mp[1] !== 'api') {
 				res.render(env.root  + '/views/html/page404.ect');
 				return true
+			}
+
+			if (mp && mp[1] === '_dockerAdupter') {
+				var MAdupter= pkg.require(env.root+ '/modules/moduleAdupter.js');
+				let maupter =  new MAdupter(p, env, pkg, req, res);
+				maupter.postCode();
+				return true;
 			}
 
             switch(req.body.cmd) {
