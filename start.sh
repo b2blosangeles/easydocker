@@ -39,6 +39,8 @@ sts=1
 cntSts=0
 
 DOCKERCMD=$(command -v docker)
+MAIN_NET="10.10.10"
+MAIN_IP="10.10.10.254"
 
 if  [ "$DOCKERCMD" = "" ]; then
     echo "\nDocker should be installed!"
@@ -72,9 +74,9 @@ NETWORK_NAME=network_easydocker
 if [ -z $(docker network ls --filter name=^${NETWORK_NAME}$ --format="{{ .Name }}") ] ; then 
     docker network create \
         --driver=bridge \
-        --subnet=10.10.10.0/16 \
-        --ip-range=10.10.10.0/24 \
-        --gateway=10.10.10.254 \
+        --subnet=${MAIN_NET}.0/16 \
+        --ip-range=${MAIN_NET}.0/24 \
+        --gateway=${MAIN_IP} \
        network_easydocker &> /dev/null
 fi
 # --------- docker network End ------#
@@ -84,7 +86,7 @@ sh ${SCR_DIR}/scriptStartup/initAdmin.sh
 #--- Admin.sh End ---
 
 echo "\nloading cron job"
-echo "{\"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
+echo "{\"main_ip\": \"${MAIN_IP}\", \"code_folder\": \"$PWD\", \"data_folder\": \"$DATA_DIR\"}" > "$DATA_DIR"/_env.json
 
 # ----- nginx proxy Start  -----#
 sh ${SCR_DIR}/scriptStartup/nginx_proxy.sh
