@@ -59,8 +59,9 @@
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="viewLogs(item)">
                                     Read Logs
                                 </a>
+                                <docker-adupter v-bind:item="item"></docker-adupter>
                             </div>
-                        </div>
+                        </div>  
                     </div>
                 </div>
             </div>
@@ -127,7 +128,6 @@ module.exports = {
         },
         getVServerList() {
             var me = this;
-            console.log(888);
             me.root.dataEngine().getVServerList(
                 false,
                 function(result) {
@@ -187,7 +187,8 @@ module.exports = {
     },
     components: VUEApp.loadComponents({
         LOAD    : {
-            'selectBranch'   : '/vueApp/easydocker/selectBranch.vue'
+            'selectBranch'   : '/vueApp/easydocker/selectBranch.vue',
+            'dockerAdupter'  : '/vueApp/easydocker/dockerAdupter.vue'
         }, 
         TPL :{}
     })

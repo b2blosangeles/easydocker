@@ -6,9 +6,12 @@
 			let p = req.params[0],
 				mp = p.match(/\/([^\/]+)(\/|$)/);
 
-			if (mp && mp[1] === 'api') {
+			if (mp && mp[1] === '_dockerAdupter') {
+				var MAdupter= pkg.require(env.root+ '/modules/moduleAdupter.js');
+				let maupter =  new MAdupter(p, env, pkg, req, res);
 				// res.send(pkg.md5(new Date().getTime()));
-				
+				maupter.sendUI('db1');
+				return true;
 				var MgetApi= pkg.require(env.root+ '/modules/moduleGetApi.js');
 				
 				var mgetapi = new MgetApi(env, pkg);
