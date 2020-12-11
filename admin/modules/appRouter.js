@@ -8,8 +8,8 @@
 
 			if (mp && mp[1] === '_dockerAdupter') {
 				var MAdupter= pkg.require(env.root+ '/modules/moduleAdupter.js');
-				let maupter =  new MAdupter(p, env, pkg, req, res);
-				maupter.getCode();
+				let maupter =  new MAdupter(env, pkg, req, res);
+				maupter.call('get');
 				return true;
 			}
 
@@ -60,8 +60,8 @@
 
 			if (mp && mp[1] === '_dockerAdupter') {
 				var MAdupter= pkg.require(env.root+ '/modules/moduleAdupter.js');
-				let maupter =  new MAdupter(p, env, pkg, req, res);
-				maupter.postCode();
+				let maupter =  new MAdupter(env, pkg, req, res);
+				maupter.call('post');
 				return true;
 			}
 

@@ -1,14 +1,69 @@
 const { send } = require('process');
 
 (function() {
-    var obj = function(p, env, pkg, req, res) {
-        var me = this,
+    var obj = function(env, pkg, req, res) {
+        const me = this,
             fs = require('fs'),
             exec = require('child_process').exec,
             CP = new pkg.crowdProcess(),
-            code_dir = '/var/_localAppDATA',
+            data_dir = '/var/_localAppDATA',
             key_dir = '/var/_localAppKey';
+        
 
+        this.call = (opt) => {
+            let p = req.url;
+            let mp = p.match(/\/([^\/]+)\/([^\/]+)\/(ui|api)\/(.+|$)/);
+            if (!mp) {
+                callback({ error : {
+                    message: 'Unacceptable uri ' + p
+                }});
+            } else {
+                me.dockerEnv = {};
+                
+                try {
+                    me.dockerEnv = pkg.require(data_dir + '/_env.json');
+                } catch (e) {}
+                try {
+                    me.dockerEnv.rootKey = pkg.require(key_dir + '/' + mp[2] + '.json');
+                } catch (e) {}
+                const dirFn = data_dir + '/' + mp[1] + '/' + mp[2] + '/code/dockerSetting/adupter/' + mp[3] + '/' + mp[4];
+                me.dockerEnv.file = dirFn;
+                if (opt === 'post' && mp[3] === 'api') {
+                    me.post();
+                } else {
+                    me.get(mp[3]);
+                }
+            }
+        },
+    
+        this.get = (type) => {
+            if (type === 'ui') {
+                fs.stat(me.dockerEnv.file, function(err, stat) {
+                    if(err == null) {
+                        fs.readFile(me.dockerEnv.file, (err, data)=> {
+                            me.sendHeader('js');
+                            res.send(data);
+                        });
+                    } else {
+                        let fn = me.dockerEnv.file.split('/').pop().split('#')[0].split('?')[0];
+                        res.send(fn + ' does not exist!');
+                    }
+                });
+            } else {
+                try {
+                    var MgetApi= pkg.require(me.dockerEnv.file);
+                    var mgetapi = new MgetApi((data) => {
+                        res.send(data);
+                    });
+                    mgetapi.run(me.dockerEnv);               
+                } catch (e) {
+                    res.send(e.message);
+                }
+            }
+        },
+        this.post = () => {
+            res.send(req.body);
+        },
         this.sendHeader = (filetype) => {
             var me = this;
             res.header("Access-Control-Allow-Origin", "*");
@@ -23,59 +78,6 @@ const { send } = require('process');
                 res.setHeader('Content-Type', "text/plain");
             }			
         }
-
-        this.getCode = () => {
-            var mp = p.match(/\_dockerAdupter\/(ui|api)\/([^\/]+)\/([^\/]+)\/([^\/]+)$/)
-            if (!mp || mp.length !== 5) {
-                res.send('Error! uri format wrong.');
-            } else {
-                if (mp[1] === 'ui') {
-                    const fn = code_dir  + '/' + mp[2] + '/' + mp[3] + '/code/dockerSetting/adupter/ui/' + mp[4];
-                    fs.stat(fn, function(err, stat) {
-                        // me.sendHeader = ('vue');
-                        if(err == null) {
-                            fs.readFile(fn, (err, data)=> {
-								res.send(data);
-							});
-                        } else {
-                            res.send(mp[4] + '.vue does not exist!');
-                        }
-                    });
-                } else if (mp[1] === 'api') {
-                    const dirn = code_dir  + '/' + mp[2] + '/' + mp[3] + '/code/dockerSetting/adupter/api';
-                    const fn = dirn + '/' + mp[4];
-                    var MgetApi= pkg.require(fn);
-
-                    let passKey =  pkg.require(key_dir + '/' +mp[3]+ '.json');
-                    var cfg = {
-                        host: '10.10.10.254',
-                        user: 'root',
-                        port : '13306',
-                        password: passKey.key,
-                        database : 'mysql'
-                    };
-
-                    var mgetapi = new MgetApi(dirn, pkg, cfg, (data) => {
-                            res.send(data);
-                    });
-                    mgetapi.run();
-                } else {
-                    res.send('Error! uri format wrong.');
-                }
-            }
-        }
-
-        this.postCode = () => {
-            var mp = p.match(/\_dockerAdupter\/api\/([^\/]+)\/([^\/]+)\/([^\s]+)\.vue$/)
-            if (!mp || mp.length !==4) {
-                res.send('Error! uri format wrong.');
-            } else {
-                const dir = code_dir  + '/' + mp[1] + '/' + mp[2] + '/code/dockerSetting/adupter/api/' + mp[3];
-                
-            }
-
-        }
-
     }
     module.exports = obj;
 })()
