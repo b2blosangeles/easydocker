@@ -7,8 +7,24 @@ const { send } = require('process');
             exec = require('child_process').exec,
             CP = new pkg.crowdProcess(),
             data_dir = '/var/_localAppDATA',
-            key_dir = '/var/_localAppKey';
-        
+            key_dir = '/var/_localAppKey',
+            sitesCfgFn = data_dir + '/_servers_cfg.json';
+
+        this.getSiteIP = (serverName) => {
+            var v = {}, p;
+            try {
+                var p = pkg.require(sitesCfgFn);
+                if (typeof p == 'object') {
+                    v = p;
+                }
+            } catch (e) {}
+            var cfg = v[serverName];
+            if (!cfg) {
+                return null;
+            } else {
+                return cfg.unidx * 10000 + parseInt(cfg.docker.ports[0]);
+            }
+        }
 
         this.call = (opt) => {
             let p = req.url;
@@ -28,6 +44,9 @@ const { send } = require('process');
                 } catch (e) {}
                 const dirFn = data_dir + '/' + mp[1] + '/' + mp[2] + '/code/dockerSetting/adupter/' + mp[3] + '/' + mp[4];
                 me.dockerEnv.file = dirFn;
+
+                me.dockerEnv.port = me.getSiteIP(mp[2]);
+
                 if (opt === 'post' && mp[3] === 'api') {
                     me.post();
                 } else {
