@@ -10,7 +10,7 @@ const { send } = require('process');
             key_dir = '/var/_localAppKey',
             sitesCfgFn = data_dir + '/_servers_cfg.json';
 
-        this.getSiteIP = (serverName) => {
+        this.getSiteConfig = (serverName) => {
             var v = {}, p;
             try {
                 var p = pkg.require(sitesCfgFn);
@@ -19,14 +19,10 @@ const { send } = require('process');
                 }
             } catch (e) {}
             var cfg = v[serverName];
-            if (!cfg) {
-                return null;
-            } else {
-                return cfg.unidx * 10000 + parseInt(cfg.docker.ports[0]);
-            }
+            return cfg;
         }
 
-        this.call = (opt) => {
+        this.call = () => {
             let p = req.url;
             let mp = p.match(/\/([^\/]+)\/([^\/]+)\/(ui|api)\/(.+|$)/);
             if (!mp) {
@@ -42,46 +38,36 @@ const { send } = require('process');
                 try {
                     me.dockerEnv.rootKey = pkg.require(key_dir + '/' + mp[2] + '.json');
                 } catch (e) {}
-                const dirFn = data_dir + '/' + mp[1] + '/' + mp[2] + '/code/dockerSetting/adupter/' + mp[3] + '/' + mp[4];
-                me.dockerEnv.file = dirFn;
-
-                me.dockerEnv.port = me.getSiteIP(mp[2]);
-
-                if (opt === 'post' && mp[3] === 'api') {
-                    me.post();
-                } else {
-                    me.get(mp[3]);
-                }
+                me.pluginFn = data_dir + '/' + mp[1] + '/' + mp[2] + '/code/dockerSetting/adupter/' + mp[3] + '/' + mp[4];
+                me.dockerEnv.siteConfig = me.getSiteConfig(mp[2]);
+                me.request(mp[3], (!req.body || !Object.keys(req.body).length || mp[3] === 'ui') ? null : req.body);
             }
         },
     
-        this.get = (type) => {
+        this.request = (type, requestData) => {
             if (type === 'ui') {
-                fs.stat(me.dockerEnv.file, function(err, stat) {
+                fs.stat(me.pluginFn, function(err, stat) {
                     if(err == null) {
-                        fs.readFile(me.dockerEnv.file, (err, data)=> {
+                        fs.readFile(me.pluginFn, (err, data)=> {
                             me.sendHeader('js');
                             res.send(data);
                         });
                     } else {
-                        let fn = me.dockerEnv.file.split('/').pop().split('#')[0].split('?')[0];
+                        let fn = me.pluginFn.split('/').pop().split('#')[0].split('?')[0];
                         res.send(fn + ' does not exist!');
                     }
                 });
             } else {
                 try {
-                    var MgetApi= pkg.require(me.dockerEnv.file);
-                    var mgetapi = new MgetApi((data) => {
+                    var MgetApi= pkg.require(me.pluginFn);
+                    var mgetapi = new MgetApi();
+                    mgetapi.call('checkUserSetting', {dockerEnv : me.dockerEnv, data: requestData}, (data) => {
                         res.send(data);
-                    });
-                    mgetapi.run(me.dockerEnv);               
+                    });               
                 } catch (e) {
                     res.send(e.message);
                 }
             }
-        },
-        this.post = () => {
-            res.send(req.body);
         },
         this.sendHeader = (filetype) => {
             var me = this;

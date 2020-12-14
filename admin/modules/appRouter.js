@@ -61,7 +61,7 @@
 			if (mp && mp[1] === '_dockerAdupter') {
 				var MAdupter= pkg.require(env.root+ '/modules/moduleAdupter.js');
 				let maupter =  new MAdupter(env, pkg, req, res);
-				maupter.call('post');
+				maupter.call();
 				return true;
 			}
 
