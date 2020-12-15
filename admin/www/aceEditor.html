@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ACE in Action</title>
+<link rel="stylesheet" href="/css/bootstrap.4.4.1.min.css">
+
+<style type="text/css" media="screen">
+    #editor { 
+        position: absolute;
+        top: 3.2em;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+</head>
+<body>
+    <button class="btn btn-warning btn-sm mr-1" onClick="parent.document._iFrameBridge.close();">Cancel</button>
+    <button class="btn btn-warning btn-sm" onClick="parent.document._iFrameBridge.save(editor.getValue());">Save</button>
+<div id="editor">function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+}</div>
+</body>
+</html>
+<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" crossorigin="anonymous"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/javascript");
+    editor.session.on('change', function(delta) {
+        // console.log(editor.session.getDocument());
+        // parent.passValue(editor.getValue());
+        // console.log(delta);
+    // delta.start, delta.end, delta.lines, delta.action
+    });
+</script>

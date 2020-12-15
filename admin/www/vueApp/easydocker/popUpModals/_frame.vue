@@ -4,8 +4,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <span v-bind:is="loadModule()"></span>
-                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" v-on:click="close()">Cancel</button>
-                    
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" v-if="!cfg.noDefaultCancel" v-on:click="close()">Cancel</button>
                 </div>
             </div>
         </div>
@@ -33,7 +32,7 @@ module.exports = {
         },
         loadModule() {
            let me = this;
-           let list = ['switchBranch', 'confirmDelete'];
+           let list = ['switchBranch', 'confirmDelete', 'iframeObj'];
            return (list.indexOf(me.cfg.insideModule)  === -1) ? '' : me.cfg.insideModule;
         },
         close() {
@@ -46,7 +45,8 @@ module.exports = {
    components: VUEApp.loadComponents({
         LOAD    : {
             'switchBranch' : '/vueApp/easydocker/popUpModals/switchBranch.vue',
-            'confirmDelete' : '/vueApp/easydocker/popUpModals/confirmDelete.vue'
+            'confirmDelete' : '/vueApp/easydocker/popUpModals/confirmDelete.vue',
+            'iframeObj' : '/vueApp/easydocker/popUpModals/iframeObj.vue'
         }, 
         TPL :{
             

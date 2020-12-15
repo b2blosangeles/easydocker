@@ -61,7 +61,7 @@ const { send } = require('process');
                 try {
                     var MgetApi= pkg.require(me.pluginFn);
                     var mgetapi = new MgetApi();
-                    mgetapi.call('checkUserSetting', {dockerEnv : me.dockerEnv, data: requestData}, (data) => {
+                    mgetapi.call({dockerEnv : me.dockerEnv, requestData: requestData}, (data) => {
                         res.send(data);
                     });               
                 } catch (e) {

@@ -59,6 +59,9 @@
                                 <a class="btn btn-sm btn-warning m-1" href="JavaScript:void(0)" v-on:click="viewLogs(item)">
                                     Read Logs
                                 </a>
+                                <a class="btn btn-sm btn-info m-1" href="JavaScript:void(0)" v-on:click="popupEditor(item)">
+                                    <i class="fa fa-file-code-o mr-2" aria-hidden="true"></i>Edit Site Variabls
+                                </a>
                                 <docker-adupter v-bind:item="item"></docker-adupter>
                             </div>
                         </div>  
@@ -183,12 +186,37 @@ module.exports = {
                 str += (item.unidx * 10000 + parseInt(p[i])) +','
             }
             return str.replace(/\,$/,'');
+        },
+        popupEditor(record) {
+            var me = this;
+            me.root.popUp(me).show({
+                insideModule: 'iframeObj',
+                data : {
+                    url : '/aceEditor.html',
+                    item : record
+                },
+                noDefaultCancel : true
+            }); 
+
+            document._iFrameBridge.close = (function(me) {
+                return function(v) {
+                    me.root.popUp(me).close();
+                }
+            })(me);
+
+            document._iFrameBridge.save = (function(me, item) {
+                return function(v) {
+                   console.log(item.name + '<<<--' + v);
+                   me.root.popUp(me).close();
+                }
+            })(me, record);
         }
     },
     components: VUEApp.loadComponents({
         LOAD    : {
             'selectBranch'   : '/vueApp/easydocker/selectBranch.vue',
-            'dockerAdupter'  : '/vueApp/easydocker/dockerAdupter.vue'
+            'dockerAdupter'  : '/vueApp/easydocker/dockerAdupter.vue',
+            'iframeObj'      : '/vueApp/easydocker/_iframe.vue'
         }, 
         TPL :{}
     })

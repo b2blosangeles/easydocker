@@ -5,9 +5,9 @@ $(document).ready(
                 new Vue({
                     el: '#vHostApp',
                     data: function() {},
-                    mounted () {},
+                    mounted () {
+                    },
                     methods :{
-
                     },
                     components: VUEApp.loadComponents({
                         LOAD    : {}, 

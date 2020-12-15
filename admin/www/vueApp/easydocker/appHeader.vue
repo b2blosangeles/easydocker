@@ -13,33 +13,14 @@
                 </div>
             </div>
             <div class="container-fluid mt-3 text-left" v-if="root.isSignin()">
-                <!--div class="row">
-                    <div class="col-6 p-0 m-0 text-left">
-                        <button class="btn btn-sm btn-success m-1 pull-right" 
-                            :disabled = "isDisabled('databases')"
-                            v-on:click="clickMenu('databases')">
-                            MySQL Databases {{$parent.module}}
-                        </button>
-                        <button class="btn btn-sm btn-success m-1 pull-right" 
-                            :disabled = "isDisabled('webservers')"
-                            v-on:click="clickMenu('webservers')">
-                            Web Servers
-                        </button>
-                    </div>
-                    <div class="col-6 p-30 m-0 text-right">
-                        <a class="btn btn-sm btn-danger m-1 pull-right" href="JavaScript:void(0)" v-on:click="root.signOff()">
-                            Sign Off
-                        </a>
-                    </div>
-                </div-->
                 <div class="row">
                     <div class="col-6 p-0 m-0 text-left">
-                        <button class="btn btn-sm btn-success m-1 pull-right" 
+                        <button class="btn btn-sm btn-success m-1" 
                             :disabled = "isDisabled('form')"
                             v-on:click="clickMenu('form')">
                             Add a server
                         </button>
-                        <button class="btn btn-sm btn-success m-1 pull-right" 
+                        <button class="btn btn-sm btn-success m-1" 
                             :disabled = "isDisabled('list')"
                             v-on:click="clickMenu('list')">
                             List Servers

@@ -9,7 +9,7 @@
 			if (mp && mp[1] === '_dockerAdupter') {
 				var MAdupter= pkg.require(env.root+ '/modules/moduleAdupter.js');
 				let maupter =  new MAdupter(env, pkg, req, res);
-				maupter.call('get');
+				maupter.call();
 				return true;
 			}
 
@@ -53,16 +53,17 @@
 			let p = req.params[0],
 				mp = p.match(/\/([^\/]+)(\/|$)/);
 
-			if (!mp || mp[1] !== 'api') {
-				res.render(env.root  + '/views/html/page404.ect');
-				return true
-			}
 
 			if (mp && mp[1] === '_dockerAdupter') {
 				var MAdupter= pkg.require(env.root+ '/modules/moduleAdupter.js');
 				let maupter =  new MAdupter(env, pkg, req, res);
 				maupter.call();
 				return true;
+			}
+
+			if (!mp || mp[1] !== 'api') {
+				res.render(env.root  + '/views/html/page404.ect');
+				return true
 			}
 
             switch(req.body.cmd) {

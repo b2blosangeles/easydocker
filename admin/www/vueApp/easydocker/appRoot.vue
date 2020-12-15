@@ -35,7 +35,9 @@ module.exports = {
             menu   : ''
         }
     },
-    mounted () {},
+    mounted () {
+        document._iFrameBridge = (!document._iFrameBridge) ? {} : document._iFrameBridge;
+    },
     methods :{
         isSignin() {
             return (!this.root.auth || !this.root.auth.isSignIn || !this.root.auth.isAuthExist) ? false : true
