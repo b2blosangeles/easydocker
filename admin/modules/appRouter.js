@@ -86,6 +86,32 @@
 
 					break;
 				
+				case 'saveVserverValiables' :
+					var Servers = new MServers(req.body.serverType, env, pkg);
+					var data = {
+						serverName  : req.body.serverName,
+						contents	: req.body.contents
+					}
+					Servers.saveVserverValiables(req.body,
+						function(data) {
+							// res.send(data);
+							me.refreshTokenSend(data);
+						});
+
+					break;
+
+				case 'getVserverValiables' :
+					var Servers = new MServers(req.body.serverType, env, pkg);
+					var data = {
+						serverName  : req.body.serverName
+					}
+					Servers.getVserverValiables(req.body,
+						function(data) {
+							me.refreshTokenSend(data);
+						});
+
+					break;
+
 				case 'restartProxy' :
 
 					var Servers = new MServers('webserver', env, pkg);

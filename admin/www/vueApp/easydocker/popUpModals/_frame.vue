@@ -1,7 +1,7 @@
 <template>
     <div id="confirm_modal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
+        <div class="modal-dialog-centered modal-dialog" role="document">
+            <div class="modal-content shadow">
                 <div class="modal-body">
                     <span v-bind:is="loadModule()"></span>
                     <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" v-if="!cfg.noDefaultCancel" v-on:click="close()">Cancel</button>
@@ -28,7 +28,7 @@ module.exports = {
         show(param) {
             var me = this;
             me.cfg = param;
-            $('#confirm_modal').modal('show');
+            $('#confirm_modal').modal({backdrop: false, show: true});
         },
         loadModule() {
            let me = this;
@@ -56,4 +56,10 @@ module.exports = {
 </script>
  
 <style>
+.modal-dialog {
+    min-width: 68%;
+}
+#confirm_modal {
+    background-color: rgba(50, 50, 50, 0.6);
+}
 </style>

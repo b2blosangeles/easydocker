@@ -1,7 +1,7 @@
 <template>
-    <span class="text-left">
-       <iframe v-bind:src="$parent.cfg.data.url" style="min-height:30em;width:100%; border: 0"></iframe>
-    </span>
+    <div class="text-left">
+       <iframe v-bind:src="$parent.cfg.data.url" style="min-height:36em;width:100%; border: 0"></iframe>
+    </div>
 </template>
 
 <script>
@@ -24,4 +24,5 @@ module.exports = {
 </script>
  
 <style>
+    
 </style>

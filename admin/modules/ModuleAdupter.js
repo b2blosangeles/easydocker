@@ -36,7 +36,7 @@ const { send } = require('process');
                     me.dockerEnv = pkg.require(data_dir + '/_env.json');
                 } catch (e) {}
                 try {
-                    me.dockerEnv.rootKey = pkg.require(key_dir + '/' + mp[2] + '.json');
+                    me.dockerEnv.rootKey = pkg.require(key_dir + '/' + mp[2] + '/key.json');
                 } catch (e) {}
                 me.pluginFn = data_dir + '/' + mp[1] + '/' + mp[2] + '/code/dockerSetting/adupter/' + mp[3] + '/' + mp[4];
                 me.dockerEnv.siteConfig = me.getSiteConfig(mp[2]);

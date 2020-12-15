@@ -187,6 +187,29 @@ module.exports = {
             }
             return str.replace(/\,$/,'');
         },
+        saveEditorContent(record, v, callback) {
+            var me = this;
+            var rec = {
+                serverName : record.name,
+                serverType : record.serverType,
+                contents   : v
+            };
+            me.root.dataEngine().saveVserverValiables(rec, 
+                function(result) {
+                    callback(result);
+            });
+        },
+        getEditorContent(record, callback) {
+            var me = this;
+            var rec = {
+                serverName : record.name,
+                serverType : record.serverType
+            };
+            me.root.dataEngine().getVserverValiables(rec, 
+                function(result) {
+                    callback(result);
+            });
+        },
         popupEditor(record) {
             var me = this;
             me.root.popUp(me).show({
@@ -206,8 +229,17 @@ module.exports = {
 
             document._iFrameBridge.save = (function(me, item) {
                 return function(v) {
-                   console.log(item.name + '<<<--' + v);
-                   me.root.popUp(me).close();
+                   me.saveEditorContent(item, v, function(result) {
+                       me.root.popUp(me).close();
+                   })
+                }
+            })(me, record);
+
+            document._iFrameBridge.loadContents = (function(me, item) {
+                return function(callback) {
+                   me.getEditorContent(item, function(result) {
+                       callback(result.data);
+                   })
                 }
             })(me, record);
         }

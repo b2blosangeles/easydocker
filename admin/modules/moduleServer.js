@@ -26,6 +26,10 @@
             return this.sitePath(serverName) + '/code';
         }
 
+        this.siteEnvPath = (serverName) => {
+            return this.sitePath(serverName) + '/env';
+        }
+
         this.siteDockerTemplatePath = (serverName) => {
             return me.siteCodePath(serverName) + '/dockerSetting/scriptTemplate';
         }
@@ -259,9 +263,34 @@
             let v = {
                 key : randomCode
             };
-            fs.writeFile(key_dir + '/' + serverName + '.json', JSON.stringify(v), function (err) {
-                callback(err)
+            let kdir = key_dir + '/' + serverName,
+                fn = kdir + '/key.json',
+                cmd = 'mkdir -p ' + kdir;
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    fs.writeFile(fn, JSON.stringify(v), function (err) {
+                        callback((!err) ? {status : 'success'} : {status : 'failure', message : err.message });
+                    });  
             });
+
+        }
+
+        this.saveVserverValiables = (data, callback) => {
+            var fn = me.siteEnvPath(data.serverName) + '/_env.json';
+            cmd = 'mkdir -p ' + me.siteEnvPath(data.serverName);
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                fs.writeFile(fn, data.contents, function (err) {
+                    callback((!err) ? {status : 'success'} : {status : 'failure', message : err.message });
+                });    
+            });
+        }
+
+        this.getVserverValiables = (data, callback) => {
+            var fn = me.siteEnvPath(data.serverName) + '/_env.json';
+            fs.readFile(fn, 'utf-8', (err, data)=> {
+                callback((!err) ? {status : 'success', data : data} : {status : 'failure', message : err.message });
+            });    
         }
 
         this.addVServer = (data, callback) => {
@@ -277,20 +306,12 @@
                 });
             };
        
-            _f['prepareFolder'] = function(cbk) {
-                let cmd = 'mkdir -p ' + key_dir;
-                exec(cmd, {maxBuffer: 1024 * 2048},
-                    function(error, stdout, stderr) {
-                        cbk(true);
-                });
+            _f['saveRandomCode'] = function(cbk) {
+                me.saveRandomCode(data.serverName,  randomCode, cbk);
             };
 
             _f['SitesServers'] = function(cbk) {
                 me.saveSitesServers(data, cbk);
-            };
-            
-            _f['saveRandomCode'] = function(cbk) {
-                me.saveRandomCode(data.serverName,  randomCode, cbk);
             };
             
             _f['addDocker'] = function(cbk) {

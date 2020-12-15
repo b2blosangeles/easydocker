@@ -170,6 +170,46 @@ module.exports = {
                 dataType: 'JSON'
             });
         },
+        saveVserverValiables(record, callback) {
+            var me = this;
+            var rec = record;
+            rec.cmd = 'saveVserverValiables';
+            me.$parent.triggerSpinner = true;
+            $.ajax({
+                type: 'POST',
+                url:'/api',
+                data: rec,
+                success: function(result) {
+                    me.$parent.triggerSpinner = false;
+                    callback(result);
+                },
+                error: function (jqXHR, textStatus, errorThrown) { 
+                    me.$parent.triggerSpinner = false;
+                    callback({status : 'failure', message : 'engine error'});
+                },
+                dataType: 'JSON'
+            });
+        },
+        getVserverValiables(record, callback) {
+            var me = this;
+            var rec = record;
+            rec.cmd = 'getVserverValiables';
+            me.$parent.triggerSpinner = true;
+            $.ajax({
+                type: 'POST',
+                url:'/api',
+                data: rec,
+                success: function(result) {
+                    me.$parent.triggerSpinner = false;
+                    callback(result);
+                },
+                error: function (jqXHR, textStatus, errorThrown) { 
+                    me.$parent.triggerSpinner = false;
+                    callback({status : 'failure', message : 'engine error'});
+                },
+                dataType: 'JSON'
+            });
+        },
         pullCode(record) {
             var me = this;
             me.$parent.triggerSpinner = true;
