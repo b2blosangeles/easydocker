@@ -41,18 +41,6 @@
                     >{{ option.branch }}</option>
                 </select>
             </div>
-            <div v-if="form.docker.additions">
-                <hr/>
-                <div v-for="o in form.docker.additions">
-                    <div class="form-group" v-if="branches!==null" >
-                        <label>{{o.prompty}} * == {{form[o.fieldName]}} -- {{o.fieldName}}</label>
-                        <input type="text" class="form-control" maxlength="64" v-model="form.rootPassword" placeholder="{{o.prompty}}">
-                    </div>
-                </div>
-                 
-                ==={{ form.docker.additions }}===
-                 <hr/>
-            </div>
             <div v-if="form.docker.type">
             {{form.docker}}
                  <hr/>
