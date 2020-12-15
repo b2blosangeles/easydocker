@@ -276,7 +276,7 @@
         }
 
         this.saveVserverValiables = (data, callback) => {
-            var fn = me.siteEnvPath(data.serverName) + '/_env.json';
+            var fn = me.siteEnvPath(data.serverName) + '/variables.json';
             cmd = 'mkdir -p ' + me.siteEnvPath(data.serverName);
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
@@ -287,7 +287,7 @@
         }
 
         this.getVserverValiables = (data, callback) => {
-            var fn = me.siteEnvPath(data.serverName) + '/_env.json';
+            var fn = me.siteEnvPath(data.serverName) + '/variables.json';
             fs.readFile(fn, 'utf-8', (err, data)=> {
                 callback((!err) ? {status : 'success', data : data} : {status : 'failure', message : err.message });
             });    

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>ACE in Action</title>
+<title>ACE Editor</title>
 <link rel="stylesheet" href="/css/bootstrap.4.4.1.min.css">
-
 <style type="text/css" media="screen">
     #editor { 
         position: absolute;
@@ -12,62 +11,46 @@
         bottom: 4em;
         left: 0;
     }
+    #errorInfo { padding: 0.1rem; color: red}
 </style>
 </head>
 <body>
-    <button class="btn btn-warning btn-sm mr-1" onClick="parent.document._iFrameBridge.close();">Cancel</button>
-    <button class="btn btn-warning btn-sm" onClick="parent.document._iFrameBridge.save(editor.getValue());">Save</button>
-<div id="editor"></div>
+    <div>
+        <button class="btn btn-warning btn-sm mr-1" onClick="parent.document._iFrameBridge.close();">Cancel</button>
+        <span id="errorInfo"></span>
+    </div>
+    <div id="editor"></div>
+    
+
 </body>
 </html>
-<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" crossorigin="anonymous"></script>
+<script src="/js/ace/src-min/ace.js" crossorigin="anonymous"></script>
 <script>
-    var uu = function() {
-        var issue = 0;
-        var annot = editor.getSession().getAnnotations();
-        
-        for (var key in annot){
-    
-            if (annot.hasOwnProperty(key)) {
-                issue++;
-            }
-          //      console.log("[" + annot[key][0].row + " , " + annot[key][0].column + "] - \t" + annot[key][0].text);
-        }
-        if (issue) {
-            console.log(issue);
-        }
-        console.log(issue);
-    }
-    //var beautify = ace.require("ace/ext/beautify");
     var editor = ace.edit("editor");
-    //beautify.beautify(editor.session);
     editor.getSession().setMode("ace/mode/json");
     editor.setTheme("ace/theme/twilight");
 
-    //editor.setTheme("ace/theme/monokai");
-    //editor.session.setMode("ace/mode/javascript");
-    let issue = 0;
+    function save(editor) {
+        let valid = (Object.keys(editor.getSession().getAnnotations()).length === 0) ? true : false;
+        if (valid) {
+            parent.document._iFrameBridge.save(editor.getValue())
+        }
+    }
+    function validationMessage(editor) {
+        if (Object.keys(editor.getSession().getAnnotations()).length === 0) {
+           document.getElementById('errorInfo').innerHTML = '<button class="btn btn-warning btn-sm" onClick="save(editor);">Save</button>';
+        } else {
+            document.getElementById('errorInfo').innerHTML = 'Incorrect JSON Format!';
+        }
+    }
+
     editor.session.on('change', function(delta) {
-        uu();
-        // console.log(editor.session.getDocument());
-        // parent.passValue(editor.getValue());
-        // console.log(delta);
-    // delta.start, delta.end, delta.lines, delta.action
     });
-    editor.getSession().on("changeAnnotation", function(){
-        var annot = editor.getSession().getAnnotations();
-        
-        for (var key in annot){
-            issue++;
-            if (annot.hasOwnProperty(key)) {
-                issue++;
-            }
-          //      console.log("[" + annot[key][0].row + " , " + annot[key][0].column + "] - \t" + annot[key][0].text);
-        }
-        if (issue) {
-            console.log(issue);
-        }
-    });
+
+    editor.session.on("changeAnnotation", function() {
+        validationMessage(editor);
+    })
+
     parent.document._iFrameBridge.loadContents(function(data) {
         editor.session.setValue(data);
     });
