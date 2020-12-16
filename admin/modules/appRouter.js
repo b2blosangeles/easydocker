@@ -2,7 +2,7 @@
 	var obj =  function (env, pkg, req, res) {
 		var fs = require('fs');
 		var path = require('path');
-		this.get = function() {
+		this.get = () => {
 			let p = req.params[0],
 				mp = p.match(/\/([^\/]+)(\/|$)/);
 
@@ -24,16 +24,26 @@
 				res.sendFile(fn);
 				return true
 			} else {
-				var fn = env.root + '/www' + p;
-				fs.stat(fn, function(err, stat) {
-					if(err == null) {
-						res.sendFile(fn);
-					} else  {
-						res.render(env.root  + '/views/html/page404.ect');
-					}
-				});
+				if (!/\.ect$/.test(p)) {
+					var fn = env.root + '/www' + p;
+					fs.stat(fn, function(err, stat) {
+						if(err == null) {
+							res.sendFile(fn);
+						} else  {
+							res.render(env.root  + '/views/html/page404.ect');
+						}
+					});
+				} else {
+					res.render(env.root  + '/views/html/' + p, req.query);
+				}
+
 			}
 		};
+
+		this.sendEct = (p) => {
+			let mp = p.match(/\/([^\/]+)\.ect$/);
+
+		}
 	
 		this.refreshTokenSend = (data) => {
 			var MAuth= pkg.require(env.root+ '/modules/moduleAuth.js');
