@@ -215,7 +215,7 @@ module.exports = {
             me.root.popUp(me).show({
                 insideModule: 'iframeObj',
                 data : {
-                    url : '/aceEditor.html',
+                    url : '/aceEditor.ect?mode=json',
                     item : record
                 },
                 noDefaultCancel : true
